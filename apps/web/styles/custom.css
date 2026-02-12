@@ -1,0 +1,291 @@
+@layer base {
+  :root {
+    /* Colors from Figma Design */
+    --color-background: #f3f5f7;
+    --color-white: #ffffff;
+    --color-border: #dee0e3;
+    --color-text-primary: #0e1114;
+    --color-text-placeholder: #6f7a85;
+    --color-primary: #1f6f66;
+    --color-primary-hover: #1a5d55;
+    --color-radio-inactive: #8a949e;
+    --color-card-selected-bg: #f9fffe;
+    --color-text-dark: #03111f;
+    --color-yellow-bg: #fdfaed;
+    --color-yellow-border: #f2e3a1;
+    --color-green-bg: #ecfff8;
+    --color-green-border: #10b981;
+    --color-blue-info-bg: #ebf3ff;
+    --color-blue-info-border: #3b82f6;
+    --color-icon-secondary: #7e6a11;
+    --color-supporting-n100: #f4f5f6;
+    --color-checkbox-checked-border: #bfede7;
+    --color-text-success: #10b981;
+    --color-interactive-primary-active: #1f6f66;
+    --color-text-inverse: #ffffff;
+
+    /* Shadows */
+    --shadow-md:
+      0px 2px 4px -1px rgba(0, 0, 0, 0.06), 0px 4px 6px -1px
+      rgba(202, 218, 239, 0.3);
+  }
+}
+
+@layer utilities {
+  /* Color utilities */
+  .bg-background {
+    background-color: var(--color-background);
+  }
+
+  .text-success {
+    color: var(--color-text-success);
+  }
+
+  .bg-white-custom {
+    background-color: var(--color-white);
+  }
+
+  .border-custom {
+    border-color: var(--color-border);
+  }
+
+  .border-primary-color {
+    border-color: var(--color-primary);
+  }
+
+  .bg-primary-color {
+    background-color: var(--color-primary);
+  }
+
+  .border-radio-inactive {
+    border-color: var(--color-radio-inactive);
+  }
+
+  .bg-card-selected {
+    background-color: var(--color-card-selected-bg);
+  }
+
+  .text-primary {
+    color: var(--color-text-primary);
+  }
+
+  .text-placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  .bg-primary {
+    background-color: var(--color-primary);
+  }
+
+  .hover\:bg-primary-hover:hover {
+    background-color: var(--color-primary-hover);
+  }
+
+  .text-primary-button {
+    color: var(--color-background);
+  }
+
+  .text-primary-link {
+    color: var(--color-primary);
+  }
+
+  /* Shadow utilities */
+  .shadow-md-custom {
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Font utilities */
+  .font-poppins {
+    font-family: var(--font-poppins), Poppins, sans-serif;
+  }
+
+  .font-sf-pro {
+    font-family:
+      SF Pro,
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+
+  /* Typography utilities from Figma */
+  .text-h3 {
+    font-family: var(--font-poppins), Poppins, sans-serif;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 1.5em;
+  }
+
+  .text-body-copy {
+    font-family:
+      SF Pro,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.193359375em;
+  }
+
+  .text-supporting {
+    font-family:
+      SF Pro,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.193359375em;
+  }
+
+  .text-button {
+    font-family: var(--font-poppins), Poppins, sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.5em;
+  }
+
+  .text-label {
+    font-family:
+      SF Pro,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-weight: 510;
+    font-size: 16px;
+    line-height: 1.193359375em;
+  }
+
+  .text-small {
+    font-family:
+      SF Pro,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 1.193359375em;
+  }
+
+  .text-h6 {
+    font-family: var(--font-poppins), Poppins, sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 1.5em;
+  }
+
+  .text-dark {
+    color: var(--color-text-dark);
+  }
+
+  /* Color utilities for instruction screens */
+  .bg-yellow-light {
+    background-color: var(--color-yellow-bg);
+  }
+
+  .border-yellow {
+    border-color: var(--color-yellow-border);
+  }
+
+  .bg-green-light {
+    background-color: var(--color-green-bg);
+  }
+
+  .border-green {
+    border-color: var(--color-green-border);
+  }
+
+  .text-green {
+    color: var(--color-green-border);
+  }
+
+  .bg-blue-info {
+    background-color: var(--color-blue-info-bg);
+  }
+
+  .border-blue-info {
+    border-color: var(--color-blue-info-border);
+  }
+
+  .text-blue-info {
+    color: var(--color-blue-info-border);
+  }
+
+  .text-icon-secondary {
+    color: var(--color-icon-secondary);
+  }
+
+  .bg-number-circle {
+    background-color: var(--color-number-circle-bg);
+  }
+
+  .bg-step-badge {
+    background-color: var(--color-supporting-n100);
+  }
+
+  .border-checkbox-checked {
+    border-color: var(--color-checkbox-checked-border);
+  }
+
+  .shadow-medium {
+    box-shadow: 0px 4px 8px 0px rgba(135, 159, 171, 0.3);
+  }
+
+  /* Backdrop filter utility */
+  .backdrop-blur-custom {
+    backdrop-filter: blur(30px);
+  }
+
+  /* Dashboard specific utilities */
+  .bg-Interactive-Primary-Active {
+    background-color: var(--color-interactive-primary-active);
+  }
+
+  .text-Text-txt-Inverse {
+    color: var(--color-text-inverse);
+  }
+
+  /* Hide scrollbar utility - width 0 */
+  .hide-scrollbar {
+    /* Firefox */
+    scrollbar-width: none;
+    /* IE and Edge */
+    -ms-overflow-style: none;
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+  }
+
+  /* Custom scrollbar for select dropdowns */
+  .select-dropdown-scrollbar {
+    /* Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: #8A949E #f1f1f1;
+  }
+
+  .select-dropdown-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .select-dropdown-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+
+  .select-dropdown-scrollbar::-webkit-scrollbar-thumb {
+    background: #8A949E;
+    border-radius: 3px;
+  }
+
+  .select-dropdown-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #6F7A85;
+  }
+}
+
+@layer components {
+  .custom-btn {
+    @apply w-full text-white py-2 h-[44px] bg-[#1F4FB6] hover:bg-[#15357A] rounded-xl transition text-base font-semibold font-['Open_Sans'] cursor-pointer;
+  }
+}

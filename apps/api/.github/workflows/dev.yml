@@ -1,0 +1,69 @@
+name: Build and Deploy Worklighter Backend CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Manual trigger
+
+jobs:
+  Build-and-Deploy:
+    env:
+      ENV: dev
+      APP_NAME: worklighter-backend-dev
+      REPO_NAME: worklighter-backend-dev
+      ACR_HOST: fleekbiz.azurecr.io
+      AZURE_RG: CommonDev
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Log in to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.ACR_CREDENTIALS }}
+
+    - name: Log in to Docker
+      run: docker login ${ACR_HOST} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+
+    - name: Define IMAGE_TAG
+      run: |
+        echo "IMAGE_TAG=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+        
+    - name: Mirror Node base image into ACR
+      run: |
+        docker pull node:22-slim
+        docker tag node:22-slim ${ACR_HOST}/node:22-slim
+        docker push ${ACR_HOST}/node:22-slim    
+
+    - name: Build Docker image
+      run: |
+        npm install webpack typescript -g
+        npm install webpack-cli --save-dev --yes
+        npm install
+        npm run build:prod
+        docker build -t ${ACR_HOST}/${REPO_NAME}:latest -t ${ACR_HOST}/${REPO_NAME}:${IMAGE_TAG} .
+
+    - name: Push Docker image
+      run: |
+        docker push ${ACR_HOST}/${REPO_NAME}:${IMAGE_TAG}
+        docker push ${ACR_HOST}/${REPO_NAME}:latest
+
+    - name: Configure Azure Web App settings
+      run: |
+        az webapp config container set \
+        --name ${APP_NAME} \
+        --resource-group ${AZURE_RG} \
+        --container-image-name ${ACR_HOST}/${REPO_NAME}:latest \
+        --container-registry-url ${ACR_HOST} \
+        --container-registry-user ${{ secrets.ACR_USERNAME }} \
+        --container-registry-password ${{ secrets.ACR_PASSWORD }}
+
+    - name: Restart Azure Web App
+      run: |
+        az webapp restart --name ${APP_NAME} --resource-group ${AZURE_RG}
+
+    - name: Logout from ACR
+      run: docker logout ${ACR_HOST}
