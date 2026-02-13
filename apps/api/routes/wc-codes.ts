@@ -7,7 +7,7 @@ import { parse } from 'csv-parse/sync';
 import { stringify } from 'csv-stringify/sync';
 import { getCsvField, parseCsvNumber } from '../utils/csvHelpers';
 
-const router = Router();
+const router: Router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.use(authMiddleware);
@@ -269,3 +269,4 @@ router.get('/export/csv', async (req: AuthRequest, res: Response) => {
 });
 
 export default router;
+

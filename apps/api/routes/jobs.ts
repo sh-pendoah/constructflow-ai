@@ -5,7 +5,7 @@ import { logger } from '../config/logger';
 import { createJobValidators, updateJobValidators, idValidator } from '../middleware/validators';
 import { validate } from '../middleware/validate';
 
-const router = Router();
+const router: Router = Router();
 
 router.use(authMiddleware);
 
@@ -130,3 +130,4 @@ router.delete('/:id', idValidator, validate, async (req: AuthRequest, res: Respo
 });
 
 export default router;
+

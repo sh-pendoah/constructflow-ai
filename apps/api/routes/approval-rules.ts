@@ -1,9 +1,9 @@
-import { Router, Response } from 'express';
-import { ApprovalRule } from '../models/ApprovalRule';
-import { authMiddleware, AuthRequest } from '../middleware/auth';
+import { Response, Router } from 'express';
 import { logger } from '../config/logger';
+import { authMiddleware, AuthRequest } from '../middleware/auth';
+import { ApprovalRule } from '../models/ApprovalRule';
 
-const router = Router();
+const router: Router = Router();
 
 router.use(authMiddleware);
 
@@ -12,7 +12,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const { isActive } = req.query;
     const filter: any = { company: req.user!.id };
-    
+
     if (isActive !== undefined) {
       filter.isActive = isActive === 'true';
     }
@@ -30,7 +30,10 @@ router.get('/', async (req: AuthRequest, res: Response) => {
 // Get a specific approval rule
 router.get('/:id', async (req: AuthRequest, res: Response) => {
   try {
-    const rule = await ApprovalRule.findById(req.params.id).populate('approvers', 'name email');
+    const rule = await ApprovalRule.findById(req.params.id).populate(
+      'approvers',
+      'name email'
+    );
 
     if (!rule) {
       res.status(404).json({ error: 'Approval rule not found' });
@@ -85,10 +88,14 @@ router.put('/:id', async (req: AuthRequest, res: Response) => {
       return;
     }
 
-    const updated = await ApprovalRule.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updated = await ApprovalRule.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     res.json({ rule: updated });
   } catch (error) {

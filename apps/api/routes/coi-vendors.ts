@@ -1,9 +1,9 @@
-import { Router, Response } from 'express';
-import { COIVendor } from '../models/COIVendor';
-import { authMiddleware, AuthRequest } from '../middleware/auth';
+import { Response, Router } from 'express';
 import { logger } from '../config/logger';
+import { authMiddleware, AuthRequest } from '../middleware/auth';
+import { COIVendor } from '../models/COIVendor';
 
-const router = Router();
+const router: Router = Router();
 
 router.use(authMiddleware);
 
@@ -12,7 +12,7 @@ router.get('/', async (req: AuthRequest, res: Response) => {
   try {
     const { status } = req.query;
     const filter: any = { company: req.user!.id };
-    
+
     if (status) {
       filter.status = status;
     }
@@ -68,7 +68,16 @@ router.get('/:id', async (req: AuthRequest, res: Response) => {
 // Create a new COI vendor
 router.post('/', async (req: AuthRequest, res: Response) => {
   try {
-    const { name, email, phone, certificateNumber, expirationDate, documentUrl, status, notes } = req.body;
+    const {
+      name,
+      email,
+      phone,
+      certificateNumber,
+      expirationDate,
+      documentUrl,
+      status,
+      notes,
+    } = req.body;
 
     const vendor = await COIVendor.create({
       name,

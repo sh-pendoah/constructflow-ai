@@ -1,37 +1,37 @@
-import express from 'express';
 import cors from 'cors';
+import express, { Express } from 'express';
+import fs from 'fs';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import fs from 'fs';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './config/swagger';
 import { config } from './config';
-import { logger } from './config/logger';
 import { connectDatabase } from './config/database';
+import { logger } from './config/logger';
 import './config/redis';
+import swaggerSpec from './config/swagger';
 import './services/documentProcessing';
 import './services/emailIngestion';
 // NOTE: complianceScheduler import removed - scheduler handled by apps/scheduler service (P0.2 fix)
 // import { scheduleComplianceChecks } from './services/complianceScheduler';
 import { errorHandler } from './middleware/errorHandler';
-import { generalLimiter, authLimiter } from './middleware/rateLimiter';
-import authRoutes from './routes/auth';
-import projectRoutes from './routes/projects';
-import documentRoutes from './routes/documents';
-import healthRoutes from './routes/health';
-import jobRoutes from './routes/jobs';
-import costCodeRoutes from './routes/cost-codes';
-import wcCodeRoutes from './routes/wc-codes';
-import coiVendorRoutes from './routes/coi-vendors';
+import { authLimiter, generalLimiter } from './middleware/rateLimiter';
 import approvalRuleRoutes from './routes/approval-rules';
-import invoiceRoutes from './routes/invoices';
-import dailyLogRoutes from './routes/daily-logs';
+import authRoutes from './routes/auth';
+import coiVendorRoutes from './routes/coi-vendors';
 import complianceRoutes from './routes/compliance';
-import reviewQueueRoutes from './routes/reviewQueue';
-import exportRoutes from './routes/exports';
 import contractorRoutes from './routes/contractors';
+import costCodeRoutes from './routes/cost-codes';
+import dailyLogRoutes from './routes/daily-logs';
+import documentRoutes from './routes/documents';
+import exportRoutes from './routes/exports';
+import healthRoutes from './routes/health';
+import invoiceRoutes from './routes/invoices';
+import jobRoutes from './routes/jobs';
+import projectRoutes from './routes/projects';
+import reviewQueueRoutes from './routes/reviewQueue';
+import wcCodeRoutes from './routes/wc-codes';
 
-const app = express();
+const app: Express = express();
 
 // Ensure upload directory exists
 if (!fs.existsSync(config.uploadDir)) {
@@ -43,7 +43,9 @@ app.use(helmet());
 app.use(cors({ origin: config.corsOrigins, credentials: true }));
 app.use(express.json({ limit: config.maxFileSize }));
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan('combined', { stream: { write: (msg) => logger.info(msg.trim()) } }));
+app.use(
+  morgan('combined', { stream: { write: (msg) => logger.info(msg.trim()) } })
+);
 
 // Apply rate limiting to all routes
 app.use('/api/', generalLimiter);
@@ -53,11 +55,14 @@ app.use('/uploads', express.static(config.uploadDir));
 
 // API Documentation - Swagger UI
 app.use('/api-docs', swaggerUi.serve);
-app.get('/api-docs', swaggerUi.setup(swaggerSpec, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: 'Worklighter API Documentation',
-  customfavIcon: '/favicon.ico',
-}));
+app.get(
+  '/api-docs',
+  swaggerUi.setup(swaggerSpec, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: 'Worklighter API Documentation',
+    customfavIcon: '/favicon.ico',
+  })
+);
 
 // Swagger JSON endpoint
 app.get('/api-docs.json', (_req, res) => {
@@ -100,7 +105,7 @@ app.use(errorHandler);
 // Start server
 async function start() {
   await connectDatabase();
-  
+
   // NOTE: Compliance checks are handled by the dedicated scheduler service (apps/scheduler)
   // The BullMQ-based scheduler below is disabled to prevent duplicate alerts (P0.2 fix)
   // Keep the cron-based scheduler in apps/scheduler/index.ts as the single source of truth

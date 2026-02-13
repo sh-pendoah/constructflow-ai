@@ -40,6 +40,26 @@ logs/
 
 # ---------- Root Build / Cache ----------
 *.tsbuildinfo
+.nx/
+.nx/cache/
+
+# ---------- TypeScript Build Artifacts ----------
+*.d.ts
+*.d.ts.map
+*.js.map
+
+# ---------- Package Locks (uncomment if not committing lock files) ----------
+# pnpm-lock.yaml
+# package-lock.json
+# yarn.lock
+
+# ============================================
+# Shared Libraries (libs/) - Build Outputs
+# ============================================
+libs/*/dist/
+libs/*/build/
+libs/*/*.tsbuildinfo
+libs/*/tsconfig.tsbuildinfo
 
 # ============================================
 # Frontend (Next.js) - apps/web/
@@ -103,3 +123,10 @@ test-results/
 .cache/
 .temp/
 .tmp/
+
+# ============================================
+# Nx / Monorepo
+# ============================================
+.nx/
+.nx/cache/
+.turbo/

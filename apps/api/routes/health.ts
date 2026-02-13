@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { redis } from '../config/redis';
 import { azureBlobStorageService } from '../services/azureBlobStorageService';
 
-const router = Router();
+const router: Router = Router();
 
 router.get('/', async (_req: Request, res: Response) => {
   const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
@@ -36,3 +36,4 @@ router.get('/', async (_req: Request, res: Response) => {
 });
 
 export default router;
+

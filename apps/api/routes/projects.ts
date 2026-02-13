@@ -1,9 +1,9 @@
-import { Router, Response } from 'express';
-import { Project } from '../models/Project';
-import { authMiddleware, AuthRequest } from '../middleware/auth';
+import { Response, Router } from 'express';
 import { logger } from '../config/logger';
+import { authMiddleware, AuthRequest } from '../middleware/auth';
+import { Project } from '../models/Project';
 
-const router = Router();
+const router: Router = Router();
 
 router.use(authMiddleware);
 

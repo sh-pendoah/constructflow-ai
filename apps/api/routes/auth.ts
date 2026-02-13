@@ -6,7 +6,7 @@ import { logger } from '../config/logger';
 import { registerValidators, loginValidators } from '../middleware/validators';
 import { validate } from '../middleware/validate';
 
-const router = Router();
+const router: Router = Router();
 
 function generateToken(user: { id: string; email: string; role: string; tenantId?: string }): string {
   return jwt.sign(user, config.jwtSecret, { expiresIn: config.jwtExpiresIn } as jwt.SignOptions);
@@ -87,3 +87,4 @@ router.get('/me', async (req: Request, res: Response) => {
 });
 
 export default router;
+

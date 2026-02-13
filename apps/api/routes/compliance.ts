@@ -9,7 +9,7 @@ import { evaluateComplianceRules } from '../services/rulesEngine';
 import { createAuditLog, AUDIT_EVENTS } from '../services/auditLoggingService';
 import mongoose from 'mongoose';
 
-const router = Router();
+const router: Router = Router();
 
 router.use(authMiddleware);
 
@@ -313,3 +313,4 @@ router.delete('/:id', async (req: AuthRequest, res: Response) => {
 });
 
 export default router;
+
