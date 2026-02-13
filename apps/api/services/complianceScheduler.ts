@@ -1,3 +1,15 @@
+/**
+ * DEPRECATED - DO NOT USE
+ * 
+ * This BullMQ-based compliance scheduler has been DISABLED to prevent duplicate alert sends.
+ * 
+ * The cron-based scheduler in apps/scheduler/index.ts is now the single source of truth
+ * for compliance expiration checks and alerts.
+ * 
+ * This file is kept for reference only and should not be imported or used.
+ * See AUDIT.md P0.2 for details on why this was disabled.
+ */
+
 import { Queue, Worker, Job } from 'bullmq';
 import { redis } from '../config/redis';
 import { logger } from '../config/logger';

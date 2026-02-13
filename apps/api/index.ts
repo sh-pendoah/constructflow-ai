@@ -11,7 +11,8 @@ import { connectDatabase } from './config/database';
 import './config/redis';
 import './services/documentProcessing';
 import './services/emailIngestion';
-import { scheduleComplianceChecks } from './services/complianceScheduler';
+// NOTE: complianceScheduler import removed - scheduler handled by apps/scheduler service (P0.2 fix)
+// import { scheduleComplianceChecks } from './services/complianceScheduler';
 import { errorHandler } from './middleware/errorHandler';
 import { generalLimiter, authLimiter } from './middleware/rateLimiter';
 import authRoutes from './routes/auth';
@@ -100,8 +101,10 @@ app.use(errorHandler);
 async function start() {
   await connectDatabase();
   
-  // Schedule compliance checks
-  await scheduleComplianceChecks();
+  // NOTE: Compliance checks are handled by the dedicated scheduler service (apps/scheduler)
+  // The BullMQ-based scheduler below is disabled to prevent duplicate alerts (P0.2 fix)
+  // Keep the cron-based scheduler in apps/scheduler/index.ts as the single source of truth
+  // await scheduleComplianceChecks(); // DISABLED - use apps/scheduler instead
 
   app.listen(config.port, () => {
     logger.info(`Core API running on port ${config.port} [${config.env}]`);

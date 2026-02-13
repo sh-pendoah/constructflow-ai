@@ -120,10 +120,25 @@ async function checkComplianceExpirations() {
           $gte: windowDate,
           $lt: windowEnd,
         },
+        $and: [
+          // Either alert doesn't exist
+          {
+            $or: [
+              { [`alerts.${window.type}`]: { $exists: false } },
+              { [`alerts.${window.type}.sentAt`]: { $exists: false } }
+            ]
+          }
+        ]
       };
       
-      // Check if alert already sent for this window
-      query[`alerts.${window.type}`] = { $exists: false };
+      // Additional guard: skip if alert was sent within the last 24 hours
+      const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      query.$and.push({
+        $or: [
+          { [`alerts.${window.type}.sentAt`]: { $exists: false } },
+          { [`alerts.${window.type}.sentAt`]: { $lt: twentyFourHoursAgo } }
+        ]
+      });
       
       const docs = await ComplianceDoc.find(query);
       

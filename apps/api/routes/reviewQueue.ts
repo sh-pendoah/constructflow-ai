@@ -4,6 +4,7 @@ import { authMiddleware, AuthRequest } from '../middleware/auth';
 import { tenantMiddleware, TenantRequest } from '../middleware/tenant';
 import { logger } from '../config/logger';
 import mongoose from 'mongoose';
+import { logReviewApproval, logReviewRejection, createAuditLog, AUDIT_EVENTS } from '../services/auditLoggingService';
 
 const router = express.Router();
 
@@ -214,6 +215,18 @@ router.post('/:id/corrections', authMiddleware, tenantMiddleware, async (req: an
 
     await item.save();
 
+    // Log correction to audit trail
+    await createAuditLog({
+      tenantId,
+      reviewItemId: new mongoose.Types.ObjectId(id),
+      eventType: AUDIT_EVENTS.REVIEW_ITEM_CORRECTED,
+      actor: 'USER',
+      actorUserId: new mongoose.Types.ObjectId(tenantReq.user!.id),
+      beforeState: { [field]: originalValue },
+      afterState: { [field]: correctedValue },
+      metadata: { field, documentType: item.documentType },
+    });
+
     logger.info(`Correction added to review queue item ${id}: ${field}`);
     res.json(item);
   } catch (error) {
@@ -245,6 +258,14 @@ router.post('/:id/approve', authMiddleware, tenantMiddleware, async (req: any, r
     item.reviewedAt = new Date();
     item.reviewNotes = notes;
     await item.save();
+
+    // Log approval to audit trail
+    await logReviewApproval(
+      tenantId,
+      new mongoose.Types.ObjectId(id),
+      new mongoose.Types.ObjectId(tenantReq.user!.id),
+      notes
+    );
 
     // Update source document based on documentType
     try {
@@ -371,6 +392,14 @@ router.post('/:id/reject', authMiddleware, tenantMiddleware, async (req: any, re
     item.reviewedAt = new Date();
     item.reviewNotes = notes;
     await item.save();
+
+    // Log rejection to audit trail
+    await logReviewRejection(
+      tenantId,
+      new mongoose.Types.ObjectId(id),
+      new mongoose.Types.ObjectId(tenantReq.user!.id),
+      notes
+    );
 
     // Update source document based on documentType
     try {
