@@ -161,7 +161,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     // Step 7: Create review queue item if needed
     if (rulesResult.needsReview) {
       const reviewItem = await ReviewQueueItem.create({
-        tenantId: companyId,
+        company: companyId,
         documentId: invoice._id,
         documentType: 'invoice',
         status: 'pending',
@@ -174,12 +174,6 @@ router.post('/', async (req: AuthRequest, res: Response) => {
         })),
         extractedData: extractedData || {},
         fileUrl: documentUrl,
-        metadata: {
-          invoiceNumber,
-          vendor,
-          amount,
-          vendorMatchConfidence: vendorMatch.confidence,
-        },
       });
 
       logger.info('Review queue item created', { reviewItemId: reviewItem._id });

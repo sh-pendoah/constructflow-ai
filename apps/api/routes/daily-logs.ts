@@ -172,7 +172,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     // Step 5: Create review queue item if needed
     if (rulesResult.needsReview) {
       const reviewItem = await ReviewQueueItem.create({
-        tenantId: companyId,
+        company: companyId,
         documentId: log._id,
         documentType: 'daily-log',
         status: 'pending',
@@ -190,10 +190,6 @@ router.post('/', async (req: AuthRequest, res: Response) => {
           workers: processedWorkers,
         },
         fileUrl: documentUrl,
-        metadata: {
-          workersCount: workers?.length || 0,
-          wcCodeSuggestions,
-        },
       });
 
       logger.info('Review queue item created for daily log', { reviewItemId: reviewItem._id });

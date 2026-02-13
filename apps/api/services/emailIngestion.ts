@@ -1,5 +1,5 @@
 import { Queue, Worker, Job } from 'bullmq';
-import { redis } from '../config/redis';
+import { redisConnection } from '../config/redis';
 import { logger } from '../config/logger';
 import { DocumentModel } from '../models/Document';
 import { DailyLog } from '../models/DailyLog';
@@ -40,7 +40,7 @@ const EMAIL_ROUTING: Record<string, DocumentType> = {
 
 // Create queue for email ingestion
 export const emailQueue = new Queue<EmailIngestionJob>('email-ingestion', {
-  connection: redis,
+  connection: redisConnection,
   defaultJobOptions: {
     attempts: 3,
     backoff: {
@@ -286,7 +286,7 @@ async function processAttachments(
       logger.info(`Created workflow document ${workflowDoc._id} from email attachment`);
 
       // Queue document for OCR processing
-      await documentQueue.add('process-document', {
+      await documentQueue.add('process-document' as any, {
         documentId: workflowDoc._id.toString(),
         filePath: fileUrl,
         workflowType: documentType,
@@ -338,7 +338,7 @@ async function processEmailBody(
     logger.info(`Created document ${document._id} from email body`);
 
     // Queue for processing
-    await documentQueue.add('process-document', {
+    await documentQueue.add('process-document' as any, {
       documentId: document._id.toString(),
       filePath: fileUrl,
       workflowType: documentType,
@@ -387,7 +387,7 @@ export const emailWorker = new Worker<EmailIngestionJob>(
     }
   },
   {
-    connection: redis,
+    connection: redisConnection,
     concurrency: 3,
     limiter: {
       max: 10,

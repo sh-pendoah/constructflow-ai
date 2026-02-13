@@ -40,13 +40,16 @@ const logger = winston.createLogger({
   ],
 });
 
-// Redis connection
-const redis = new IORedis({
+// Redis connection config for BullMQ
+const redisConnection = {
   host: process.env.REDIS_HOST || 'localhost',
   port: parseInt(process.env.REDIS_PORT || '6379'),
   password: process.env.REDIS_PASSWORD || undefined,
   maxRetriesPerRequest: null,
-});
+};
+
+// Redis connection
+const redis = new IORedis(redisConnection);
 
 // MongoDB connection
 async function connectDatabase() {
@@ -114,7 +117,7 @@ const documentWorker = new Worker<DocumentProcessingJob>(
     }
   },
   {
-    connection: redis,
+    connection: redisConnection,
     concurrency: parseInt(process.env.WORKER_CONCURRENCY || '5'),
     limiter: {
       max: 10,
@@ -154,7 +157,7 @@ const emailWorker = new Worker<EmailIngestionJob>(
     }
   },
   {
-    connection: redis,
+    connection: redisConnection,
     concurrency: 3,
     limiter: {
       max: 10,
@@ -191,7 +194,7 @@ const exportWorker = new Worker<ExportGenerationJob>(
     }
   },
   {
-    connection: redis,
+    connection: redisConnection,
     concurrency: 2,
   }
 );

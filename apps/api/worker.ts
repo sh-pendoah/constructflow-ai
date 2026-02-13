@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Worker } from 'bullmq';
-import { redis } from './config/redis';
+import { redisConnection } from './config/redis';
 import { logger } from './config/logger';
 // import { processEmailJob } from './workers/email-worker'; // To be implemented
 // import { processOCRJob } from './workers/ocr-worker';     // To be implemented
@@ -12,7 +12,7 @@ const emailWorker = new Worker('email-queue', async (job) => {
   logger.info(`Processing email job ${job.id}`);
   // await processEmailJob(job);
   return { processed: true };
-}, { connection: redis });
+}, { connection: redisConnection });
 
 emailWorker.on('completed', (job) => {
   logger.info(`Email job ${job.id} completed!`);
@@ -27,7 +27,7 @@ const ocrWorker = new Worker('ocr-queue', async (job) => {
   logger.info(`Processing OCR job ${job.id}`);
   // await processOCRJob(job);
   return { processed: true };
-}, { connection: redis });
+}, { connection: redisConnection });
 
 ocrWorker.on('completed', (job) => {
   logger.info(`OCR job ${job.id} completed!`);
