@@ -1,5 +1,5 @@
-import rateLimit from 'express-rate-limit';
 import { Request, Response } from 'express';
+import rateLimit, { ipKeyGenerator } from 'express-rate-limit';
 import { logger } from '../config/logger';
 
 /**
@@ -32,10 +32,12 @@ export const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req: Request, res: Response) => {
-    logger.warn(`Auth rate limit exceeded for IP: ${req.ip}, path: ${req.path}`);
+    logger.warn(
+      `Auth rate limit exceeded for IP: ${req.ip}, path: ${req.path}`
+    );
     res.status(429).json({
-      message: 'Too many authentication attempts from this IP. Please try again after 15 minutes.',
-      
+      message:
+        'Too many authentication attempts from this IP. Please try again after 15 minutes.',
     });
   },
 });
@@ -51,10 +53,12 @@ export const strictLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req: Request, res: Response) => {
-    logger.warn(`Strict rate limit exceeded for IP: ${req.ip}, path: ${req.path}`);
+    logger.warn(
+      `Strict rate limit exceeded for IP: ${req.ip}, path: ${req.path}`
+    );
     res.status(429).json({
-      message: 'Rate limit exceeded for this operation. Please try again later.',
-      
+      message:
+        'Rate limit exceeded for this operation. Please try again later.',
     });
   },
 });
@@ -73,7 +77,6 @@ export const uploadLimiter = rateLimit({
     logger.warn(`Upload rate limit exceeded for IP: ${req.ip}`);
     res.status(429).json({
       message: 'Upload rate limit exceeded. Please try again after 1 hour.',
-      
     });
   },
 });
@@ -89,15 +92,20 @@ export const apiKeyLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req: Request) => {
-    // Use API key from header if present, otherwise fall back to IP
+    // Use API key from header if present, otherwise fall back to IP with IPv6 subnet handling
     const apiKey = req.headers['x-api-key'];
-    return (typeof apiKey === 'string' ? apiKey : undefined) || req.ip || 'unknown';
+    if (typeof apiKey === 'string') {
+      return apiKey;
+    }
+    // Use ipKeyGenerator helper to properly handle IPv6 addresses
+    return ipKeyGenerator(req.ip || 'unknown', 56);
   },
   handler: (req: Request, res: Response) => {
-    logger.warn(`API key rate limit exceeded for: ${req.headers['x-api-key'] || req.ip}`);
+    logger.warn(
+      `API key rate limit exceeded for: ${req.headers['x-api-key'] || req.ip}`
+    );
     res.status(429).json({
       message: 'API rate limit exceeded. Please try again later.',
-      
     });
   },
 });
@@ -120,7 +128,6 @@ export const createRateLimiter = (options: {
       logger.warn(`Custom rate limit exceeded for IP: ${req.ip}`);
       res.status(429).json({
         message: options.message || 'Rate limit exceeded.',
-        
       });
     },
   });

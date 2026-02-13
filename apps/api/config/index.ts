@@ -35,14 +35,28 @@ export const config = {
   },
   emailFrom: process.env.EMAIL_FROM || 'noreply@shtrial.com',
 
-  // AI / OpenAI
+  // Azure OpenAI (primary LLM provider)
+  azureOpenAI: {
+    endpoint: process.env.AZURE_OPENAI_ENDPOINT || '',
+    apiKey: process.env.AZURE_OPENAI_API_KEY || '',
+    deployment: process.env.AZURE_OPENAI_DEPLOYMENT || 'gpt-4.1',
+    apiVersion: process.env.AZURE_OPENAI_API_VERSION || '2025-03-01-preview',
+  },
+
+  // LLM Provider Selection
+  llmProvider: process.env.LLM_PROVIDER || 'azure-openai',
+
+  // Legacy OpenAI settings (deprecated - use Azure OpenAI instead)
   openaiApiKey: process.env.OPENAI_API_KEY || '',
   openaiChatModel: process.env.OPENAI_CHAT_MODEL || 'gpt-4o',
-  openaiEmbeddingModel: process.env.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-small',
+  openaiEmbeddingModel:
+    process.env.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-small',
 
   // Google Auth
-  googleClientId: process.env.GOOGLE_CLIENT_ID || process.env.AUTH_GOOGLE_ID || '',
-  googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || process.env.AUTH_GOOGLE_SECRET || '',
+  googleClientId:
+    process.env.GOOGLE_CLIENT_ID || process.env.AUTH_GOOGLE_ID || '',
+  googleClientSecret:
+    process.env.GOOGLE_CLIENT_SECRET || process.env.AUTH_GOOGLE_SECRET || '',
 
   // Logging
   logLevel: process.env.LOG_LEVEL || 'info',
@@ -50,5 +64,9 @@ export const config = {
   // CORS
   corsOrigins: process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',')
-    : ['http://localhost:3001', 'http://localhost:3002', 'http://localhost:5173'],
+    : [
+        'http://localhost:3001',
+        'http://localhost:3002',
+        'http://localhost:5173',
+      ],
 };
