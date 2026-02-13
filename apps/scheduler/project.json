@@ -1,0 +1,46 @@
+{
+  "name": "scheduler",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/scheduler",
+  "projectType": "application",
+  "tags": ["scope:backend", "type:scheduler"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc",
+        "cwd": "apps/scheduler"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nodemon --exec ts-node index.ts",
+        "cwd": "apps/scheduler"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/index.js",
+        "cwd": "apps/scheduler"
+      },
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'Linting not configured yet' && exit 0",
+        "cwd": "apps/scheduler"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'No tests configured yet' && exit 0",
+        "cwd": "apps/scheduler"
+      }
+    }
+  }
+}
