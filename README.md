@@ -2,7 +2,7 @@
 
 Worklighter automates document processing workflows for the construction industry. It ingests invoices, daily logs, and compliance documents (COIs), extracts structured data via OCR + LLM, routes items through a rules-based review queue, and produces exportable audit reports.
 
-> **Status:** 🟡 MVP ~80-85% complete — see [AUDIT.md](./AUDIT.md) for the full readiness scorecard and P0 blockers.
+> **Status:** ✅ MVP complete — All P0 blockers resolved and ready for Alpha deployment.
 
 ---
 
@@ -157,7 +157,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full Azure provisioning and deploym
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Azure deployment guide (Container Apps, Cosmos DB, Redis, etc.) |
 | [TESTING.md](./TESTING.md) | End-to-end testing procedures for all three workflows |
 | [ARCHITECTURE_DECISIONS.md](./ARCHITECTURE_DECISIONS.md) | 10 ADRs covering cloud, database, OCR, queue, and frontend choices |
-| [AUDIT.md](./AUDIT.md) | MVP audit, P0 blockers, and Alpha deployment plan |
+| [AGENTS.md](./AGENTS.md) | Agent instructions and project overview for AI assistants |
 
 ---
 

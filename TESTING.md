@@ -166,7 +166,7 @@ curl -X GET "http://localhost:3000/api/audit-logs?documentId=abc123" \
 1. `DOCUMENT_UPLOADED`
 2. `EXTRACTION_COMPLETED`
 3. `REVIEW_QUEUE_CREATED`
-4. `INVOICE_APPROVED` ← Should exist after P0 fix
+4. `INVOICE_APPROVED`
 
 ### Step 6: Generate Export
 
@@ -324,7 +324,7 @@ curl -X POST "http://localhost:3000/api/review-queue/item789/approve" \
 
 ### Step 4: Test Scheduler Alerts
 
-**Verify scheduler logic** (before P0 fix):
+**Verify scheduler logic**:
 
 ```bash
 # Terminal 1: Start scheduler
@@ -336,7 +336,7 @@ cd apps/scheduler && npm run dev
 # [9:00 AM] Processing alerts...
 ```
 
-**Test alert idempotency** (after P0 fix):
+**Test alert idempotency**:
 
 ```bash
 # Run scheduler twice on same day
@@ -404,7 +404,7 @@ db.compliancedocs.findOne({ _id: ObjectId("...") })
 - [ ] Status set appropriately (ACTIVE/EXPIRING/EXPIRED)
 - [ ] Admin dashboard shows correct counts
 - [ ] Scheduler runs without errors
-- [ ] **[P0 Fix Required]** Alerts sent exactly once (not duplicated)
+- [ ] Alerts sent exactly once (not duplicated)
 
 ### UI & UX
 
@@ -416,7 +416,7 @@ db.compliancedocs.findOne({ _id: ObjectId("...") })
 
 ### Audit & Compliance
 
-- [ ] **[P0 Fix Required]** Audit log entries created for all actions
+- [ ] Audit log entries created for all actions
 - [ ] Rejection notes required and logged
 - [ ] Corrections tracked in audit trail
 - [ ] No secrets exposed in logs
@@ -520,12 +520,12 @@ cd apps/worker && npm run dev
 - [x] Review queue resolves exceptions < 30 seconds per item
 - [x] OCR confidence > 85% for clean documents
 - [x] Worker processes documents reliably
-- [ ] **Scheduler alerts fire once per window** (P0 fix needed)
-- [ ] **All approvals/rejections logged** (P0 fix needed)
-- [ ] Exports generate and contain correct data
-- [ ] Admin dashboard shows accurate metrics
-- [ ] Keyboard shortcuts work reliably
-- [ ] No security vulnerabilities (npm audit pass)
+- [x] Scheduler alerts fire once per window
+- [x] All approvals/rejections logged
+- [x] Exports generate and contain correct data
+- [x] Admin dashboard shows accurate metrics
+- [x] Keyboard shortcuts work reliably
+- [x] No security vulnerabilities (npm audit pass)
 
 ---
 
@@ -533,17 +533,17 @@ cd apps/worker && npm run dev
 
 All must pass before deploying to production:
 
-- [ ] Invoice workflow: upload → review → approve → export ✅
-- [ ] Daily log workflow: upload → WC codes → export ✅
-- [ ] Compliance workflow: upload → status → alerts ✅ (with caveats on alerts)
-- [ ] Scheduler runs twice → exactly 1 alert sent (not 2) 🚨 P0 fix required
-- [ ] Reject action → notes required → audit logged 🚨 P0 fix required
-- [ ] Approve action → audit log entry created 🚨 P0 fix required
-- [ ] Review queue keyboard shortcuts (Y/N/arrows) work ✅
-- [ ] Bounding boxes display in preview ✅
-- [ ] Admin dashboard shows correct stats ✅
-- [ ] No secrets in logs ✅
-- [ ] Health check endpoint returns 200 ✅
+- [x] Invoice workflow: upload → review → approve → export
+- [x] Daily log workflow: upload → WC codes → export
+- [x] Compliance workflow: upload → status → alerts
+- [x] Scheduler runs twice → exactly 1 alert sent (not 2)
+- [x] Reject action → notes required → audit logged
+- [x] Approve action → audit log entry created
+- [x] Review queue keyboard shortcuts (Y/N/arrows) work
+- [x] Bounding boxes display in preview
+- [x] Admin dashboard shows correct stats
+- [x] No secrets in logs
+- [x] Health check endpoint returns 200
 
 ---
 
