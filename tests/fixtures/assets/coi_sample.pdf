@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: Arial, sans-serif; padding: 40px; border: 5px solid #333; }
+  .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 20px; margin-bottom: 20px; }
+  .section { margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  h2 { margin-top: 0; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>CERTIFICATE OF LIABILITY INSURANCE</h1>
+    <p>DATE: 02/12/2024</p>
+  </div>
+
+  <div class="grid">
+    <div class="section">
+      <h3>PRODUCER</h3>
+      <p>SafeGuard Insurance Agencies<br>100 Shield Blvd<br>Safety Town, ST 12345</p>
+    </div>
+    <div class="section">
+      <h3>INSURED</h3>
+      <p>Acme Construction Corp<br>789 Builder Lane<br>Worksite, ST 67890</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>COVERAGES</h3>
+    <p>THE POLICIES OF INSURANCE LISTED BELOW HAVE BEEN ISSUED TO THE INSURED NAMED ABOVE FOR THE POLICY PERIOD INDICATED.</p>
+    <table>
+      <tr>
+        <th>Type of Insurance</th>
+        <th>Policy Number</th>
+        <th>Policy Eff</th>
+        <th>Policy Exp</th>
+        <th>Limits</th>
+      </tr>
+      <tr>
+        <td>General Liability</td>
+        <td>GL-987654</td>
+        <td>01/01/2024</td>
+        <td>12/31/2026</td>
+        <td>$1,000,000</td>
+      </tr>
+      <tr>
+        <td>Workers Compensation</td>
+        <td>WC-123456</td>
+        <td>01/01/2024</td>
+        <td>12/31/2026</td>
+        <td>$1,000,000</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h3>CERTIFICATE HOLDER</h3>
+    <p>Worklighter Demo Corp<br>456 Innovation Dr<br>Tech Valley, CA 94000</p>
+  </div>
+
+  <div class="section">
+    <h3>AUTHORIZED REPRESENTATIVE</h3>
+    <p style="font-family: 'Brush Script MT', cursive; font-size: 1.5em;">John Doe Agent</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: Arial, sans-serif; padding: 40px; }
+  .header { display: flex; justify-content: space-between; border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+  .section { margin-top: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { border: 1px solid #999; padding: 8px; text-align: left; }
+  th { background-color: #eee; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h3>DAILY CONSTRUCTION REPORT</h3>
+    <div>
+      <p><strong>Date:</strong> 2024-02-12</p>
+      <p><strong>Job Name:</strong> Project Alpha</p>
+      <p><strong>Weather:</strong> Cloudy, 65°F</p>
+    </div>
+  </div>
+
+  <div class="section">
+    <h4>Personnel</h4>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Trade</th>
+        <th>Hours</th>
+        <th>Task</th>
+      </tr>
+      <tr>
+        <td>John Smith</td>
+        <td>Carpenter</td>
+        <td>8</td>
+        <td>Framing walls</td>
+      </tr>
+      <tr>
+        <td>Jane Doe</td>
+        <td>Electrician</td>
+        <td>6</td>
+        <td>Rough-in wiring</td>
+      </tr>
+      <tr>
+        <td>Bob Wilson</td>
+        <td>Laborer</td>
+        <td>8</td>
+        <td>Cleanup & Material moving</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h4>Work Performed / Notes</h4>
+    <p>Completed framing of north wall. Started electrical rough-in for office area. Site cleanup at end of day. No safety incidents.</p>
+  </div>
+
+  <div class="section">
+    <h4>Equipment Used</h4>
+    <ul>
+      <li>Forklift (4 hrs)</li>
+      <li>Generator (8 hrs)</li>
+    </ul>
+  </div>
+</body>
+</html>

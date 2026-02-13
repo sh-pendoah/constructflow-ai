@@ -6,8 +6,8 @@ test('Login flow', async ({ page }) => {
   await expect(page).toHaveTitle(/Worklighter/);
 
   // 2. Enter credentials
-  await page.fill('input[type="email"]', 'lee321@yopmail.com');
-  await page.fill('input[type="password"]', 'Test1234$');
+  await page.fill('input[type="email"]', 'demo@worklight.com');
+  await page.fill('input[type="password"]', 'password123');
 
   // 3. Click Sign In
   const signInButton = page.getByRole('button', { name: /Sign In/i });

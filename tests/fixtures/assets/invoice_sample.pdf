@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: Arial, sans-serif; padding: 40px; }
+  .header { display: flex; justify-content: space-between; margin-bottom: 40px; }
+  .invoice-details { text-align: right; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+  th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+  th { background-color: #f2f2f2; }
+  .total { font-weight: bold; font-size: 1.2em; }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1>Acme Construction Supply</h1>
+      <p>123 Build It Way<br>Constructor City, ST 90210</p>
+    </div>
+    <div class="invoice-details">
+      <h2>INVOICE</h2>
+      <p><strong>Invoice #:</strong> INV-2024-001</p>
+      <p><strong>Date:</strong> 2024-02-12</p>
+      <p><strong>Due Date:</strong> 2024-03-12</p>
+    </div>
+  </div>
+
+  <p><strong>Bill To:</strong><br>Worklighter Demo Corp<br>456 Innovation Dr<br>Tech Valley, CA 94000</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Lumber 2x4</td>
+        <td>100</td>
+        <td>$5.00</td>
+        <td>$500.00</td>
+      </tr>
+      <tr>
+        <td>Concrete Mix</td>
+        <td>50</td>
+        <td>$5.00</td>
+        <td>$250.00</td>
+      </tr>
+      <tr>
+        <td>Labor</td>
+        <td>10</td>
+        <td>$75.00</td>
+        <td>$750.00</td>
+      </tr>
+      <tr>
+        <td colspan="3" style="text-align:right">Subtotal</td>
+        <td>$1,500.00</td>
+      </tr>
+      <tr>
+        <td colspan="3" style="text-align:right">Tax (10%)</td>
+        <td>$150.00</td>
+      </tr>
+      <tr class="total">
+        <td colspan="3" style="text-align:right">Total</td>
+        <td>$1,650.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top: 40px; text-align: center;">Thank you for your business!</p>
+</body>
+</html>
