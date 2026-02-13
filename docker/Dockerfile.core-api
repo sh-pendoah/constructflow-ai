@@ -1,19 +1,22 @@
-# Core API Dockerfile
+# Core API Dockerfile - Multi-stage build for pnpm monorepo
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY apps/api/package*.json ./
+# Install pnpm
+RUN npm install -g pnpm
 
-# Install dependencies
-RUN npm ci --only=production
+# Copy workspace files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api ./apps/api
+COPY libs/ ./libs
 
-# Copy source code
-COPY apps/api/ .
+# Install dependencies for the entire workspace
+RUN pnpm install --frozen-lockfile
 
-# Build TypeScript
-RUN npm run build:staging
+# Build the API service
+WORKDIR /app/apps/api
+RUN pnpm run build:staging
 
 # Production stage
 FROM node:20-alpine
@@ -24,9 +27,9 @@ WORKDIR /app
 RUN apk add --no-cache dumb-init
 
 # Copy built app and node_modules from builder
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/apps/api/build ./build
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/apps/api/package.json ./package.json
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs

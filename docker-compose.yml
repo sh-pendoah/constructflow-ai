@@ -16,7 +16,7 @@ services:
     networks:
       - worklight-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin -d worklight"]
+      test: [ "CMD-SHELL", "pg_isready -U admin -d worklight" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -102,11 +102,10 @@ services:
       - /app/node_modules
     command: npm run dev:staging
 
-
   worker:
     build:
-      context: ./apps/worker
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/Dockerfile.worker
     container_name: worklight-worker
     environment:
       NODE_ENV: ${NODE_ENV:-staging}
@@ -127,8 +126,8 @@ services:
 
   scheduler:
     build:
-      context: ./apps/scheduler
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/Dockerfile.scheduler
     container_name: worklight-scheduler
     environment:
       NODE_ENV: ${NODE_ENV:-staging}

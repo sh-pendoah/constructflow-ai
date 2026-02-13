@@ -1,22 +1,32 @@
-# Frontend (Next.js) Dockerfile
+# Frontend (Next.js) Dockerfile - Multi-stage build for pnpm monorepo
 FROM node:20-alpine AS dependencies
 
 WORKDIR /app
 
-COPY apps/web/package*.json ./
+# Install pnpm
+RUN npm install -g pnpm
 
-RUN npm ci
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/web ./apps/web
+COPY libs/ ./libs
+
+# Remove npm lockfile to avoid Turbopack confusion
+RUN rm -f apps/web/package-lock.json
+
+RUN pnpm install --frozen-lockfile
 
 FROM node:20-alpine AS builder
 
-WORKDIR /app
+WORKDIR /
 
-COPY apps/web/package*.json ./
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY apps/web/ .
+# Copy everything from dependencies stage
+COPY --from=dependencies /app ./app
+
+WORKDIR /app/apps/web
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
+# Build using npm run build:staging with NODE_ENV set
 RUN npm run build:staging
 
 # Production stage
@@ -29,12 +39,13 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # Install dumb-init
 RUN apk add --no-cache dumb-init
 
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY apps/web/package*.json ./
+# Copy built application from builder
+COPY --from=builder /app/apps/web/public ./public
+COPY --from=builder /app/apps/web/.next ./.next
 
-RUN npm ci --only=production
+# For start command, need package.json and node_modules
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/web/package.json ./package.json
 
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001

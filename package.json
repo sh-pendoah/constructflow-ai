@@ -34,11 +34,11 @@
     "clean": "nx reset && rm -rf node_modules apps/*/node_modules libs/*/node_modules"
   },
   "devDependencies": {
+    "@nx/js": "^22.5.0",
+    "@nx/node": "^22.5.0",
+    "@nx/workspace": "^22.5.0",
     "@playwright/test": "^1.58.2",
-    "nx": "^20.3.0",
-    "@nx/workspace": "^20.3.0",
-    "@nx/js": "^20.3.0",
-    "@nx/node": "^20.3.0",
-    "typescript": "^5.7.2"
+    "nx": "^22.5.0",
+    "typescript": "^5.9.3"
   }
 }

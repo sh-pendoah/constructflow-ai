@@ -1,0 +1,41 @@
+# Multi-stage build for pnpm monorepo
+FROM node:20-alpine AS installer
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm
+
+# Copy workspace files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/worker ./apps/worker
+COPY libs/ ./libs
+
+# Install dependencies for the entire workspace
+RUN pnpm install --frozen-lockfile
+
+# Build the worker service
+WORKDIR /app/apps/worker
+RUN pnpm run build
+
+# Runtime stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dumb-init
+RUN apk add --no-cache dumb-init
+
+# Install pnpm in runtime
+RUN npm install -g pnpm
+
+# Copy only runtime dependencies and built code from installer
+COPY --from=installer /app/node_modules ./node_modules
+COPY --from=installer /app/apps/worker/dist ./dist
+COPY --from=installer /app/apps/worker/package.json ./package.json
+
+# Expose port (not used, but good practice)
+EXPOSE 3000
+
+# Run worker
+CMD ["dumb-init", "node", "dist/index.js"]

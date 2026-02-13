@@ -1,21 +1,21 @@
 /**
  * Worklight Scheduler Service
- * 
+ *
  * Independent cron job service responsible for:
  * - Compliance expiration scanning (daily at 9 AM)
  * - Weekly summary emails (Monday at 8 AM)
  * - Queue health monitoring (every 15 minutes)
  * - Automated alert generation
- * 
+ *
  * This service runs independently and executes scheduled tasks.
  */
 
 import dotenv from 'dotenv';
-import cron from 'node-cron';
-import mongoose from 'mongoose';
-import winston from 'winston';
-import nodemailer from 'nodemailer';
 import http from 'http';
+import mongoose from 'mongoose';
+import cron from 'node-cron';
+import nodemailer from 'nodemailer';
+import winston from 'winston';
 
 // Load environment variables
 dotenv.config();
@@ -52,7 +52,9 @@ const emailTransporter = nodemailer.createTransport({
 // MongoDB connection
 async function connectDatabase() {
   try {
-    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/worklighter');
+    await mongoose.connect(
+      process.env.MONGO_URI || 'mongodb://localhost:27017/worklighter'
+    );
     logger.info('Scheduler: MongoDB connected successfully');
   } catch (error) {
     logger.error('Scheduler: MongoDB connection error:', error);
@@ -84,7 +86,10 @@ const complianceDocSchema = new mongoose.Schema({
   alerts: mongoose.Schema.Types.Mixed,
 });
 
-const ComplianceDoc = mongoose.model<IComplianceDoc>('ComplianceDoc', complianceDocSchema);
+const ComplianceDoc = mongoose.model<IComplianceDoc>(
+  'ComplianceDoc',
+  complianceDocSchema
+);
 
 // Scheduled Jobs
 
@@ -95,10 +100,10 @@ const ComplianceDoc = mongoose.model<IComplianceDoc>('ComplianceDoc', compliance
  */
 async function checkComplianceExpirations() {
   logger.info('Scheduler: Running compliance expiration check...');
-  
+
   try {
     const now = new Date();
-    
+
     // Alert windows: 30, 15, 7, and 0 (expired) days
     const alertWindows = [
       { days: 30, type: '30_DAY' },
@@ -106,14 +111,14 @@ async function checkComplianceExpirations() {
       { days: 7, type: '7_DAY' },
       { days: 0, type: 'EXPIRED' },
     ];
-    
+
     for (const window of alertWindows) {
       const windowDate = new Date(now);
       windowDate.setDate(windowDate.getDate() + window.days);
-      
+
       const windowEnd = new Date(windowDate);
       windowEnd.setDate(windowEnd.getDate() + 1); // Next day
-      
+
       // Find docs expiring within this window that haven't been alerted yet
       const query: any = {
         expirationDate: {
@@ -125,25 +130,27 @@ async function checkComplianceExpirations() {
           {
             $or: [
               { [`alerts.${window.type}`]: { $exists: false } },
-              { [`alerts.${window.type}.sentAt`]: { $exists: false } }
-            ]
-          }
-        ]
+              { [`alerts.${window.type}.sentAt`]: { $exists: false } },
+            ],
+          },
+        ],
       };
-      
+
       // Additional guard: skip if alert was sent within the last 24 hours
       const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
       query.$and.push({
         $or: [
           { [`alerts.${window.type}.sentAt`]: { $exists: false } },
-          { [`alerts.${window.type}.sentAt`]: { $lt: twentyFourHoursAgo } }
-        ]
+          { [`alerts.${window.type}.sentAt`]: { $lt: twentyFourHoursAgo } },
+        ],
       });
-      
+
       const docs = await ComplianceDoc.find(query);
-      
-      logger.info(`Scheduler: Found ${docs.length} compliance docs for ${window.days}-day window`);
-      
+
+      logger.info(
+        `Scheduler: Found ${docs.length} compliance docs for ${window.days}-day window`
+      );
+
       for (const doc of docs) {
         try {
           // Update status based on window
@@ -153,14 +160,17 @@ async function checkComplianceExpirations() {
           } else if (window.days <= 30) {
             newStatus = 'EXPIRING';
           }
-          
+
           // Send alert email (placeholder - actual email service would be called here)
-          logger.info(`Scheduler: Sending ${window.type} alert for compliance doc ${doc._id}`, {
-            contractorName: doc.contractorName,
-            expirationDate: doc.expirationDate,
-            type: doc.type,
-          });
-          
+          logger.info(
+            `Scheduler: Sending ${window.type} alert for compliance doc ${doc._id}`,
+            {
+              contractorName: doc.contractorName,
+              expirationDate: doc.expirationDate,
+              type: doc.type,
+            }
+          );
+
           // Mark alert as sent
           const alertKey = `alerts.${window.type}`;
           const updateData: any = {
@@ -170,21 +180,24 @@ async function checkComplianceExpirations() {
             sentAt: now,
             recipient: doc.contractorName || 'admin',
           };
-          
+
           // Update document
           await ComplianceDoc.findByIdAndUpdate(doc._id, updateData);
-          
+
           logger.info(`Scheduler: Alert sent and document updated`, {
             docId: doc._id,
             alertType: window.type,
             newStatus,
           });
         } catch (docError) {
-          logger.error(`Scheduler: Failed to process compliance doc ${doc._id}`, docError);
+          logger.error(
+            `Scheduler: Failed to process compliance doc ${doc._id}`,
+            docError
+          );
         }
       }
     }
-    
+
     logger.info('Scheduler: Compliance expiration check complete');
   } catch (error) {
     logger.error('Scheduler: Compliance check failed:', error);
@@ -198,7 +211,7 @@ async function checkComplianceExpirations() {
  */
 async function sendWeeklySummary() {
   logger.info('Scheduler: Generating weekly summary...');
-  
+
   try {
     // TODO: Implement actual summary generation
     // 1. Count unresolved ReviewQueueItems
@@ -208,14 +221,14 @@ async function sendWeeklySummary() {
     // 5. Generate HTML email
     // 6. Send to all ADMIN and REVIEWER users
     // 7. Log action in AuditLog
-    
+
     const recipients = process.env.ALERT_RECIPIENTS?.split(',') || [];
-    
+
     if (recipients.length === 0) {
       logger.warn('Scheduler: No recipients configured for weekly summary');
       return;
     }
-    
+
     const mailOptions = {
       from: process.env.SMTP_FROM || 'noreply@worklight.com',
       to: recipients.join(','),
@@ -230,9 +243,11 @@ async function sendWeeklySummary() {
         </ul>
       `,
     };
-    
+
     // await emailTransporter.sendMail(mailOptions);
-    logger.info(`Scheduler: Weekly summary sent to ${recipients.length} recipients`);
+    logger.info(
+      `Scheduler: Weekly summary sent to ${recipients.length} recipients`
+    );
   } catch (error) {
     logger.error('Scheduler: Weekly summary failed:', error);
   }
@@ -245,7 +260,7 @@ async function sendWeeklySummary() {
  */
 async function checkQueueHealth() {
   logger.info('Scheduler: Checking queue health...');
-  
+
   try {
     // TODO: Implement actual queue health checking
     // 1. Connect to Redis
@@ -253,7 +268,7 @@ async function checkQueueHealth() {
     // 3. Check for stuck jobs
     // 4. Log warnings if thresholds exceeded
     // 5. Optional: Send alert emails for critical issues
-    
+
     logger.info('Scheduler: Queue health check complete');
   } catch (error) {
     logger.error('Scheduler: Queue health check failed:', error);
@@ -265,7 +280,6 @@ function scheduleJobs() {
   // Compliance expiration check - Daily at 9 AM
   const complianceCron = process.env.COMPLIANCE_CHECK_CRON || '0 9 * * *';
   cron.schedule(complianceCron, checkComplianceExpirations, {
-    scheduled: true,
     timezone: 'America/New_York',
   });
   logger.info(`Scheduler: Compliance check scheduled: ${complianceCron}`);
@@ -273,7 +287,6 @@ function scheduleJobs() {
   // Weekly summary - Every Monday at 8 AM
   const summaryCron = process.env.SUMMARY_EMAIL_CRON || '0 8 * * 1';
   cron.schedule(summaryCron, sendWeeklySummary, {
-    scheduled: true,
     timezone: 'America/New_York',
   });
   logger.info(`Scheduler: Weekly summary scheduled: ${summaryCron}`);
@@ -281,7 +294,6 @@ function scheduleJobs() {
   // Queue health - Every 15 minutes
   const queueHealthCron = process.env.QUEUE_HEALTH_CRON || '*/15 * * * *';
   cron.schedule(queueHealthCron, checkQueueHealth, {
-    scheduled: true,
     timezone: 'America/New_York',
   });
   logger.info(`Scheduler: Queue health check scheduled: ${queueHealthCron}`);
@@ -290,9 +302,9 @@ function scheduleJobs() {
 // Graceful shutdown
 const shutdown = async () => {
   logger.info('Scheduler: Shutting down gracefully...');
-  
+
   await mongoose.connection.close();
-  
+
   logger.info('Scheduler: Shutdown complete');
   process.exit(0);
 };
@@ -303,23 +315,26 @@ process.on('SIGINT', shutdown);
 // Health check endpoint
 const healthServer = http.createServer((req, res) => {
   if (req.url === '/health' && req.method === 'GET') {
-    const mongoStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+    const mongoStatus =
+      mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
     const healthy = mongoStatus === 'connected';
-    
+
     res.writeHead(healthy ? 200 : 503, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({
-      status: healthy ? 'healthy' : 'degraded',
-      service: 'scheduler',
-      timestamp: new Date().toISOString(),
-      dependencies: {
-        mongodb: mongoStatus,
-      },
-      scheduledJobs: {
-        complianceCheck: 'active',
-        weeklySummary: 'active',
-        queueHealth: 'active',
-      },
-    }));
+    res.end(
+      JSON.stringify({
+        status: healthy ? 'healthy' : 'degraded',
+        service: 'scheduler',
+        timestamp: new Date().toISOString(),
+        dependencies: {
+          mongodb: mongoStatus,
+        },
+        scheduledJobs: {
+          complianceCheck: 'active',
+          weeklySummary: 'active',
+          queueHealth: 'active',
+        },
+      })
+    );
   } else {
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Not Found' }));
@@ -329,17 +344,19 @@ const healthServer = http.createServer((req, res) => {
 // Start scheduler
 async function start() {
   logger.info('Scheduler: Starting Worklight Scheduler Service...');
-  
+
   await connectDatabase();
   scheduleJobs();
-  
+
   logger.info('Scheduler: All jobs scheduled and ready');
   logger.info('Scheduler: Service running...');
-  
+
   // Start health check server
   const healthPort = parseInt(process.env.HEALTH_PORT || '3003');
   healthServer.listen(healthPort, () => {
-    logger.info(`Scheduler: Health check endpoint available at http://localhost:${healthPort}/health`);
+    logger.info(
+      `Scheduler: Health check endpoint available at http://localhost:${healthPort}/health`
+    );
   });
 }
 
