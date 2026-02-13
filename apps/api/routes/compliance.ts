@@ -91,7 +91,7 @@ router.get('/expired', async (req: AuthRequest, res: Response) => {
     );
 
     // Also update associated vendors
-    const vendorIds = docs.map((doc) => doc.vendor).filter(Boolean);
+    const vendorIds = docs.map((doc) => doc.vendor).filter((id): id is mongoose.Types.ObjectId => Boolean(id));
     if (vendorIds.length > 0) {
       await COIVendor.updateMany(
         {
@@ -174,7 +174,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       title,
       company: req.user!.id,
       vendor,
-      contractorId: contractorMatch?.id,
+      ...(contractorMatch?.id && { contractorId: contractorMatch.id }),
       contractorName,
       documentNumber,
       issueDate,
@@ -204,7 +204,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
     // Step 5: Create review queue item if needed
     if (rulesResult.needsReview) {
       const reviewItem = await ReviewQueueItem.create({
-        tenantId: companyId,
+        company: companyId,
         documentId: doc._id,
         documentType: 'compliance',
         status: 'pending',
@@ -223,9 +223,6 @@ router.post('/', async (req: AuthRequest, res: Response) => {
           issueDate,
         },
         fileUrl: documentUrl,
-        metadata: {
-          contractorMatchConfidence: contractorMatch?.confidence,
-        },
       });
 
       logger.info('Review queue item created for compliance doc', { reviewItemId: reviewItem._id });

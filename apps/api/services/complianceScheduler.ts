@@ -11,7 +11,7 @@
  */
 
 import { Queue, Worker, Job } from 'bullmq';
-import { redis } from '../config/redis';
+import { redisConnection } from '../config/redis';
 import { logger } from '../config/logger';
 import { ComplianceDoc } from '../models/ComplianceDoc';
 import { COIVendor } from '../models/COIVendor';
@@ -20,7 +20,7 @@ import { sendExpirationAlert, sendCOIExpirationAlert } from './emailService';
 
 // Create queue for scheduled compliance checks
 export const complianceQueue = new Queue('compliance-checks', {
-  connection: redis,
+  connection: redisConnection,
 });
 
 // Worker for compliance checks
@@ -42,7 +42,7 @@ export const complianceWorker = new Worker(
     }
   },
   {
-    connection: redis,
+    connection: redisConnection,
   }
 );
 

@@ -89,7 +89,7 @@ router.post('/', async (req: AuthRequest, res: Response) => {
       phone,
       address,
       licenseNumber,
-      insuranceInfo,
+      insuranceCarrier: insuranceInfo,
       aliases: aliases || [],
       tenantId: req.user!.id,
       isActive: isActive !== undefined ? isActive : true,

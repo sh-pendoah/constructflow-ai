@@ -1,6 +1,6 @@
 import { Queue, Worker, Job } from 'bullmq';
 import mongoose from 'mongoose';
-import { redis } from '../config/redis';
+import { redisConnection } from '../config/redis';
 import { logger } from '../config/logger';
 import { WorkflowDocument } from '../models/WorkflowDocument';
 import { ReviewQueueItem } from '../models/ReviewQueueItem';
@@ -19,7 +19,7 @@ export interface DocumentProcessingJob {
 
 // Create queue for document processing
 export const documentQueue = new Queue<DocumentProcessingJob>('document-processing', {
-  connection: redis,
+  connection: redisConnection,
   defaultJobOptions: {
     attempts: 3,
     backoff: {
@@ -106,7 +106,7 @@ export const documentWorker = new Worker<DocumentProcessingJob>(
         documentId: workflowDoc._id,
         version: 1,
         ocrProvider: ocrService.ocrProvider.name,
-        ocrRawJson: ocrResult,
+        ocrRawJson: ocrResult as unknown as Record<string, unknown>,
         llmProvider: ocrService.llmProvider.name,
         llmRawJson: extractedData,
         extractedData,
@@ -228,7 +228,7 @@ export const documentWorker = new Worker<DocumentProcessingJob>(
     }
   },
   {
-    connection: redis,
+    connection: redisConnection,
     concurrency: 5,
     limiter: {
       max: 10,
