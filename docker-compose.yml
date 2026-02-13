@@ -102,19 +102,6 @@ services:
       - /app/node_modules
     command: npm run dev:staging
 
-  landing-page:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.landing-page
-    container_name: worklight-landing-page
-    ports:
-      - "${LANDING_PAGE_PORT:-3002}:5173"
-    networks:
-      - worklight-network
-    volumes:
-      - ./apps/landing:/app
-      - /app/node_modules
-    command: npm run dev
 
   worker:
     build:

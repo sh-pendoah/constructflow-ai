@@ -9,9 +9,9 @@ Worklighter automates document processing workflows for the construction industr
 ## Architecture
 
 ```
-┌─────────────┐  ┌──────────────┐
-│  Web (Next)  │  │ Landing (Vite)│
-└──────┬───────┘  └──────┬───────┘
+┌─────────────┐
+│  Web (Next)  │
+└──────┬───────┘
        │                 │
        └────── API ──────┘   (Express + TypeScript)
                │
@@ -32,7 +32,6 @@ Five independent services communicate exclusively over REST and shared infrastru
 |---|---|---|
 | **`apps/api`** | Express 4 · TypeScript | REST API, workflow orchestration, rules engine |
 | **`apps/web`** | Next.js 15 · App Router · Tailwind · Redux | Review Queue UI, Admin Dashboard (33 routes) |
-| **`apps/landing`** | Vite · React 18 | Static marketing / landing page |
 | **`apps/worker`** | BullMQ · TypeScript | Background OCR, document extraction, email processing |
 | **`apps/scheduler`** | node-cron · TypeScript | Compliance alerts, weekly summaries, queue health |
 
@@ -92,7 +91,6 @@ npm run dev
 # Or individually
 npm run dev:core-api        # http://localhost:3000
 npm run dev:frontend        # http://localhost:3001
-npm run dev:landing-page    # http://localhost:5173
 ```
 
 ### Docker (full stack)
@@ -112,7 +110,6 @@ worklighter/
 ├── apps/
 │   ├── api/              # Express backend (REST API, services, routes)
 │   ├── web/              # Next.js 15 frontend (App Router)
-│   ├── landing/          # Vite + React landing page
 │   ├── worker/           # BullMQ background job processor
 │   └── scheduler/        # node-cron scheduled tasks
 ├── docker/               # Dockerfiles + nginx config
