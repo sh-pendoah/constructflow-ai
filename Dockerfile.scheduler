@@ -1,0 +1,48 @@
+# Multi-stage Dockerfile for Worklighter Scheduler
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files and lockfile
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+COPY apps/scheduler/package.json apps/scheduler/
+COPY libs/contracts/package.json libs/contracts/
+COPY libs/observability/package.json libs/observability/
+
+# Install pnpm and dependencies (including devDependencies for build)
+RUN npm install -g pnpm@9
+RUN pnpm install
+# Ensure TypeScript and type definitions are available for build
+RUN pnpm add -w -D typescript @types/node
+
+# Copy source code
+COPY apps/scheduler/ apps/scheduler/
+COPY libs/ libs/
+COPY nx.json ./
+
+# Build the application - use node_modules/.bin/tsc from workspace root explicitly
+WORKDIR /app/apps/scheduler
+RUN node ../../node_modules/typescript/lib/tsc.js
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files and lockfile
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY apps/scheduler/package.json ./apps/scheduler/
+
+# Install pnpm and production dependencies only
+RUN npm install -g pnpm@9
+WORKDIR /app/apps/scheduler
+RUN cd /app && pnpm install --prod
+
+# Copy built application
+COPY --from=builder /app/apps/scheduler/dist /app/apps/scheduler/dist
+
+# Set environment
+ENV NODE_ENV=production
+
+# Start the application
+CMD ["node", "dist/index.js"]

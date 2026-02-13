@@ -1,0 +1,54 @@
+# Multi-stage Dockerfile for Worklighter API
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy package files and lockfile
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+COPY apps/api/package.json apps/api/
+COPY libs/contracts/package.json libs/contracts/
+COPY libs/observability/package.json libs/observability/
+COPY libs/tooling-config/package.json libs/tooling-config/
+
+# Install pnpm and dependencies
+RUN npm install -g pnpm@9
+RUN pnpm install
+
+# Copy source code
+COPY apps/api/ apps/api/
+COPY libs/ libs/
+COPY nx.json ./
+
+# Build the application - use TypeScript from workspace root explicitly
+WORKDIR /app/apps/api
+RUN node ../../node_modules/typescript/lib/tsc.js
+
+# Production stage
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files and lockfile
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY apps/api/package.json ./apps/api/
+
+# Install pnpm and production dependencies only
+RUN npm install -g pnpm@9
+WORKDIR /app/apps/api
+RUN cd /app && pnpm install --prod
+
+# Copy built application
+COPY --from=builder /app/apps/api/build /app/apps/api/build
+
+# Create uploads directory
+RUN mkdir -p /app/uploads
+
+# Expose port
+EXPOSE 3000
+
+# Set environment
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Start the application
+CMD ["node", "build/index.js"]

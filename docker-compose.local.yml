@@ -1,0 +1,169 @@
+version: '3.9'
+
+# Docker Compose for local testing with Azure remote services
+# Usage: docker-compose -f docker-compose.local.yml up --build
+
+services:
+  # Infrastructure Services (Local)
+  mongodb:
+    image: mongo:7.0
+    container_name: worklighter-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${MONGO_DB:-worklighter}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - worklighter-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: worklighter-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - worklighter-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Application Services
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: worklighter-api
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: ${NODE_ENV:-local}
+      MONGO_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongodb:27017/${MONGO_DB:-worklighter}?authSource=admin
+      REDIS_URL: redis://redis:6379
+      CORE_API_PORT: 3000
+      # Azure Services (Remote)
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT}
+      AZURE_OPENAI_API_VERSION: ${AZURE_OPENAI_API_VERSION}
+      AZURE_FORM_RECOGNIZER_ENDPOINT: ${AZURE_FORM_RECOGNIZER_ENDPOINT}
+      AZURE_FORM_RECOGNIZER_API_KEY: ${AZURE_FORM_RECOGNIZER_API_KEY}
+      AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT: ${AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT}
+      AZURE_DOCUMENT_INTELLIGENCE_API_KEY: ${AZURE_DOCUMENT_INTELLIGENCE_API_KEY}
+      AZURE_STORAGE_ACCOUNT: ${AZURE_STORAGE_ACCOUNT}
+      AZURE_STORAGE_CONTAINER: ${AZURE_STORAGE_CONTAINER}
+      AZURE_STORAGE_CONNECTION_STRING: ${AZURE_STORAGE_CONNECTION_STRING}
+      OCR_PROVIDER: ${OCR_PROVIDER:-azure-form-recognizer}
+      LLM_PROVIDER: ${LLM_PROVIDER:-azure-openai}
+    ports:
+      - "3000:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - worklighter-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:3000/api/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Web service can be run locally with: cd apps/web && npm run dev
+  # Uncomment below to run in Docker:
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/web/Dockerfile
+  #   container_name: worklighter-web
+  #   environment:
+  #     NEXT_PUBLIC_API_URL: http://localhost:3000
+  #     NODE_ENV: production
+  #   ports:
+  #     - "3001:3000"
+  #   depends_on:
+  #     api:
+  #       condition: service_healthy
+  #   networks:
+  #     - worklighter-network
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: worklighter-worker
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: ${NODE_ENV:-local}
+      MONGO_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongodb:27017/${MONGO_DB:-worklighter}?authSource=admin
+      REDIS_URL: redis://redis:6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      # Azure Services (Remote)
+      AZURE_OPENAI_ENDPOINT: ${AZURE_OPENAI_ENDPOINT}
+      AZURE_OPENAI_API_KEY: ${AZURE_OPENAI_API_KEY}
+      AZURE_OPENAI_DEPLOYMENT: ${AZURE_OPENAI_DEPLOYMENT}
+      AZURE_FORM_RECOGNIZER_ENDPOINT: ${AZURE_FORM_RECOGNIZER_ENDPOINT}
+      AZURE_FORM_RECOGNIZER_API_KEY: ${AZURE_FORM_RECOGNIZER_API_KEY}
+      AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT: ${AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT}
+      AZURE_DOCUMENT_INTELLIGENCE_API_KEY: ${AZURE_DOCUMENT_INTELLIGENCE_API_KEY}
+      AZURE_STORAGE_ACCOUNT: ${AZURE_STORAGE_ACCOUNT}
+      AZURE_STORAGE_CONTAINER: ${AZURE_STORAGE_CONTAINER}
+      AZURE_STORAGE_CONNECTION_STRING: ${AZURE_STORAGE_CONNECTION_STRING}
+      OCR_PROVIDER: ${OCR_PROVIDER:-azure-form-recognizer}
+      LLM_PROVIDER: ${LLM_PROVIDER:-azure-openai}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - worklighter-network
+    restart: unless-stopped
+
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile.scheduler
+    container_name: worklighter-scheduler
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: ${NODE_ENV:-local}
+      MONGO_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongodb:27017/${MONGO_DB:-worklighter}?authSource=admin
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      EMAIL_FROM: ${EMAIL_FROM}
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - worklighter-network
+    restart: unless-stopped
+
+networks:
+  worklighter-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  mongodb_config:
+  redis_data:
