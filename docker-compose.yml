@@ -77,11 +77,6 @@ services:
         condition: service_healthy
     networks:
       - worklight-network
-    volumes:
-      - ./apps/api:/app
-      - /app/node_modules
-      - /app/build
-    command: npm run dev:staging
 
   frontend:
     build:
@@ -96,11 +91,6 @@ services:
       - core-api
     networks:
       - worklight-network
-    volumes:
-      - ./apps/web:/app
-      - /app/.next
-      - /app/node_modules
-    command: npm run dev:staging
 
   worker:
     build:

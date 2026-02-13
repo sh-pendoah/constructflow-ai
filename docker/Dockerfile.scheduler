@@ -26,16 +26,11 @@ WORKDIR /app
 # Install dumb-init
 RUN apk add --no-cache dumb-init
 
-# Install pnpm in runtime
-RUN npm install -g pnpm
+# Copy EVERYTHING from installer to preserve exact structure
+COPY --from=installer /app ./app
 
-# Copy only runtime dependencies and built code from installer
-COPY --from=installer /app/node_modules ./node_modules
-COPY --from=installer /app/apps/scheduler/dist ./dist
-COPY --from=installer /app/apps/scheduler/package.json ./package.json
-
-# Expose port (not used, but good practice)
+# Expose port
 EXPOSE 3000
 
 # Run scheduler
-CMD ["dumb-init", "node", "dist/index.js"]
+CMD ["dumb-init", "node", "app/dist/index.js"]

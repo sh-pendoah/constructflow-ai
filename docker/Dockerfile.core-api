@@ -26,9 +26,9 @@ WORKDIR /app
 # Install dumb-init
 RUN apk add --no-cache dumb-init
 
-# Copy built app and node_modules from builder
-COPY --from=builder /app/apps/api/build ./build
+# Copy entire node_modules and built app from builder to preserve pnpm structure
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/build ./build
 COPY --from=builder /app/apps/api/package.json ./package.json
 
 # Create non-root user

@@ -23,19 +23,33 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dumb-init
-RUN apk add --no-cache dumb-init
+# Install dumb-init and pnpm
+RUN apk add --no-cache dumb-init && npm install -g pnpm
 
-# Install pnpm in runtime
-RUN npm install -g pnpm
+# Copy workspace config files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# Copy only runtime dependencies and built code from installer
-COPY --from=installer /app/node_modules ./node_modules
-COPY --from=installer /app/apps/worker/dist ./dist
-COPY --from=installer /app/apps/worker/package.json ./package.json
+# Copy built code first
+COPY --from=installer /app/apps/worker/dist ./apps/worker/dist
+COPY --from=installer /app/apps/worker/package.json ./apps/worker/
+
+# Copy lib package files for resolution
+COPY --from=installer /app/libs ./libs
+
+# Create apps directory structure
+RUN mkdir -p ./apps/worker
+
+# Install dependencies with pnpm - this will preserve the hoisting/symlink structure
+RUN pnpm install --frozen-lockfile
+
+# Ensure the built code is available
+RUN cp -r ./apps/worker/dist /app/dist
+
+# Set working directory to /app for proper module resolution
+WORKDIR /app
 
 # Expose port (not used, but good practice)
 EXPOSE 3000
 
-# Run worker
+# Run worker from /app with proper NODE_PATH
 CMD ["dumb-init", "node", "dist/index.js"]
