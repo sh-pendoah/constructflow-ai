@@ -1,7 +1,8 @@
 version: '3.9'
 
 # Infrastructure-only compose file (MongoDB, Redis)
-# Use: docker-compose -f docker-compose.services.yml up
+# Per 2026 playbook: Separate infrastructure from application services
+# Use: docker-compose -f docker-compose.infra.yml up -d
 
 services:
   mongodb:
@@ -17,7 +18,7 @@ services:
       - mongodb_data:/data/db
       - mongodb_config:/data/configdb
     networks:
-      - worklight-network
+      - worklighter-network
     healthcheck:
       test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
       interval: 10s
@@ -32,7 +33,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - worklight-network
+      - worklighter-network
     command: redis-server --appendonly yes
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
@@ -41,7 +42,7 @@ services:
       retries: 5
 
 networks:
-  worklight-network:
+  worklighter-network:
     driver: bridge
 
 volumes:

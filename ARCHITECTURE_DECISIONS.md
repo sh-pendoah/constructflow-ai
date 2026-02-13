@@ -857,16 +857,17 @@ We will use Next.js 15 with App Router for the frontend application.
 ## Future ADRs
 
 Topics to document:
-- ADR-011: Workers Comp Code Suggestion Algorithm
 - ADR-012: Compliance Alert Windows (30/15/7/0 days)
 - ADR-013: Multi-Tenant Data Isolation Strategy
 - ADR-014: Export Format Selection (CSV vs XLSX vs PDF)
 - ADR-015: Webhook Event Schema Design
 - ADR-016: Error Handling and Retry Strategies
-- ADR-017: Logging and Monitoring Approach
-- ADR-018: CI/CD Pipeline Design
+- ADR-017: Logging and Monitoring Approach (partially covered in libs/observability)
+- ADR-018: CI/CD Pipeline Design (partially implemented with Nx + path triggers)
 - ADR-019: Testing Strategy (Unit, Integration, E2E)
 - ADR-020: Security and Authentication Model
+- ADR-021: AI Runtime Model Tier Strategy
+- ADR-022: Tool Registry and Side-Effect Classification
 
 ---
 
@@ -902,3 +903,106 @@ What are the positive and negative outcomes?
 ### Notes
 Additional context and links
 ```
+
+---
+
+## ADR-011: MongoDB vs PostgreSQL Database Strategy (2026 Review)
+
+**Date**: 2026-02-13  
+**Status**: Accepted (with review cycle planned)  
+**Decision Makers**: Technical Lead, CTO
+
+### Context
+
+The 2026 End-to-End AI Solution Playbook designates **Azure Database for PostgreSQL** as the default database for new applications. Worklighter currently uses **MongoDB 7.x via Azure Cosmos DB for MongoDB API** (documented in ADR-002 from 2024).
+
+Need to evaluate:
+1. Whether the original MongoDB justification remains valid
+2. Migration cost/benefit to PostgreSQL
+3. 2026 playbook compliance
+
+### Decision
+
+We will **continue using MongoDB via Azure Cosmos DB for MongoDB API** with the following justifications and review criteria.
+
+### Rationale
+
+**Why MongoDB remains appropriate:**
+
+1. **Document-Centric Workload (Primary Justification)**:
+   - Invoice line items: Nested arrays with variable structure
+   - Daily log workers: Nested arrays of worker entries
+   - Compliance documents: Variable field sets per document type
+   - OCR extraction results: Variable structure with confidence scores + bounding boxes
+   - Review queue exceptions: Nested array of rule violations
+   - PostgreSQL JSONB would require manual schema management for these patterns
+
+2. **Schema Evolution Velocity**:
+   - OCR extraction adds new fields regularly (new invoice formats, new log templates)
+   - Compliance document types expand (new COI types, new license formats)
+   - MongoDB's schemaless model reduces migration overhead
+   - Current velocity: 2-3 schema changes per month
+
+3. **Azure Cosmos DB Benefits**:
+   - Azure-native (meets playbook's Azure-first requirement)
+   - Serverless pricing aligns with MVP stage
+   - MongoDB API provides full compatibility
+   - Global distribution for future multi-region needs
+   - Automatic indexing and scaling
+
+4. **Migration Cost vs Benefit**:
+   - ~12 Mongoose models with complex nested schemas
+   - ~150+ aggregation pipelines for reporting
+   - ~50+ existing queries across API/Worker/Scheduler
+   - Estimated migration: 4-6 weeks + testing
+   - **Cost > Benefit** at current stage
+
+**Why this deviation from playbook default is justified:**
+
+Per 2026 playbook § 0.1: Deviations require written justification answering:
+1. **What constraint the default fails**: PostgreSQL with JSONB doesn't efficiently handle deeply nested, variable-structure document arrays without complex schema management
+2. **Why the exception solves it**: MongoDB's native document model matches our data patterns exactly
+3. **What new operational risks we're accepting**: Azure Cosmos DB for MongoDB has feature gaps vs full MongoDB (no $lookup across databases, limited aggregation operators), but we don't use those features
+
+### Consequences
+
+**Positive:**
+- Continue with proven, working data model
+- Avoid 4-6 week migration during MVP phase
+- Azure Cosmos DB is Azure-native (playbook compliant)
+- Serverless pricing reduces costs during low-usage periods
+
+**Negative:**
+- Non-default choice requires ongoing justification
+- MongoDB expertise less common than PostgreSQL
+- Azure Cosmos DB for MongoDB has limitations vs full MongoDB
+- Future PostgreSQL adoption requires migration
+
+**Mitigation Strategies:**
+- Review decision annually or when workload changes significantly
+- Document MongoDB usage patterns in AGENTS.md
+- Maintain query abstraction layer for potential future migration
+- Consider PostgreSQL for new bounded contexts (e.g., analytics, user management if split out)
+
+### Review Criteria (Annual Assessment)
+
+Re-evaluate MongoDB choice if any of these conditions change:
+
+1. **Workload shift**: If document patterns become more relational (e.g., complex joins dominate)
+2. **Team expertise**: If PostgreSQL expertise significantly exceeds MongoDB expertise
+3. **Azure Cosmos DB limitations**: If we hit feature gaps that block critical functionality
+4. **Cost structure**: If Cosmos DB costs exceed PostgreSQL at scale (review at 1M+ documents)
+5. **Playbook evolution**: If 2027+ playbook elevates PostgreSQL requirement from "default" to "mandatory"
+
+### Next Review Date
+
+**2027-02-13** or when reaching 1 million documents, whichever comes first.
+
+### Notes
+
+- Azure Cosmos DB for MongoDB vCore is now GA (2026), providing full MongoDB 6.0+ compatibility if needed
+- MongoDB Atlas on Azure is also Azure-compatible (but adds vendor complexity)
+- This ADR supersedes the original ADR-002 rationale with 2026 playbook context
+
+---
+
