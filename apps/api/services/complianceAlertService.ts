@@ -33,6 +33,9 @@ export async function getExpiringCompliance(
   const startDate = new Date(targetDate.getTime() - 24 * 60 * 60 * 1000);
   const endDate = new Date(targetDate.getTime() + 24 * 60 * 60 * 1000);
 
+  // Additional guard: skip if alert was sent within the last 24 hours
+  const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
   const docs = await ComplianceDoc.find({
     tenantId,
     expirationDate: {
@@ -40,8 +43,22 @@ export async function getExpiringCompliance(
       $lte: endDate,
     },
     status: { $nin: ['EXPIRED', 'INACTIVE'] },
-    // Check if alert not already sent for this window
-    [`alerts.${alertWindow.alertType}`]: { $ne: true },
+    // Check if alert not already sent for this window - consistent with scheduler
+    $and: [
+      {
+        $or: [
+          { [`alerts.${alertWindow.alertType}`]: { $exists: false } },
+          { [`alerts.${alertWindow.alertType}.sentAt`]: { $exists: false } }
+        ]
+      },
+      // Skip if sent within last 24 hours
+      {
+        $or: [
+          { [`alerts.${alertWindow.alertType}.sentAt`]: { $exists: false } },
+          { [`alerts.${alertWindow.alertType}.sentAt`]: { $lt: twentyFourHoursAgo } }
+        ]
+      }
+    ]
   });
 
   return docs;
@@ -84,11 +101,12 @@ export async function sendExpirationAlert(
       daysUntilExpiry,
     });
 
-    // Mark alert as sent
+    // Mark alert as sent with timestamp for idempotency
+    const alertKey = `alerts.${alertType}`;
     await ComplianceDoc.findByIdAndUpdate(doc._id, {
       $set: {
-        [`alerts.${alertType}`]: true,
-        [`alerts.${alertType}_sentAt`]: new Date(),
+        [`${alertKey}.sentAt`]: new Date(),
+        [`${alertKey}.recipient`]: doc.contractorName || 'admin',
       },
     });
 
