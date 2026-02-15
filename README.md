@@ -75,7 +75,7 @@ Worker  Scheduler    Azure Services
 ### 1️⃣ Clone and Install
 
 ```bash
-git clone https://github.com/your-org/worklighter.git
+git clone https://github.com/sh-pendoah/worklighter.git
 cd worklighter
 
 # Install all dependencies (root + apps + libs)
@@ -248,3 +248,4 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full Azure provisioning and deploym
 ## License
 
 Proprietary — all rights reserved.
+
