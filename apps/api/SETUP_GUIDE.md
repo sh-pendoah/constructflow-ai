@@ -1,4 +1,4 @@
-# Worklight Core API - Setup Guide
+# docflow-360 Core API - Setup Guide
 
 ## Prerequisites
 
@@ -13,7 +13,7 @@
 
 ```bash
 git clone <repository-url>
-cd worklight
+cd docflow-360
 npm run install:all
 ```
 
@@ -42,10 +42,10 @@ CORE_API_PORT=3000
 NODE_ENV=local
 
 # MongoDB
-MONGO_URI=mongodb://admin:password@localhost:27017/worklighter?authSource=admin
+MONGO_URI=mongodb://admin:password@localhost:27017/docflow-360?authSource=admin
 MONGO_USER=admin
 MONGO_PASSWORD=password
-MONGO_DB=worklighter
+MONGO_DB=docflow-360
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -59,7 +59,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASSWORD=your-app-password
-EMAIL_FROM=noreply@worklight.com
+EMAIL_FROM=noreply@docflow-360.com
 
 # File Uploads
 MAX_FILE_SIZE=50mb
@@ -266,7 +266,7 @@ npm run lint
 curl -X POST http://localhost:3000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@worklight.com",
+    "email": "admin@docflow-360.com",
     "password": "password123",
     "name": "Admin User",
     "role": "admin"
@@ -278,7 +278,7 @@ curl -X POST http://localhost:3000/api/auth/register \
 curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "admin@worklight.com",
+    "email": "admin@docflow-360.com",
     "password": "password123"
   }'
 ```
@@ -339,12 +339,12 @@ docker ps | grep mongodb
 
 2. Test connection:
 ```bash
-mongosh mongodb://admin:password@localhost:27017/worklighter?authSource=admin
+mongosh mongodb://admin:password@localhost:27017/docflow-360?authSource=admin
 ```
 
 3. Check logs:
 ```bash
-docker logs worklight-mongodb
+docker logs docflow-360-mongodb
 ```
 
 ### Redis Connection Issues
@@ -361,7 +361,7 @@ redis-cli ping
 
 3. Check logs:
 ```bash
-docker logs worklight-redis
+docker logs docflow-360-redis
 ```
 
 ### API Not Starting
@@ -476,3 +476,4 @@ For issues and questions:
 ## License
 
 [Your License Here]
+

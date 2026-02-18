@@ -1,5 +1,5 @@
 /**
- * Worklight Worker Service
+ * docflow-360 Worker Service
  * 
  * Independent BullMQ consumer service responsible for:
  * - Email attachment extraction and normalization
@@ -54,7 +54,7 @@ const redis = new IORedis(redisConnection);
 // MongoDB connection
 async function connectDatabase() {
   try {
-    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/worklighter');
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/docflow-360');
     logger.info('Worker: MongoDB connected successfully');
   } catch (error) {
     logger.error('Worker: MongoDB connection error:', error);
@@ -265,7 +265,7 @@ const healthServer = http.createServer((req, res) => {
 
 // Start worker
 async function start() {
-  logger.info('Worker: Starting Worklight Worker Service...');
+  logger.info('Worker: Starting docflow-360 Worker Service...');
   
   await connectDatabase();
   
@@ -285,3 +285,4 @@ start().catch((error) => {
   logger.error('Worker: Failed to start', error);
   process.exit(1);
 });
+

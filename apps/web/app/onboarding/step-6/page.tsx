@@ -107,7 +107,7 @@ const OnboardingStep6 = () => {
               {/* Title Section */}
               <div className="w-full flex flex-col gap-0.5">
                 <h1 className="text-h3 text-primary">
-                  Invite Your Team to Worklighter
+                  Invite Your Team to docflow-360
                 </h1>
                 <p className="text-body-copy text-primary">
                   Add team members who will review & approve documents

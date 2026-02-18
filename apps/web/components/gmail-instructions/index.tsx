@@ -11,7 +11,7 @@ const GmailInstructions = () => {
       {/* Title Section */}
       <div className="w-full flex flex-col gap-0.5">
         <h1 className="text-h3 text-primary">
-          Setting Up Gmail for Worklighter
+          Setting Up Gmail for docflow-360
         </h1>
         <p className="text-body-copy text-primary">
           Quick 3-step guide to connect your existing emails.
@@ -54,7 +54,7 @@ const GmailInstructions = () => {
           </h3>
           <NumberedItem
             icon={<ArrowRight className="w-5 h-5 text-primary" />}
-            text="worklighter-docs@yourcompany.com"
+            text="docflow-360-docs@yourcompany.com"
           />
         </div>
 
@@ -66,15 +66,15 @@ const GmailInstructions = () => {
           <div className="w-full flex flex-col gap-3">
             <NumberedItem
               icon={<ArrowRight className="w-5 h-5 text-primary" />}
-              text="worklighter-invoices@yourcompany.com"
+              text="docflow-360-invoices@yourcompany.com"
             />
             <NumberedItem
               icon={<ArrowRight className="w-5 h-5 text-primary" />}
-              text="worklighter-logs@yourcompany.com"
+              text="docflow-360-logs@yourcompany.com"
             />
             <NumberedItem
               icon={<ArrowRight className="w-5 h-5 text-primary" />}
-              text="worklighter-compliance@yourcompany.com"
+              text="docflow-360-compliance@yourcompany.com"
             />
           </div>
         </div>
@@ -109,7 +109,7 @@ const GmailInstructions = () => {
               />
               <NumberedItem
                 number={2}
-                text="Enable forwarding to: worklighter-docs@yourcompany.com"
+                text="Enable forwarding to: docflow-360-docs@yourcompany.com"
               />
               <NumberedItem
                 number={3}
@@ -142,7 +142,7 @@ const GmailInstructions = () => {
       <div className="w-full flex flex-col gap-5 p-5 rounded-2xl border border-custom bg-white-custom">
         <div className="w-full flex flex-col gap-1">
           <StepBadge stepNumber="3" />
-          <h2 className="text-h6 text-dark">Connect in Worklighter</h2>
+          <h2 className="text-h6 text-dark">Connect in docflow-360</h2>
           <p className="text-body-copy text-primary">
             Once forwarding is active, click below to connect your Gmail
             account(s)
@@ -164,7 +164,7 @@ const GmailInstructions = () => {
           </div>
           <div className="w-full flex flex-col gap-1">
             <p className="text-body-copy text-dark h-5">
-              New Gmail: worklighter-invoices@company.com
+              New Gmail: docflow-360-invoices@company.com
             </p>
             <p className="text-supporting text-primary h-5">
               ↓ Connect with Google ↓
@@ -172,7 +172,7 @@ const GmailInstructions = () => {
           </div>
           <NumberedItem
             icon={<MailCheck className="w-5 h-5 text-primary" />}
-            text="Worklighter monitors Gmail account"
+            text="docflow-360 monitors Gmail account"
           />
         </div>
       </div>
@@ -181,3 +181,4 @@ const GmailInstructions = () => {
 };
 
 export default GmailInstructions;
+

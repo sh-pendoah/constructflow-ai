@@ -13,7 +13,7 @@ export const config = {
   // MongoDB
   mongoUri:
     process.env.MONGO_URI ||
-    `mongodb://${process.env.MONGO_USER || 'admin'}:${process.env.MONGO_PASSWORD || 'password'}@localhost:${process.env.MONGO_PORT || '27017'}/${process.env.MONGO_DB || 'worklighter'}?authSource=admin`,
+    `mongodb://${process.env.MONGO_USER || 'admin'}:${process.env.MONGO_PASSWORD || 'password'}@localhost:${process.env.MONGO_PORT || '27017'}/${process.env.MONGO_DB || 'docflow-360'}?authSource=admin`,
 
   // Redis
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
@@ -70,3 +70,4 @@ export const config = {
         'http://localhost:5173',
       ],
 };
+

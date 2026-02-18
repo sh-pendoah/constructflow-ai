@@ -5,7 +5,7 @@ import { test, expect, Page } from '@playwright/test';
  */
 async function login(page: Page) {
   await page.goto('/login');
-  await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL || 'test@worklight.com');
+  await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL || 'test@docflow-360.com');
   await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD || 'Test1234$');
   await page.click('button[type="submit"]');
   await page.waitForURL(/.*dashboard/, { timeout: 10000 });

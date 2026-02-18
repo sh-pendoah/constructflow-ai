@@ -81,8 +81,8 @@ const LoginPage = () => {
         {/* Logo */}
         <div className="w-[263px] h-[94px] relative">
           <Image
-            src="/images/worklighter-logo.png"
-            alt="Worklighter Logo"
+            src="/images/docflow-360-logo.png"
+            alt="docflow-360 Logo"
             fill
             className="object-contain"
             priority
@@ -99,7 +99,7 @@ const LoginPage = () => {
             {/* Title Container */}
             <div className="w-full flex flex-col gap-0.5">
               <h1 className="text-[27px] leading-[1.5em] font-semibold text-primary font-poppins">
-                Log in to Worklighter
+                Log in to docflow-360
               </h1>
             </div>
 
@@ -260,4 +260,5 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
+
 

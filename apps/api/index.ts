@@ -59,7 +59,7 @@ app.get(
   '/api-docs',
   swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'Worklighter API Documentation',
+    customSiteTitle: 'docflow-360 API Documentation',
     customfavIcon: '/favicon.ico',
   })
 );
@@ -90,7 +90,7 @@ app.use('/api/exports', exportRoutes);
 // Root
 app.get('/', (_req, res) => {
   res.json({
-    service: 'Worklight Core API',
+    service: 'docflow-360 Core API',
     version: '1.0.0',
     env: config.env,
     timestamp: new Date().toISOString(),

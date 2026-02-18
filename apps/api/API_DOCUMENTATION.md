@@ -1,12 +1,12 @@
-# Worklight Core API Documentation
+# docflow-360 Core API Documentation
 
 ## Overview
-The Worklight Core API provides backend services for construction document management, invoice processing, workers compensation tracking, and compliance monitoring.
+The docflow-360 Core API provides backend services for construction document management, invoice processing, workers compensation tracking, and compliance monitoring.
 
 ## Base URL
 - Local: `http://localhost:3000/api`
-- Staging: `https://staging-api.worklight.com/api`
-- Production: `https://api.worklight.com/api`
+- Staging: `https://staging-api.docflow-360.com/api`
+- Production: `https://api.docflow-360.com/api`
 
 ## Authentication
 All endpoints (except `/auth/register` and `/auth/login`) require JWT authentication.
@@ -463,7 +463,7 @@ MONGO_URI=mongodb://user:pass@host:port/database
 MONGO_USER=admin
 MONGO_PASSWORD=password
 MONGO_PORT=27017
-MONGO_DB=worklighter
+MONGO_DB=docflow-360
 
 # Redis
 REDIS_URL=redis://localhost:6379
@@ -477,7 +477,7 @@ SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USER=your-email@gmail.com
 SMTP_PASSWORD=your-password
-EMAIL_FROM=noreply@worklight.com
+EMAIL_FROM=noreply@docflow-360.com
 
 # File Uploads
 MAX_FILE_SIZE=50mb
@@ -822,4 +822,5 @@ When rate limit is exceeded, API returns:
 - Stricter limits for authentication
 - API key support for integrations
 - Comprehensive audit logging
+
 

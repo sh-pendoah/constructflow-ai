@@ -1,0 +1,21 @@
+name: Release Blockers
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  blockers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run release blocker validation
+        shell: pwsh
+        run: ./scripts/validate-name-and-gov.ps1
+
+      - name: Run golden smoke
+        shell: pwsh
+        run: ./tests/golden-smoke.ps1

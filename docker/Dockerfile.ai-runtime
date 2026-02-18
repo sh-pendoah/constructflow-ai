@@ -1,0 +1,11 @@
+FROM node:20-alpine
+WORKDIR /app
+
+COPY apps/ai-runtime/package*.json ./
+RUN npm ci
+
+COPY apps/ai-runtime ./
+RUN npm run build
+
+EXPOSE 4100
+CMD ["npm", "run", "start"]

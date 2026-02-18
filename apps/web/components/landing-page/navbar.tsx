@@ -10,7 +10,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-[1200px] mx-auto px-10 h-[80px] flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
-          <Image src={logo} alt="Logo Worklighter" className="h-8 w-auto object-contain" />
+          <Image src={logo} alt="Logo docflow-360" className="h-8 w-auto object-contain" />
         </div>
 
         {/* Links */}

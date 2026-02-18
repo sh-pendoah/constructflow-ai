@@ -64,7 +64,7 @@ export const FinalCTA: React.FC = () => {
             className="text-white/70 text-lg md:text-[20px] leading-[1.6] max-w-[700px] mx-auto mb-10"
             style={{ fontFamily: 'Onest, sans-serif' }}
           >
-            Cut your admin time by 70% and get back to building. Join hundreds of construction teams who switched to Worklighter.
+            Cut your admin time by 70% and get back to building. Join hundreds of construction teams who switched to docflow-360.
           </motion.p>
 
           {/* CTA Buttons */}

@@ -1,4 +1,4 @@
-# Worklighter: Executive Summary (Quick Reference)
+# docflow-360: Executive Summary (Quick Reference)
 
 **Full Report:** See [CTO_REVIEW_REPORT.md](./CTO_REVIEW_REPORT.md) (1,856 lines, ~40 pages)  
 **Date:** February 13, 2026  
@@ -66,7 +66,7 @@
 
 **Why:** ABA therapy ops has overlap (billing, session notes, certifications)  
 **Challenge:** Requires HIPAA compliance + ABA-specific workflows (treatment plans, behavior tracking)  
-**Effort:** 6-8 weeks (treat as new product build using Worklighter as foundation)
+**Effort:** 6-8 weeks (treat as new product build using docflow-360 as foundation)
 
 ---
 
@@ -74,7 +74,7 @@
 
 **Recommendation:** If perrygoals.com unavailable, host as demo at:
 - `workops.shtrial.com` or `buildops.shtrial.com`
-- Rebrand from "Worklighter" to more marketable name (WorkOps, BuildOps, DocsFlow)
+- Rebrand from "docflow-360" to more marketable name (WorkOps, BuildOps, DocsFlow)
 
 ---
 
@@ -131,7 +131,7 @@
 - Wire compliance alerts
 - Add API rate limiting
 
-**Deliverable:** Worklighter v1.1 (production-ready core)
+**Deliverable:** docflow-360 v1.1 (production-ready core)
 
 ---
 
@@ -143,7 +143,7 @@
 - Progressive onboarding
 - Trust signals & pricing page
 
-**Deliverable:** Worklighter v1.2 (mobile-friendly, conversion-optimized)
+**Deliverable:** docflow-360 v1.2 (mobile-friendly, conversion-optimized)
 
 ---
 
@@ -155,7 +155,7 @@
 - Performance improvements
 - Code cleanup
 
-**Deliverable:** Worklighter v2.0 (feature-complete, differentiated)
+**Deliverable:** docflow-360 v2.0 (feature-complete, differentiated)
 
 ---
 
@@ -196,7 +196,7 @@
 
 ---
 
-### If Keeping as Worklighter Demo:
+### If Keeping as docflow-360 Demo:
 1. Week 1-3: Execute P0 fixes
 2. Week 4: Build demo mode
 3. Week 5: Demo video + landing page optimization

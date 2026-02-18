@@ -1,0 +1,46 @@
+{
+  "name": "ai-runtime",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/ai-runtime",
+  "projectType": "application",
+  "tags": ["scope:backend", "type:ai-runtime"],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc",
+        "cwd": "apps/ai-runtime"
+      },
+      "outputs": ["{projectRoot}/dist"]
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nodemon --exec ts-node index.ts",
+        "cwd": "apps/ai-runtime"
+      }
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/index.js",
+        "cwd": "apps/ai-runtime"
+      },
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'No lint configured' && exit 0",
+        "cwd": "apps/ai-runtime"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo 'No tests configured yet' && exit 0",
+        "cwd": "apps/ai-runtime"
+      }
+    }
+  }
+}

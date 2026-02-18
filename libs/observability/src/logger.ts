@@ -15,7 +15,7 @@ export const logger = winston.createLogger({
     winston.format.errors({ stack: true }),
     winston.format.json()
   ),
-  defaultMeta: { service: process.env.SERVICE_NAME || 'worklighter' },
+  defaultMeta: { service: process.env.SERVICE_NAME || 'docflow-360' },
   transports: [
     new winston.transports.Console({
       format: winston.format.combine(
@@ -43,3 +43,4 @@ export function logWithTrace(traceId: string, spanId: string, message: string, m
     ...meta,
   });
 }
+

@@ -10,8 +10,8 @@ jobs:
   Build-and-Deploy:
     env:
       ENV: dev
-      APP_NAME: worklighter-backend-dev
-      REPO_NAME: worklighter-backend-dev
+      APP_NAME: docflow-360-backend-dev
+      REPO_NAME: docflow-360-backend-dev
       ACR_HOST: fleekbiz.azurecr.io
       AZURE_RG: CommonDev
     runs-on: ubuntu-latest
@@ -67,3 +67,4 @@ jobs:
 
     - name: Logout from ACR
       run: docker logout ${ACR_HOST}
+

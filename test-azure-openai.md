@@ -2,7 +2,7 @@
 
 ## Summary
 
-The Worklighter application has been fully configured to use Azure OpenAI instead of regular OpenAI.
+The docflow-360 application has been fully configured to use Azure OpenAI instead of regular OpenAI.
 
 ## Changes Made
 
@@ -26,9 +26,9 @@ The Worklighter application has been fully configured to use Azure OpenAI instea
 
 ✅ Azure Blob Storage:
 
-- `AZURE_STORAGE_ACCOUNT=shdevvoxops`
+- `AZURE_STORAGE_ACCOUNT=shdevagenticcxcore`
 - `AZURE_STORAGE_CONNECTION_STRING=[configured]`
-- `AZURE_STORAGE_CONTAINER=sh-dev-worklighter`
+- `AZURE_STORAGE_CONTAINER=sh-dev-docflow-360`
 
 ### 2. API Configuration (apps/api/config/index.ts)
 
@@ -66,8 +66,8 @@ llmProvider: process.env.LLM_PROVIDER || 'azure-openai',
 
 ### From sh-dev Resource Group:
 
-- **Storage Account**: shdevvoxops
-  - Container: sh-dev-worklighter
+- **Storage Account**: shdevagenticcxcore
+  - Container: sh-dev-docflow-360
 
 ### From AzureFleekDev Resource Group:
 
@@ -176,9 +176,11 @@ az cognitiveservices account deployment list -g AzureFleekDev -n GPT35FInetuning
 az cognitiveservices account show -g CommonDev -n galsi-ADI
 
 # Check Blob Storage container
-az storage container show --name sh-dev-worklighter --account-name shdevvoxops
+az storage container show --name sh-dev-docflow-360 --account-name shdevagenticcxcore
 ```
 
 ## Configuration is Complete ✅
 
 The application is now fully configured to use Azure OpenAI and Azure AI services. All provider settings are correctly configured in the .env file and the application code properly routes to Azure services based on the provider selection.
+
+

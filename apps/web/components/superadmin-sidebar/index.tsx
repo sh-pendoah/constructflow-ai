@@ -45,8 +45,8 @@ const SuperAdminSidebar: React.FC<SuperAdminSidebarProps> = ({ isOpen = true, on
             <Link href="/superadmin/companies" className="block">
               <div className="w-[151px] h-[54px] relative">
                 <Image
-                  src="/images/worklighter-logo.png"
-                  alt="Worklighter Logo"
+                  src="/images/docflow-360-logo.png"
+                  alt="docflow-360 Logo"
                   fill
                   className="object-contain"
                   priority
@@ -91,4 +91,5 @@ const SuperAdminSidebar: React.FC<SuperAdminSidebarProps> = ({ isOpen = true, on
 };
 
 export default SuperAdminSidebar;
+
 

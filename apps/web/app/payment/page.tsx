@@ -12,7 +12,7 @@ export default function PaymentPage() {
       heading="Included"
       features={[
         {
-          text: "Worklighter-owned ingestion inboxes (Invoices, Logs, Compliance)",
+          text: "docflow-360-owned ingestion inboxes (Invoices, Logs, Compliance)",
           type: "included",
         },
         {
@@ -44,7 +44,7 @@ export default function PaymentPage() {
           type: "locked",
         },
         {
-          text: "Customer-specific schema evolution, historical backfill, optional Worklighter correction (Embedded Ops Partner)",
+          text: "Customer-specific schema evolution, historical backfill, optional docflow-360 correction (Embedded Ops Partner)",
           type: "excluded",
         },
       ]}
@@ -82,7 +82,7 @@ export default function PaymentPage() {
           type: "included",
         },
         {
-          text: "Schema evolution, complex exports, historical backfill, optional Worklighter correction (Embedded Ops Partner)",
+          text: "Schema evolution, complex exports, historical backfill, optional docflow-360 correction (Embedded Ops Partner)",
           type: "locked",
         },
       ]}
@@ -117,7 +117,7 @@ export default function PaymentPage() {
           type: "included",
         },
         {
-          text: "Optional Worklighter-performed correction and approval (by agreement)",
+          text: "Optional docflow-360-performed correction and approval (by agreement)",
           type: "included",
         },
         {

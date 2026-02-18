@@ -1,7 +1,7 @@
 {
-  "name": "worklight-worker",
+  "name": "docflow-360-worker",
   "version": "1.0.0",
-  "description": "Worklight Worker Service - BullMQ consumer for document processing",
+  "description": "docflow-360 Worker Service - BullMQ consumer for document processing",
   "main": "index.ts",
   "scripts": {
     "start": "node dist/index.js",

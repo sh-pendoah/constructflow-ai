@@ -1,7 +1,7 @@
 {
-  "name": "@worklighter/contracts",
+  "name": "@docflow-360/contracts",
   "version": "1.0.0",
-  "description": "Shared TypeScript interfaces, OpenAPI schemas, and Zod validators for Worklighter",
+  "description": "Shared TypeScript interfaces, OpenAPI schemas, and Zod validators for docflow-360",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
@@ -15,3 +15,4 @@
     "typescript": "^5.9.3"
   }
 }
+

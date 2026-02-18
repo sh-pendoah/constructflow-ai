@@ -1,5 +1,5 @@
 /**
- * Worklight Scheduler Service
+ * docflow-360 Scheduler Service
  *
  * Independent cron job service responsible for:
  * - Compliance expiration scanning (daily at 9 AM)
@@ -53,7 +53,7 @@ const emailTransporter = nodemailer.createTransport({
 async function connectDatabase() {
   try {
     await mongoose.connect(
-      process.env.MONGO_URI || 'mongodb://localhost:27017/worklighter'
+      process.env.MONGO_URI || 'mongodb://localhost:27017/docflow-360'
     );
     logger.info('Scheduler: MongoDB connected successfully');
   } catch (error) {
@@ -230,11 +230,11 @@ async function sendWeeklySummary() {
     }
 
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@worklight.com',
+      from: process.env.SMTP_FROM || 'noreply@docflow-360.com',
       to: recipients.join(','),
-      subject: 'Worklight Weekly Summary',
+      subject: 'docflow-360 Weekly Summary',
       html: `
-        <h2>Worklight Weekly Summary</h2>
+        <h2>docflow-360 Weekly Summary</h2>
         <p>This is a placeholder summary email.</p>
         <ul>
           <li>Pending reviews: TBD</li>
@@ -343,7 +343,7 @@ const healthServer = http.createServer((req, res) => {
 
 // Start scheduler
 async function start() {
-  logger.info('Scheduler: Starting Worklight Scheduler Service...');
+  logger.info('Scheduler: Starting docflow-360 Scheduler Service...');
 
   await connectDatabase();
   scheduleJobs();
@@ -364,3 +364,4 @@ start().catch((error) => {
   logger.error('Scheduler: Failed to start', error);
   process.exit(1);
 });
+

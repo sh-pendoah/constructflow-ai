@@ -35,8 +35,8 @@ const SignUpPage = () => {
         {/* Logo */}
         <div className="w-[263px] h-[94px] relative">
           <Image
-            src="/images/worklighter-logo.png"
-            alt="Worklighter Logo"
+            src="/images/docflow-360-logo.png"
+            alt="docflow-360 Logo"
             fill
             className="object-contain"
             priority
@@ -49,7 +49,7 @@ const SignUpPage = () => {
           <div className="w-full flex flex-col gap-11">
             {/* Header Container */}
             <div className="w-full flex flex-col gap-0.5">
-              <h1 className="text-h3 text-primary">Welcome to Worklighter</h1>
+              <h1 className="text-h3 text-primary">Welcome to docflow-360</h1>
               <p className="text-body-copy text-primary">
                 Let&apos;s get you set up in less than 10 minutes
               </p>
@@ -172,4 +172,5 @@ const SignUpPage = () => {
 };
 
 export default SignUpPage;
+
 

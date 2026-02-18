@@ -17,13 +17,13 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Worklighter - Construction Document Management",
+  title: "docflow-360 - Construction Document Management",
   description:
-    "Worklighter is a construction document management and workflow automation platform. Automatically process invoices, compliance documents, and track construction projects with intelligent document routing and approval workflows.",
+    "docflow-360 is a construction document management and workflow automation platform. Automatically process invoices, compliance documents, and track construction projects with intelligent document routing and approval workflows.",
   icons: {
-    icon: "/images/worklighter-logo.png",
+    icon: "/images/docflow-360-logo.png",
     shortcut: "/favicon.ico",
-    apple: "/images/worklighter-logo.png",
+    apple: "/images/docflow-360-logo.png",
   },
 };
 
@@ -69,4 +69,5 @@ export default function RootLayout({
     </html>
   );
 }
+
 

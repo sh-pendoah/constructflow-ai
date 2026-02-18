@@ -39,7 +39,7 @@ export const Footer: React.FC = () => {
           {/* Column 1: Brand */}
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
-              <Image src={logo} alt="Logo Worklighter" className="h-8 w-auto object-contain" />
+              <Image src={logo} alt="Logo docflow-360" className="h-8 w-auto object-contain" />
 
             </div>
             <p className="text-[#6C757D] text-sm leading-relaxed max-w-[240px]">
@@ -71,7 +71,7 @@ export const Footer: React.FC = () => {
         {/* Footer Bottom */}
         <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-[#6C757D] text-sm">
-            © 2025 Worklighter. All rights reserved.
+            © 2025 docflow-360. All rights reserved.
           </p>
           
           <div className="flex items-center gap-6">

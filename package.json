@@ -1,8 +1,8 @@
 {
-  "name": "worklighter-monorepo",
+  "name": "docflow-360-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "Worklighter Construction Operations Automation Engine - Nx-orchestrated monorepo",
+  "description": "DocFlow 360 financial logic factory - Nx-orchestrated monorepo",
   "packageManager": "pnpm@9.0.0",
   "scripts": {
     "install:all": "pnpm install",
@@ -42,3 +42,4 @@
     "typescript": "^5.9.3"
   }
 }
+

@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 async function main() {
   try {
     console.log('Connecting to database...');
-    const mongoUri = process.env.MONGO_URI || 'mongodb://admin:password@localhost:27017/worklighter?authSource=admin';
+    const mongoUri = process.env.MONGO_URI || 'mongodb://admin:password@localhost:27017/docflow-360?authSource=admin';
     await mongoose.connect(mongoUri);
     console.log('Connected to MongoDB successfully.');
 
@@ -27,3 +27,4 @@ async function main() {
 }
 
 main();
+

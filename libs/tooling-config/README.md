@@ -1,6 +1,6 @@
-# @worklighter/tooling-config
+# @docflow-360/tooling-config
 
-Shared tooling configurations for the Worklighter monorepo.
+Shared tooling configurations for the docflow-360 monorepo.
 
 ## Contents
 
@@ -50,3 +50,4 @@ Per the 2026 End-to-End AI Solution Playbook:
 - Enables consistent code style across all apps
 - Reduces configuration duplication
 - Makes onboarding easier
+

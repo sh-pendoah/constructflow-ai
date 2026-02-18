@@ -1,5 +1,5 @@
 /**
- * Swagger/OpenAPI Configuration for Worklighter API
+ * Swagger/OpenAPI Configuration for docflow-360 API
  * 
  * This file configures the API documentation using OpenAPI 3.0 specification.
  * Provides comprehensive documentation for all API endpoints, models, and authentication.
@@ -11,12 +11,12 @@ const options: swaggerJsdoc.Options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Worklighter Construction Ops Automation API',
+      title: 'docflow-360 Construction Ops Automation API',
       version: '1.0.0',
       description: `
-# Worklighter API Documentation
+# docflow-360 API Documentation
 
-Worklighter is a lightweight Construction Operations Automation Engine designed to streamline document workflows across construction companies.
+docflow-360 is a lightweight Construction Operations Automation Engine designed to streamline document workflows across construction companies.
 
 ## Core Workflows
 
@@ -124,14 +124,14 @@ Webhook payloads include event type, timestamp, and relevant resource IDs.
 
 ## Support
 
-- **Email**: support@worklighter.com
-- **Documentation**: https://docs.worklighter.com
-- **Status Page**: https://status.worklighter.com
+- **Email**: support@docflow-360.com
+- **Documentation**: https://docs.docflow-360.com
+- **Status Page**: https://status.docflow-360.com
       `,
       contact: {
-        name: 'Worklighter Support',
-        email: 'support@worklighter.com',
-        url: 'https://worklighter.com',
+        name: 'docflow-360 Support',
+        email: 'support@docflow-360.com',
+        url: 'https://docflow-360.com',
       },
       license: {
         name: 'Proprietary',
@@ -143,11 +143,11 @@ Webhook payloads include event type, timestamp, and relevant resource IDs.
         description: 'Local Development Server',
       },
       {
-        url: 'https://staging-api.worklighter.com',
+        url: 'https://staging-api.docflow-360.com',
         description: 'Staging Environment',
       },
       {
-        url: 'https://api.worklighter.com',
+        url: 'https://api.docflow-360.com',
         description: 'Production Environment',
       },
     ],
@@ -414,3 +414,4 @@ Webhook payloads include event type, timestamp, and relevant resource IDs.
 const swaggerSpec = swaggerJsdoc(options);
 
 export default swaggerSpec;
+

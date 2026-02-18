@@ -213,7 +213,7 @@ const OnboardingStep2 = () => {
                       Does Your Company Use Gmail?
                     </h1>
                     <p className="text-body-copy text-primary">
-                      Worklighter connects to Gmail accounts to monitor and
+                      docflow-360 connects to Gmail accounts to monitor and
                       process documents.
                     </p>
                   </div>
@@ -239,7 +239,7 @@ const OnboardingStep2 = () => {
                   {/* Alert */}
                   <Alert
                     heading="Important"
-                    bodyText="Worklighter only supports Gmail accounts\n\nIf you don't use Gmail, we'll guide you through a simple setup process"
+                    bodyText="docflow-360 only supports Gmail accounts\n\nIf you don't use Gmail, we'll guide you through a simple setup process"
                     variant="warning"
                     showIcon={true}
                   />

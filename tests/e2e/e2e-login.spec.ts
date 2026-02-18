@@ -3,10 +3,10 @@ import { expect, test } from '@playwright/test';
 test('Login flow', async ({ page }) => {
   // 1. Navigate to login page (use /auth which has Redux saga integration)
   await page.goto('http://localhost:3001/auth');
-  await expect(page).toHaveTitle(/Worklighter/);
+  await expect(page).toHaveTitle(/docflow-360/);
 
   // 2. Enter credentials
-  await page.fill('input[type="email"]', 'demo@worklight.com');
+  await page.fill('input[type="email"]', 'demo@docflow-360.com');
   await page.fill('input[type="password"]', 'password123');
 
   // 3. Click Sign In

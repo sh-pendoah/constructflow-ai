@@ -1,6 +1,6 @@
 # Architecture Decision Records (ADRs)
 
-This document captures key architectural decisions made during the development of Worklighter Construction Operations Automation Engine.
+This document captures key architectural decisions made during the development of docflow-360 Construction Operations Automation Engine.
 
 ## Table of Contents
 1. [ADR-001: Azure as Primary Cloud Provider](#adr-001-azure-as-primary-cloud-provider)
@@ -24,7 +24,7 @@ This document captures key architectural decisions made during the development o
 
 ### Context
 
-Need to select a cloud provider for hosting the Worklighter platform with comprehensive AI/ML capabilities for document processing.
+Need to select a cloud provider for hosting the docflow-360 platform with comprehensive AI/ML capabilities for document processing.
 
 ### Decision
 
@@ -460,7 +460,7 @@ We will use a monorepo structure with independent service packages under `/apps`
 
 **Our Structure:**
 ```
-worklight/
+docflow-360/
 ├── apps/
 │   ├── api/          # Express API server
 │   ├── worker/       # BullMQ job processor
@@ -914,7 +914,7 @@ Additional context and links
 
 ### Context
 
-The 2026 End-to-End AI Solution Playbook designates **Azure Database for PostgreSQL** as the default database for new applications. Worklighter currently uses **MongoDB 7.x via Azure Cosmos DB for MongoDB API** (documented in ADR-002 from 2024).
+The 2026 End-to-End AI Solution Playbook designates **Azure Database for PostgreSQL** as the default database for new applications. docflow-360 currently uses **MongoDB 7.x via Azure Cosmos DB for MongoDB API** (documented in ADR-002 from 2024).
 
 Need to evaluate:
 1. Whether the original MongoDB justification remains valid

@@ -1,4 +1,4 @@
-# Worklighter End-to-End Testing Guide
+# docflow-360 End-to-End Testing Guide
 
 Complete guide for testing all three MVP workflows end-to-end.
 
@@ -20,7 +20,7 @@ Complete guide for testing all three MVP workflows end-to-end.
 cp .env.example .env
 
 # Essential variables
-MONGODB_URI=mongodb://localhost:27017/worklight
+MONGODB_URI=mongodb://localhost:27017/docflow-360
 REDIS_URL=redis://localhost:6379
 JWT_SECRET=your-secret-key-for-testing
 OCR_PROVIDER=mock  # or azure-di, google-vision, aws-textract
@@ -34,7 +34,7 @@ NODE_ENV=development
 curl -X POST http://localhost:3000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "test@worklighter.com",
+    "email": "test@docflow-360.com",
     "password": "TestPassword123!",
     "firstName": "Test",
     "lastName": "User"
@@ -44,7 +44,7 @@ curl -X POST http://localhost:3000/api/auth/register \
 TOKEN=$(curl -X POST http://localhost:3000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "test@worklighter.com",
+    "email": "test@docflow-360.com",
     "password": "TestPassword123!"
   }' | jq -r '.token')
 ```
@@ -625,3 +625,4 @@ node scripts/seed-test-data.js
 
 **Last Updated**: February 12, 2026
 **Status**: Ready for end-to-end testing
+

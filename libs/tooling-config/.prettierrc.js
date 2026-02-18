@@ -1,5 +1,5 @@
 /**
- * Shared Prettier configuration for Worklighter
+ * Shared Prettier configuration for docflow-360
  * 
  * Per 2026 playbook: Consistent formatting across all apps
  */

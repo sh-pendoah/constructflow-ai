@@ -126,9 +126,9 @@ export async function sendCOIExpirationAlert(
 
 // Send welcome email
 export async function sendWelcomeEmail(email: string, name: string): Promise<void> {
-  const subject = 'Welcome to Worklight';
+  const subject = 'Welcome to docflow-360';
   const html = `
-    <h2>Welcome to Worklight, ${name}!</h2>
+    <h2>Welcome to docflow-360, ${name}!</h2>
     <p>Your account has been created successfully.</p>
     <p>You can now log in and start managing your construction documents.</p>
   `;

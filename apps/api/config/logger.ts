@@ -10,6 +10,6 @@ export const logger = winston.createLogger({
       ? winston.format.combine(winston.format.colorize(), winston.format.simple())
       : winston.format.json()
   ),
-  defaultMeta: { service: 'worklight-core-api' },
+  defaultMeta: { service: 'docflow-360-core-api' },
   transports: [new winston.transports.Console()],
 });

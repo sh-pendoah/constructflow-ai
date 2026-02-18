@@ -1,4 +1,4 @@
-# Worklight Worker Service
+# docflow-360 Worker Service
 
 Independent BullMQ consumer service responsible for processing queued jobs.
 
@@ -54,13 +54,13 @@ npm start
 
 ```bash
 # Build image
-docker build -t worklight-worker .
+docker build -t docflow-360-worker .
 
 # Run container
 docker run -d \
-  --name worklight-worker \
+  --name docflow-360-worker \
   --env-file .env \
-  worklight-worker
+  docflow-360-worker
 ```
 
 ## Deployment

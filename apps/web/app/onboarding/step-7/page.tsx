@@ -47,7 +47,7 @@ const OnboardingStep7 = () => {
               <div className="w-full flex flex-col gap-0.5">
                 <h1 className="text-h3 text-primary">You're All Set!</h1>
                 <p className="text-body-copy text-primary">
-                  Worklighter is ready to process your construction documents
+                  docflow-360 is ready to process your construction documents
                 </p>
               </div>
 
@@ -91,7 +91,7 @@ const OnboardingStep7 = () => {
                   <p className="text-supporting text-dark whitespace-pre-line">
                     {`Field teams email documents to your connected Gmail addresses
 
-Worklighter automatically processes all documents
+docflow-360 automatically processes all documents
 
 You review exceptions in the Review Queue (only 10-20%)
 

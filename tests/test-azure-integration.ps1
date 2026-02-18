@@ -9,7 +9,7 @@ Get-Content ..\.env | ForEach-Object {
 }
 
 Write-Host "═══════════════════════════════════════════════════════" -ForegroundColor Cyan
-Write-Host "   Worklighter Azure Integration Tests" -ForegroundColor Cyan
+Write-Host "   docflow-360 Azure Integration Tests" -ForegroundColor Cyan
 Write-Host "═══════════════════════════════════════════════════════`n" -ForegroundColor Cyan
 
 $results = @{}

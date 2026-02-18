@@ -5,7 +5,7 @@ test.describe('COI Upload Workflow', () => {
   test('should upload a COI document successfully', async ({ page }) => {
     // 1. Login
     await page.goto('/login');
-    await page.fill('input[type="email"]', 'demo@worklight.com');
+    await page.fill('input[type="email"]', 'demo@docflow-360.com');
     await page.fill('input[type="password"]', 'password123');
     await page.click('button[type="submit"]');
     await page.waitForURL(/.*dashboard/);

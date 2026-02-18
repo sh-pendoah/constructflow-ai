@@ -1,5 +1,5 @@
 /**
- * Shared ESLint configuration for Worklighter
+ * Shared ESLint configuration for docflow-360
  * 
  * Per 2026 playbook: Consistent linting across all TypeScript apps
  */

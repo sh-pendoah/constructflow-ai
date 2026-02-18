@@ -1,6 +1,6 @@
-# @worklighter/observability
+# @docflow-360/observability
 
-Shared observability utilities for the Worklighter monorepo: logging, tracing, and telemetry.
+Shared observability utilities for the docflow-360 monorepo: logging, tracing, and telemetry.
 
 ## Purpose
 
@@ -20,7 +20,7 @@ Per the 2026 End-to-End AI Solution Playbook:
 ### Logging
 
 ```typescript
-import { logger, createLogger } from '@worklighter/observability';
+import { logger, createLogger } from '@docflow-360/observability';
 
 logger.info('Processing invoice', { invoiceId: '123' });
 
@@ -31,7 +31,7 @@ childLogger.error('Failed to extract', { error: 'OCR timeout' });
 ### Tracing
 
 ```typescript
-import { getTracer, extractTraceContext, recordError } from '@worklighter/observability';
+import { getTracer, extractTraceContext, recordError } from '@docflow-360/observability';
 
 const tracer = getTracer('api-service');
 const span = tracer.startSpan('process-document');
@@ -51,7 +51,7 @@ const ctx = extractTraceContext(req.headers);
 ### Telemetry
 
 ```typescript
-import { recordAiCall, recordToolCall } from '@worklighter/observability';
+import { recordAiCall, recordToolCall } from '@docflow-360/observability';
 
 // AI call telemetry
 recordAiCall(span, {
@@ -73,3 +73,4 @@ recordToolCall(span, {
   sideEffect: 'READ_ONLY',
 });
 ```
+

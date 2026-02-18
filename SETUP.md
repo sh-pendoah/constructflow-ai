@@ -1,15 +1,15 @@
-# Worklight - Independent Services with Shared Dev Harness
+# docflow-360 - Independent Services with Shared Dev Harness
 
 ## ✅ Setup Complete!
 
-Your Worklight services directory has been successfully organized. Three **independent services** now live together with a shared development harness and orchestration layer.
+Your docflow-360 services directory has been successfully organized. Three **independent services** now live together with a shared development harness and orchestration layer.
 
 ---
 
 ## 📍 Current Structure
 
 ```
-worklight/
+docflow-360/
 ├── apps/
 │   ├── web/                    # Next.js web application
 │   ├── landing/                # Vite landing page React app
@@ -158,9 +158,9 @@ MongoDB            Redis        External APIs
 
 ```bash
 # Individual builds
-docker build -f docker/Dockerfile.frontend -t worklight-frontend .
-docker build -f docker/Dockerfile.landing-page -t worklight-landing-page .
-docker build -f docker/Dockerfile.core-api -t worklight-core-api .
+docker build -f docker/Dockerfile.frontend -t docflow-360-frontend .
+docker build -f docker/Dockerfile.landing-page -t docflow-360-landing-page .
+docker build -f docker/Dockerfile.core-api -t docflow-360-core-api .
 
 # Or use the script:
 .\scripts\build-docker.ps1
@@ -246,7 +246,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Build and deploy frontend
         run: |
-          docker build -f docker/Dockerfile.frontend -t worklight-frontend:${{ github.sha }} .
+          docker build -f docker/Dockerfile.frontend -t docflow-360-frontend:${{ github.sha }} .
           # Push to registry, deploy to K8s, etc.
 ```
 
@@ -308,7 +308,7 @@ LANDING_PAGE_PORT=5174
 npm run infra:up
 
 # Check MongoDB is healthy:
-docker ps  # should see "worklight-mongodb (healthy)"
+docker ps  # should see "docflow-360-mongodb (healthy)"
 ```
 
 ### Clear everything and start fresh
@@ -358,11 +358,11 @@ npm run dev
 
 # Example healthy output:
 # CONTAINER ID   IMAGE             STATUS
-# ...           worklight-frontend   Up (healthy)
-# ...           worklight-landing    Up (healthy)
-# ...           worklight-core-api   Up (healthy)
-# ...           worklight-mongodb    Up (healthy)
-# ...           worklight-redis      Up (healthy)
+# ...           docflow-360-frontend   Up (healthy)
+# ...           docflow-360-landing    Up (healthy)
+# ...           docflow-360-core-api   Up (healthy)
+# ...           docflow-360-mongodb    Up (healthy)
+# ...           docflow-360-redis      Up (healthy)
 ```
 
 ---

@@ -30,7 +30,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "1",
       companyName: "Silverstone Construction",
-      companyUrl: "silverstone.worklighter.com",
+      companyUrl: "silverstone.docflow-360.com",
       status: "Active",
       plan: "Pro",
       workflows: ["Invoices", "Daily Logs", "Compliance"],
@@ -39,7 +39,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "2",
       companyName: "Redwood Builders LLC",
-      companyUrl: "redwood.worklighter.com",
+      companyUrl: "redwood.docflow-360.com",
       status: "Inactive",
       plan: "Growth",
       workflows: ["Invoices", "Daily Logs"],
@@ -48,7 +48,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "3",
       companyName: "Apex Development Group",
-      companyUrl: "apex.worklighter.com",
+      companyUrl: "apex.docflow-360.com",
       status: "Active",
       plan: "Starter",
       workflows: ["Invoices", "Compliance"],
@@ -57,7 +57,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "4",
       companyName: "Harbor Concrete & Masonry",
-      companyUrl: "harbor.worklighter.com",
+      companyUrl: "harbor.docflow-360.com",
       status: "Active",
       plan: "Growth",
       workflows: ["Invoices", "Compliance"],
@@ -66,7 +66,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "5",
       companyName: "Ironclad Construction Co",
-      companyUrl: "ironclad.worklighter.com",
+      companyUrl: "ironclad.docflow-360.com",
       status: "Inactive",
       plan: "Pro",
       workflows: ["Invoices", "Daily Logs", "Compliance"],
@@ -75,7 +75,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "6",
       companyName: "Titan Commercial Builders",
-      companyUrl: "titan.worklighter.com",
+      companyUrl: "titan.docflow-360.com",
       status: "Active",
       plan: "Pro",
       workflows: ["Invoices", "Daily Logs", "Compliance"],
@@ -84,7 +84,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "7",
       companyName: "Summit Roofing Solutions",
-      companyUrl: "summit.worklighter.com",
+      companyUrl: "summit.docflow-360.com",
       status: "Active",
       plan: "Starter",
       workflows: ["Invoices", "Compliance"],
@@ -93,7 +93,7 @@ const SuperAdminCompaniesPage = () => {
     {
       id: "8",
       companyName: "Cornerstone Renovations",
-      companyUrl: "cornerstone.worklighter.com",
+      companyUrl: "cornerstone.docflow-360.com",
       status: "Active",
       plan: "Growth",
       workflows: ["Invoices", "Daily Logs"],
@@ -103,7 +103,7 @@ const SuperAdminCompaniesPage = () => {
     ...Array.from({ length: 119 }, (_, i) => ({
       id: `${i + 9}`,
       companyName: `Company ${i + 9}`,
-      companyUrl: `company${i + 9}.worklighter.com`,
+      companyUrl: `company${i + 9}.docflow-360.com`,
       status: (i % 3 === 0 ? "Inactive" : "Active") as "Active" | "Inactive",
       plan: ["Pro", "Growth", "Starter"][i % 3],
       workflows: ["Invoices", "Daily Logs", "Compliance"].slice(0, (i % 3) + 1),
@@ -377,4 +377,5 @@ const SuperAdminCompaniesPage = () => {
 };
 
 export default SuperAdminCompaniesPage;
+
 

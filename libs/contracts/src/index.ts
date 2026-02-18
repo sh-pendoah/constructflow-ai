@@ -1,7 +1,7 @@
 /**
- * @worklighter/contracts
+ * @docflow-360/contracts
  * 
- * Shared TypeScript interfaces, types, and Zod schemas for Worklighter monorepo.
+ * Shared TypeScript interfaces, types, and Zod schemas for docflow-360 monorepo.
  * These contracts are used across all apps for type safety and API contracts.
  * 
  * Per 2026 playbook: Shared contracts are allowed (and encouraged) to maintain
@@ -23,3 +23,4 @@ export * from './types/api';
 // Zod schemas for validation
 export * from './schemas/document-schemas';
 export * from './schemas/user-schemas';
+

@@ -96,8 +96,8 @@ const Navbar = () => {
       {/* Logo */}
       <Link href="/dashboard" className="w-[100px] h-[36px] sm:w-[120px] sm:h-[43px] md:w-[151px] md:h-[54px] relative flex-shrink-0">
         <Image
-          src="/images/worklighter-logo.png"
-          alt="Worklighter Logo"
+          src="/images/docflow-360-logo.png"
+          alt="docflow-360 Logo"
           fill
           className="object-contain"
           priority
@@ -180,5 +180,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 

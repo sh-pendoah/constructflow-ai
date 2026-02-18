@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GovernanceConfig",
+  "type": "object",
+  "required": [
+    "compliance_mode",
+    "data_residency",
+    "budget_cap_daily_usd",
+    "audit_log_retention_days",
+    "human_in_the_loop_threshold"
+  ],
+  "properties": {
+    "compliance_mode": {
+      "type": "string",
+      "enum": ["strict", "open"]
+    },
+    "data_residency": {
+      "type": "string",
+      "minLength": 3
+    },
+    "budget_cap_daily_usd": {
+      "type": "number",
+      "minimum": 0
+    },
+    "audit_log_retention_days": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "human_in_the_loop_threshold": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    }
+  },
+  "additionalProperties": true
+}

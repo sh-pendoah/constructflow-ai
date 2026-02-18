@@ -159,7 +159,7 @@ jobs:
           # Wait for services to be ready
           sleep 30
         env:
-          MONGO_URI: mongodb://admin:password@localhost:27017/worklighter?authSource=admin
+          MONGO_URI: mongodb://admin:password@localhost:27017/docflow-360?authSource=admin
           REDIS_URL: redis://localhost:6379
           JWT_SECRET: test-secret-key
           PORT: 3000
@@ -168,7 +168,7 @@ jobs:
         run: pnpm test:e2e
         env:
           BASE_URL: http://localhost:3001
-          TEST_USER_EMAIL: test@worklight.com
+          TEST_USER_EMAIL: test@docflow-360.local
           TEST_USER_PASSWORD: Test1234$
 
       - name: Upload Playwright report
@@ -207,7 +207,7 @@ jobs:
         with:
           context: ./apps/api
           push: false
-          tags: worklighter-api:${{ github.sha }}
+          tags: docflow-360-api:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -216,7 +216,7 @@ jobs:
         with:
           context: ./apps/worker
           push: false
-          tags: worklighter-worker:${{ github.sha }}
+          tags: docflow-360-worker:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -225,7 +225,7 @@ jobs:
         with:
           context: ./apps/scheduler
           push: false
-          tags: worklighter-scheduler:${{ github.sha }}
+          tags: docflow-360-scheduler:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -234,7 +234,7 @@ jobs:
         with:
           context: ./apps/web
           push: false
-          tags: worklighter-web:${{ github.sha }}
+          tags: docflow-360-web:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -287,3 +287,5 @@ jobs:
             exit 1
           fi
           echo "All checks passed!"
+
+

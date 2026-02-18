@@ -1,6 +1,6 @@
-# Worklighter Azure Deployment Guide
+# docflow-360 Azure Deployment Guide
 
-Complete guide for deploying Worklighter Construction Operations Automation Engine to Microsoft Azure.
+Complete guide for deploying docflow-360 Construction Operations Automation Engine to Microsoft Azure.
 
 ## Table of Contents
 
@@ -43,7 +43,7 @@ Complete guide for deploying Worklighter Construction Operations Automation Engi
 
 ## Azure Services Overview
 
-Worklighter uses the following Azure services:
+docflow-360 uses the following Azure services:
 
 ### Core Services
 
@@ -115,7 +115,7 @@ az account set --subscription "YOUR_SUBSCRIPTION_ID"
 
 ```bash
 # Set variables
-export RESOURCE_GROUP="worklighter-prod"
+export RESOURCE_GROUP="docflow-360-prod"
 export LOCATION="eastus"  # Check availability: eastus, westus2, westeurope, etc.
 
 # Create resource group
@@ -133,7 +133,7 @@ az group create \
 Create registry for Docker images:
 
 ```bash
-export ACR_NAME="worklighteracr"  # must be globally unique
+export ACR_NAME="docflow-360acr"  # must be globally unique
 
 # Create ACR
 az acr create \
@@ -154,7 +154,7 @@ az acr login --name $ACR_NAME
 ### Step 2: Azure Cosmos DB (MongoDB API)
 
 ```bash
-export COSMOSDB_ACCOUNT="worklightdb"
+export COSMOSDB_ACCOUNT="docflow-360db"
 
 # Create Cosmos DB account with MongoDB API
 az cosmosdb create \
@@ -170,7 +170,7 @@ az cosmosdb create \
 az cosmosdb mongodb database create \
   --account-name $COSMOSDB_ACCOUNT \
   --resource-group $RESOURCE_GROUP \
-  --name worklighter
+  --name docflow-360
 
 # Get connection string (save this securely)
 az cosmosdb keys list \
@@ -185,7 +185,7 @@ az cosmosdb keys list \
 ### Step 3: Azure Cache for Redis
 
 ```bash
-export REDIS_NAME="worklighterredis"
+export REDIS_NAME="docflow-360redis"
 
 # Create Redis cache
 az redis create \
@@ -209,7 +209,7 @@ az redis show \
 ### Step 4: Azure Blob Storage
 
 ```bash
-export STORAGE_ACCOUNT="worklighterstorage"  # must be globally unique
+export STORAGE_ACCOUNT="docflow-360storage"  # must be globally unique
 
 # Create storage account
 az storage account create \
@@ -240,7 +240,7 @@ az storage account show-connection-string \
 ### Step 5: Azure Form Recognizer
 
 ```bash
-export FORM_RECOGNIZER_NAME="worklighterformrec"
+export FORM_RECOGNIZER_NAME="docflow-360formrec"
 
 # Create Form Recognizer resource
 az cognitiveservices account create \
@@ -267,7 +267,7 @@ az cognitiveservices account keys list \
 ### Step 6: Azure OpenAI
 
 ```bash
-export OPENAI_NAME="worklighteropenai"
+export OPENAI_NAME="docflow-360openai"
 
 # Create Azure OpenAI resource (requires approval)
 az cognitiveservices account create \
@@ -295,7 +295,7 @@ az cognitiveservices account deployment create \
 ### Step 7: Azure Application Insights
 
 ```bash
-export APP_INSIGHTS_NAME="worklighterinsights"
+export APP_INSIGHTS_NAME="docflow-360insights"
 
 # Create App Insights
 az monitor app-insights component create \
@@ -320,7 +320,7 @@ az monitor app-insights component show \
 #### Create Container Apps Environment
 
 ```bash
-export CONTAINERAPPS_ENV="worklighter-env"
+export CONTAINERAPPS_ENV="docflow-360-env"
 
 # Create environment
 az containerapp env create \
@@ -334,8 +334,8 @@ az containerapp env create \
 ```bash
 # Tag and push each service
 for service in api web worker scheduler; do
-  docker build -t $ACR_NAME.azurecr.io/worklight-$service:latest ./apps/$service
-  docker push $ACR_NAME.azurecr.io/worklight-$service:latest
+  docker build -t $ACR_NAME.azurecr.io/docflow-360-$service:latest ./apps/$service
+  docker push $ACR_NAME.azurecr.io/docflow-360-$service:latest
 done
 ```
 
@@ -345,10 +345,10 @@ done
 
 ```bash
 az containerapp create \
-  --name worklighter-api \
+  --name docflow-360-api \
   --resource-group $RESOURCE_GROUP \
   --environment $CONTAINERAPPS_ENV \
-  --image $ACR_NAME.azurecr.io/worklight-api:latest \
+  --image $ACR_NAME.azurecr.io/docflow-360-api:latest \
   --target-port 3000 \
   --ingress external \
   --registry-server $ACR_NAME.azurecr.io \
@@ -360,10 +360,10 @@ az containerapp create \
 
 ```bash
 az containerapp create \
-  --name worklighter-worker \
+  --name docflow-360-worker \
   --resource-group $RESOURCE_GROUP \
   --environment $CONTAINERAPPS_ENV \
-  --image $ACR_NAME.azurecr.io/worklight-worker:latest \
+  --image $ACR_NAME.azurecr.io/docflow-360-worker:latest \
   --registry-server $ACR_NAME.azurecr.io \
   --cpu 2.0 --memory 4.0Gi \
   --min-replicas 2 --max-replicas 10 \
@@ -375,10 +375,10 @@ az containerapp create \
 
 ```bash
 az containerapp create \
-  --name worklighter-scheduler \
+  --name docflow-360-scheduler \
   --resource-group $RESOURCE_GROUP \
   --environment $CONTAINERAPPS_ENV \
-  --image $ACR_NAME.azurecr.io/worklight-scheduler:latest \
+  --image $ACR_NAME.azurecr.io/docflow-360-scheduler:latest \
   --registry-server $ACR_NAME.azurecr.io \
   --cpu 0.5 --memory 1.0Gi \
   --min-replicas 1 --max-replicas 1
@@ -388,10 +388,10 @@ az containerapp create \
 
 ```bash
 az containerapp create \
-  --name worklighter-web \
+  --name docflow-360-web \
   --resource-group $RESOURCE_GROUP \
   --environment $CONTAINERAPPS_ENV \
-  --image $ACR_NAME.azurecr.io/worklight-web:latest \
+  --image $ACR_NAME.azurecr.io/docflow-360-web:latest \
   --target-port 3001 \
   --ingress external \
   --registry-server $ACR_NAME.azurecr.io \
@@ -408,7 +408,7 @@ _Terraform manifests available in `terraform/` directory_
 # Create AKS cluster
 az aks create \
   --resource-group $RESOURCE_GROUP \
-  --name worklighter-aks \
+  --name docflow-360-aks \
   --node-count 3 \
   --vm-set-type VirtualMachineScaleSets \
   --load-balancer-sku standard
@@ -425,14 +425,14 @@ Store all secrets in Azure Key Vault:
 ```bash
 # Create Key Vault
 az keyvault create \
-  --name worklighter-vault \
+  --name docflow-360-vault \
   --resource-group $RESOURCE_GROUP \
   --location $LOCATION
 
 # Store secrets
-az keyvault secret set --vault-name worklighter-vault --name MONGO-URI --value "$(az cosmosdb keys list --name $COSMOSDB_ACCOUNT --resource-group $RESOURCE_GROUP --type connection-strings --query 'connectionStrings[0].connectionString' --output tsv)"
+az keyvault secret set --vault-name docflow-360-vault --name MONGO-URI --value "$(az cosmosdb keys list --name $COSMOSDB_ACCOUNT --resource-group $RESOURCE_GROUP --type connection-strings --query 'connectionStrings[0].connectionString' --output tsv)"
 
-az keyvault secret set --vault-name worklighter-vault --name REDIS-URL --value "redis://:$(az redis show-connection-string --name $REDIS_NAME --resource-group $RESOURCE_GROUP)@$(az redis show --name $REDIS_NAME --resource-group $RESOURCE_GROUP --query hostName --output tsv):6380?ssl=True"
+az keyvault secret set --vault-name docflow-360-vault --name REDIS-URL --value "redis://:$(az redis show-connection-string --name $REDIS_NAME --resource-group $RESOURCE_GROUP)@$(az redis show --name $REDIS_NAME --resource-group $RESOURCE_GROUP --query hostName --output tsv):6380?ssl=True"
 
 # Reference in Container Apps via secret refs
 # See container app deployment commands above for env-vars syntax
@@ -449,7 +449,7 @@ Automatic with Container Apps. View metrics:
 ```bash
 # Stream logs
 az containerapp logs show \
-  --name worklighter-api \
+  --name docflow-360-api \
   --resource-group $RESOURCE_GROUP \
   --follow
 
@@ -466,7 +466,7 @@ az monitor app-insights component show \
 az monitor metrics alert create \
   --name "High Error Rate" \
   --resource-group $RESOURCE_GROUP \
-  --scopes $(az containerapp show --name worklighter-api --resource-group $RESOURCE_GROUP --query id --output tsv) \
+  --scopes $(az containerapp show --name docflow-360-api --resource-group $RESOURCE_GROUP --query id --output tsv) \
   --condition "avg exceptions/server > 10" \
   --window-size 5m
 ```
@@ -481,7 +481,7 @@ Container Apps automatically scales based on CPU, memory, and HTTP concurrency. 
 
 ```bash
 az containerapp update \
-  --name worklighter-api \
+  --name docflow-360-api \
   --resource-group $RESOURCE_GROUP \
   --min-replicas 2 --max-replicas 10
 ```
@@ -503,7 +503,7 @@ az containerapp update \
 ```bash
 # Create virtual network
 az network vnet create \
-  --name worklighter-vnet \
+  --name docflow-360-vnet \
   --resource-group $RESOURCE_GROUP \
   --address-prefixes 10.0.0.0/16
 ```
@@ -513,7 +513,7 @@ az network vnet create \
 ```bash
 # Enable system-assigned identity
 az containerapp identity assign \
-  --name worklighter-api \
+  --name docflow-360-api \
   --resource-group $RESOURCE_GROUP \
   --system-assigned
 ```
@@ -523,7 +523,7 @@ az containerapp identity assign \
 ```bash
 # Restrict API to specific IPs
 az containerapp ingress access-restriction set \
-  --name worklighter-api \
+  --name docflow-360-api \
   --resource-group $RESOURCE_GROUP \
   --rule-name office-only \
   --ip-address 203.0.113.0/24 \
@@ -547,7 +547,7 @@ az containerapp ingress access-restriction set \
 **Container app won't start**:
 
 ```bash
-az containerapp logs show --name worklighter-api --resource-group $RESOURCE_GROUP --tail 100
+az containerapp logs show --name docflow-360-api --resource-group $RESOURCE_GROUP --tail 100
 ```
 
 **Database connection failures**:
@@ -557,7 +557,7 @@ az containerapp logs show --name worklighter-api --resource-group $RESOURCE_GROU
 az cosmosdb mongodb collection show \
   --account-name $COSMOSDB_ACCOUNT \
   --resource-group $RESOURCE_GROUP \
-  --database-name worklighter \
+  --database-name docflow-360 \
   --name invoices
 ```
 
@@ -566,14 +566,14 @@ az cosmosdb mongodb collection show \
 ```bash
 # Check replica count and resource usage
 az monitor metrics list \
-  --resource $(az containerapp show --name worklighter-api --resource-group $RESOURCE_GROUP --query id --output tsv) \
+  --resource $(az containerapp show --name docflow-360-api --resource-group $RESOURCE_GROUP --query id --output tsv) \
   --metric "CpuPercentage,MemoryPercentage"
 ```
 
 ### Support Resources
 
 - **Azure Docs**: https://docs.microsoft.com/azure
-- **Worklighter Docs**: See SETUP.md and README.md
+- **docflow-360 Docs**: See SETUP.md and README.md
 - **Azure Support**: Create ticket in Azure Portal
 
 ---
@@ -628,3 +628,5 @@ az group delete --name $RESOURCE_GROUP --yes --no-wait
 
 **Last Updated**: February 12, 2026
 **Status**: Ready for deployment
+
+

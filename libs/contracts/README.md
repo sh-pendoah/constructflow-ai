@@ -1,6 +1,6 @@
-# @worklighter/contracts
+# @docflow-360/contracts
 
-Shared TypeScript interfaces, types, and Zod schemas for the Worklighter monorepo.
+Shared TypeScript interfaces, types, and Zod schemas for the docflow-360 monorepo.
 
 ## Purpose
 
@@ -20,8 +20,8 @@ Per the 2026 End-to-End AI Solution Playbook, shared contracts are **allowed and
 ## Usage
 
 ```typescript
-import type { Invoice, DocumentStatus } from '@worklighter/contracts';
-import { documentStatusSchema } from '@worklighter/contracts';
+import type { Invoice, DocumentStatus } from '@docflow-360/contracts';
+import { documentStatusSchema } from '@docflow-360/contracts';
 
 // Use types
 const invoice: Invoice = { ... };
@@ -37,3 +37,4 @@ const result = documentStatusSchema.parse('pending');
 ❌ Database models (those stay in apps)
 
 ✅ Only interfaces, types, and validation schemas
+

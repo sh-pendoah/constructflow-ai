@@ -132,7 +132,7 @@ export const Hero: React.FC = () => {
                 </div>
                 <div className="flex-1 text-center">
                   <div className="inline-block px-3 py-0.5 bg-white rounded text-[10px] text-gray-400 border border-gray-100 font-mono">
-                    app.worklighter.com
+                    app.docflow-360.com
                   </div>
                 </div>
              </div>

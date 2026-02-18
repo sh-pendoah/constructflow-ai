@@ -62,18 +62,18 @@ Required Coverage:
 • Certificate Holder: Rogue Forest Products, LLC
 
 
-Submit To: compliance@worklighter.com
+Submit To: compliance@docflow-360.com
 
 
 ⚠️ Important: Outstanding invoices may be held if insurance expires without renewal.
 
 
-Questions? Contact: admin@worklighter.com
+Questions? Contact: admin@docflow-360.com
 
 
 Best regards,
 
-Worklighter Compliance Team`;
+docflow-360 Compliance Team`;
 
   const [emailPreview, setEmailPreview] = useState(defaultEmailPreview);
 
@@ -338,4 +338,5 @@ Worklighter Compliance Team`;
 };
 
 export default SendAlertModal;
+
 

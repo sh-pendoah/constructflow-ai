@@ -1,8 +1,8 @@
-# AGENTS.md — Worklighter
+# AGENTS.md — docflow-360
 
 ## Project Overview
 
-Worklighter is a **Construction Operations Automation Engine** that processes invoices, daily logs, and compliance documents (COIs) through OCR, LLM extraction, rules-based review queues, and exportable audit reports. It targets Microsoft Azure for production deployment.
+docflow-360 is a **Construction Operations Automation Engine** that processes invoices, daily logs, and compliance documents (COIs) through OCR, LLM extraction, rules-based review queues, and exportable audit reports. It targets Microsoft Azure for production deployment.
 
 **Built following the 2026 End-to-End AI Solution Playbook**: Azure-first, multi-app, agent-ready architecture with Nx orchestration, shared libraries for contracts/observability/tooling, and a dedicated AI runtime service.
 

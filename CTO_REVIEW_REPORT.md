@@ -1,8 +1,8 @@
-# Worklighter: CTO-Quality Product & Technical Review
+# docflow-360: CTO-Quality Product & Technical Review
 
 **Review Date:** February 13, 2026  
 **Reviewer:** Senior Software Architect | Product Engineer | UX-Driven Technical Strategist  
-**Repository:** sh-pendoah/worklighter  
+**Repository:** sh-pendoah/docflow-360  
 **Current Version:** 1.0.0 (MVP-to-Beta)
 
 ---
@@ -55,16 +55,16 @@
 
 ## 4.2 Domain Fit Analysis (Ranked)
 
-Below is a ranked analysis of the 15 provided business domains against Worklighter's current features, target audience, UI/UX, and product narrative.
+Below is a ranked analysis of the 15 provided business domains against docflow-360's current features, target audience, UI/UX, and product narrative.
 
 ### Matching Methodology
 
 For each domain, I evaluated:
-- **Feature Overlap** (0-30%) — Does Worklighter's invoice/log/compliance processing align with domain needs?
+- **Feature Overlap** (0-30%) — Does docflow-360's invoice/log/compliance processing align with domain needs?
 - **Target Audience** (0-25%) — Does construction ops automation serve this domain's users?
 - **UI/UX Suitability** (0-20%) — Can the current review queue/dashboard be adapted for this domain?
 - **Branding Potential** (0-15%) — Does the domain's brand/mission align with document automation?
-- **Product Narrative** (0-10%) — Can Worklighter's story (construction → ops automation) fit this domain?
+- **Product Narrative** (0-10%) — Can docflow-360's story (construction → ops automation) fit this domain?
 
 ---
 
@@ -78,9 +78,9 @@ For each domain, I evaluated:
 | 4 | **neurocareos.com** | **45%** | ❌ Demo | Neurodivergent care ops → similar to empowerspectrum; compliance and billing overlap but domain-specific workflows (care plans, therapy protocols) don't align |
 | 5 | **mahumtech.com** | **42%** | ❌ Demo | Tech consulting → invoice processing fits, but daily logs/WC tracking are construction-specific; too much re-architecture needed |
 | 6 | **lawli.ai** | **40%** | ❌ Demo | Legal AI → document extraction has overlap, but review queue for construction docs doesn't translate to legal document review |
-| 7 | **quadtech.ai** | **38%** | ❌ Demo | Quadcopter/drone tech → compliance tracking (Part 107, insurance) has minimal overlap; core product misaligned |
-| 8 | **empowera.ai** | **35%** | ❌ Demo | AI empowerment platform → too generic; Worklighter's construction specificity doesn't fit |
-| 9 | **revolva.ai** | **35%** | ❌ Demo | AI platform → generic AI branding doesn't leverage Worklighter's construction domain expertise |
+| 7 | **regsafe-core.ai** | **38%** | ❌ Demo | Quadcopter/drone tech → compliance tracking (Part 107, insurance) has minimal overlap; core product misaligned |
+| 8 | **empowera.ai** | **35%** | ❌ Demo | AI empowerment platform → too generic; docflow-360's construction specificity doesn't fit |
+| 9 | **revolva.ai** | **35%** | ❌ Demo | AI platform → generic AI branding doesn't leverage docflow-360's construction domain expertise |
 | 10 | **mairatech.com** | **32%** | ❌ Demo | Tech consulting → similar to mahumtech; invoice processing only, not enough overlap |
 | 11 | **a4squad.com** | **30%** | ❌ Demo | Unclear domain from name alone; assuming tech/consulting → insufficient overlap |
 | 12 | **campgen.app** | **28%** | ❌ Demo | Camp management → compliance tracking (counselor certifications) has minimal overlap; core workflows don't translate |
@@ -98,7 +98,7 @@ For each domain, I evaluated:
 - **Feature Overlap (28/30)** — Daily Log tracking maps to goal tracking/progress logs; WC code tracking maps to skill/competency tracking; invoice processing maps to training/certification billing; compliance tracking maps to credential/certification management
 - **Target Audience (22/25)** — Workforce development programs, vocational training centers, apprenticeship programs, and HR departments managing employee development all need structured logging, compliance tracking, and cost management
 - **UI/UX Suitability (16/20)** — Review Queue → "Goal Review Queue" (manager approves logged progress); Dashboard → "Progress Dashboard"; Onboarding → "Program Setup"
-- **Branding Potential (13/15)** — "Perry Goals" suggests goal-tracking/achievement platform; Worklighter's workflow automation → "Goal progress automation & compliance tracking"
+- **Branding Potential (13/15)** — "Perry Goals" suggests goal-tracking/achievement platform; docflow-360's workflow automation → "Goal progress automation & compliance tracking"
 - **Product Narrative (9/10)** — Construction daily logs = workforce activity logs; WC codes = skill codes; Compliance = certifications. Story: "Built for construction workforce management, now powering goal-driven workforce development."
 
 **Recommended Product Direction:**
@@ -124,16 +124,16 @@ For each domain, I evaluated:
 - **Feature Overlap (24/30)** — Invoice processing → therapy session billing; Daily Logs → session notes/behavior tracking; Compliance → provider credentials (BCBA, RBT certifications); Contractor management → therapist provider network
 - **Target Audience (20/25)** — ABA therapy clinics, behavior analysts, parent coordinators managing therapy programs
 - **UI/UX Suitability (14/20)** — Review Queue → "Session Review Queue"; Dashboard → "Therapy Dashboard"
-- **Branding Potential (10/15)** — "Smart ABA Care" implies smart automation for ABA therapy operations; Worklighter's ops automation fits
+- **Branding Potential (10/15)** — "Smart ABA Care" implies smart automation for ABA therapy operations; docflow-360's ops automation fits
 - **Product Narrative (7/10)** — Construction ops → healthcare ops; daily logs → clinical notes; compliance → provider credentials
 
 **Challenges:**
-- ABA therapy has domain-specific workflows (treatment plans, behavior data collection, insurance authorization) that don't exist in Worklighter
+- ABA therapy has domain-specific workflows (treatment plans, behavior data collection, insurance authorization) that don't exist in docflow-360
 - HIPAA compliance requirements significantly more stringent than construction document privacy
 - Parent/client communication features missing
 
 **Recommended Approach:**
-If pursuing this domain, treat as a **new product build** using Worklighter as a **foundation/accelerator** (40-50% code reuse) rather than a direct refactor. Add ABA-specific modules (treatment plans, behavior tracking, insurance claims) as new services.
+If pursuing this domain, treat as a **new product build** using docflow-360 as a **foundation/accelerator** (40-50% code reuse) rather than a direct refactor. Add ABA-specific modules (treatment plans, behavior tracking, insurance claims) as new services.
 
 **If Converted:**
 - **Product Name:** SmartABA (simplified from "Smart ABA Care")
@@ -147,9 +147,9 @@ If pursuing this domain, treat as a **new product build** using Worklighter as a
 
 #### ❌ #3-15: Remaining Domains — **<50% Match** → Recommend Demo Solution
 
-For all remaining domains (empowerspectrum.com, neurocareos.com, mahumtech.com, lawli.ai, quadtech.ai, empowera.ai, revolva.ai, mairatech.com, a4squad.com, campgen.app, educationnotwar.com), the feature overlap is **insufficient** (<50%) to justify conversion.
+For all remaining domains (empowerspectrum.com, neurocareos.com, mahumtech.com, lawli.ai, regsafe-core.ai, empowera.ai, revolva.ai, mairatech.com, a4squad.com, campgen.app, educationnotwar.com), the feature overlap is **insufficient** (<50%) to justify conversion.
 
-**Recommendation:** Retain Worklighter as a **construction operations demo** hosted under **shtrial.com**.
+**Recommendation:** Retain docflow-360 as a **construction operations demo** hosted under **shtrial.com**.
 
 ---
 
@@ -157,7 +157,7 @@ For all remaining domains (empowerspectrum.com, neurocareos.com, mahumtech.com, 
 
 **PRIMARY PATH (55% Match):**
 
-## ✅ Convert Worklighter → PerryGoals
+## ✅ Convert docflow-360 → PerryGoals
 
 **Justification:**
 - Only domain exceeding 50% match threshold
@@ -181,7 +181,7 @@ For all remaining domains (empowerspectrum.com, neurocareos.com, mahumtech.com, 
 
 ## 🎯 Keep as Demo Solution under shtrial.com
 
-**Product Name:** WorkOps or BuildOps or DocsFlow (more marketable than "Worklighter")  
+**Product Name:** WorkOps or BuildOps or DocsFlow (more marketable than "docflow-360")  
 **Deployment URL:** `workops.shtrial.com` or `buildops.shtrial.com`  
 **Positioning:** "Construction Operations Automation Demo — See how AI-powered document processing, approval workflows, and compliance tracking work in real-world construction scenarios"
 
@@ -881,7 +881,7 @@ This creates a "demo factory" showcasing how the same platform architecture can 
 
 ## 4.4 Differentiating Feature Suggestions (Defensible Additions)
 
-These 5 features would make Worklighter/PerryGoals feel **premium** and **difficult to copy**, creating a moat against competitors.
+These 5 features would make docflow-360/PerryGoals feel **premium** and **difficult to copy**, creating a moat against competitors.
 
 ---
 
@@ -1000,7 +1000,7 @@ Example Alerts:
 - "Material costs up 15% this month vs last month — inflation adjustment needed?"
 
 **Why It Matters:**
-- **Value Capture:** This is CFO-level insight. Worklighter becomes a financial tool, not just a document processor.
+- **Value Capture:** This is CFO-level insight. docflow-360 becomes a financial tool, not just a document processor.
 - **Stickiness:** Predictive alerts = proactive value. Reactive document processing = commodity.
 - **Upsell:** Premium analytics = higher tier pricing.
 
@@ -1769,7 +1769,7 @@ cd apps/web && npx depcheck
 | **Thu** | #5: Wire compliance alert emails | Close feature gap, reduce liability |
 | **Fri** | #9: Add API rate limiting & versioning | Security hardening |
 
-**Deliverable:** Worklighter v1.1 (production-ready core workflows)
+**Deliverable:** docflow-360 v1.1 (production-ready core workflows)
 
 ---
 
@@ -1782,7 +1782,7 @@ cd apps/web && npx depcheck
 | **Week 2** | **Mobile + Real-Time** | #4 (Mobile review queue), #10 (WebSocket), #11 (ID lookup), #12 (Error boundaries) |
 | **Week 3** | **Conversion** | #6 (Demo mode), #7 (Progressive onboarding), #14 (Trust signals), #15 (Pricing page) |
 
-**Deliverable:** Worklighter v1.2 (mobile-friendly, conversion-optimized)
+**Deliverable:** docflow-360 v1.2 (mobile-friendly, conversion-optimized)
 
 ---
 
@@ -1796,7 +1796,7 @@ cd apps/web && npx depcheck
 | **Week 5** | **Performance** | #13 (Bundle optimization), Performance enhancements (caching, image optimization) |
 | **Week 6** | **Polish** | #8 (Export service), #16 (WC historical analysis), Code cleanup |
 
-**Deliverable:** Worklighter v2.0 (feature-complete, performant, differentiated)
+**Deliverable:** docflow-360 v2.0 (feature-complete, performant, differentiated)
 
 ---
 
@@ -1835,7 +1835,7 @@ cd apps/web && npx depcheck
 
 ---
 
-### If Keeping as Worklighter (Demo):
+### If Keeping as docflow-360 (Demo):
 
 **Immediate Next Steps:**
 1. Week 1-3: Execute P0 fixes
@@ -1853,4 +1853,5 @@ cd apps/web && npx depcheck
 **Report Prepared By:** Senior Software Architect  
 **Date:** February 13, 2026  
 **Next Review:** Q2 2026 (after implementing P0 fixes)
+
 

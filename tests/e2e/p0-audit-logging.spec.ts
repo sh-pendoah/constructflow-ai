@@ -15,7 +15,7 @@ import { test, expect } from '@playwright/test';
 // Helper function to login
 async function login(page: any) {
   await page.goto('/login');
-  await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL || 'test@worklight.com');
+  await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL || 'test@docflow-360.com');
   await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD || 'Test1234$');
   await page.click('button[type="submit"]');
   await page.waitForURL(/.*dashboard/, { timeout: 10000 });

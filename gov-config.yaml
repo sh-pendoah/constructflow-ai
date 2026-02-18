@@ -1,0 +1,6 @@
+# Governance and Compliance Configuration
+compliance_mode: strict # options: strict, open
+data_residency: KSA_JEDDAH
+budget_cap_daily_usd: 50.00
+audit_log_retention_days: 365
+human_in_the_loop_threshold: 0.95

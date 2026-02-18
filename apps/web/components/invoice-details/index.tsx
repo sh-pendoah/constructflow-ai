@@ -168,13 +168,13 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ invoice }) => {
       {/* Scrollable Content */}
       <div className="flex-1 overflow-y-auto p-4 min-h-0 hide-scrollbar">
         <div className="flex flex-col gap-5">
-          {/* Worklighter confidence */}
+          {/* docflow-360 confidence */}
           <div className="flex items-center gap-2 p-3 pl-4 bg-[#EBF3FF] border border-[#3B82F6] rounded-lg">
             <div className="flex-1 flex flex-col gap-1">
               <div className="flex items-center gap-2">
                 <Bot className="w-6 h-6 text-[#3B82F6]" />
                 <span className="text-label text-primary font-sf-pro">
-                  Worklighter confidence
+                  docflow-360 confidence
                 </span>
               </div>
               <p className="text-small text-primary font-sf-pro">

@@ -1,4 +1,4 @@
-# Worklight Scheduler Service
+# docflow-360 Scheduler Service
 
 Independent cron job service for scheduled tasks.
 
@@ -59,13 +59,13 @@ npm start
 
 ```bash
 # Build image
-docker build -t worklight-scheduler .
+docker build -t docflow-360-scheduler .
 
 # Run container
 docker run -d \
-  --name worklight-scheduler \
+  --name docflow-360-scheduler \
   --env-file .env \
-  worklight-scheduler
+  docflow-360-scheduler
 ```
 
 ## Deployment

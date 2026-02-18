@@ -130,3 +130,5 @@ test-results/
 .nx/
 .nx/cache/
 .turbo/
+
+master.env

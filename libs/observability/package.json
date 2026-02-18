@@ -1,7 +1,7 @@
 {
-  "name": "@worklighter/observability",
+  "name": "@docflow-360/observability",
   "version": "1.0.0",
-  "description": "Shared observability utilities: logging, tracing, telemetry for Worklighter",
+  "description": "Shared observability utilities: logging, tracing, telemetry for docflow-360",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
@@ -20,3 +20,4 @@
     "typescript": "^5.9.3"
   }
 }
+

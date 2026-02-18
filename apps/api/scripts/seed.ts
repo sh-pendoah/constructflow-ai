@@ -5,7 +5,7 @@ import { Tenant } from '../models/Tenant';
 
 dotenv.config();
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:password@localhost:27017/worklighter?authSource=admin';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:password@localhost:27017/docflow-360?authSource=admin';
 
 const seed = async () => {
   try {
@@ -32,7 +32,7 @@ const seed = async () => {
     }
 
     // 2. Ensure Admin User
-    const adminEmail = 'demo@worklight.com';
+    const adminEmail = 'demo@docflow-360.com';
     let admin = await User.findOne({ email: adminEmail });
     if (!admin) {
       console.log('Creating Admin User...');
@@ -70,3 +70,4 @@ const seed = async () => {
 };
 
 seed();
+

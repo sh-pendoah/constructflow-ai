@@ -1,6 +1,15 @@
-# Worklighter — Construction Operations Automation Engine
+# DocFlow 360 Engine
 
-Worklighter automates document processing workflows for the construction industry. It ingests invoices, daily logs, and compliance documents (COIs), extracts structured data via OCR + LLM, routes items through a rules-based review queue, and produces exportable audit reports.
+Automated financial reconciliation that keeps humans in control.
+
+## For Operations Leaders
+
+- `Logic, not just OCR`: reconcile invoice vs PO vs receipt with deterministic checks.
+- `Confidence routing`: low-confidence and high-risk outcomes route to human review queues.
+- `Controlled posting`: high-value actions require explicit approvals before export.
+- [View Product Spec](./docs/product-spec.md) | [View Demo Script](./docs/demo-script.md)
+
+DocFlow 360 automates document processing workflows with extraction, reconciliation, reason-coded exceptions, and auditable approvals.
 
 **Built with the 2026 End-to-End AI Solution Playbook**: Azure-first, Nx-orchestrated monorepo, centralized AI runtime, shared libraries, and observability-first architecture.
 
@@ -75,8 +84,8 @@ Worker  Scheduler    Azure Services
 ### 1️⃣ Clone and Install
 
 ```bash
-git clone https://github.com/sh-pendoah/worklighter.git
-cd worklighter
+git clone https://github.com/sh-pendoah/docflow-360.git
+cd docflow-360
 
 # Install all dependencies (root + apps + libs)
 pnpm install
@@ -100,7 +109,7 @@ cp .env.example .env
 pnpm infra:up
 
 # Verify services are healthy
-docker ps  # Should show worklighter-mongodb and worklighter-redis
+docker ps  # Should show docflow-360-mongodb and docflow-360-redis
 ```
 
 ### 4️⃣ Build All Apps
@@ -133,8 +142,8 @@ pnpm dev:scheduler   # Scheduled tasks
 
 - API: `curl http://localhost:3000/health`
 - Web: Open http://localhost:3001 in browser
-- MongoDB: `docker exec -it worklighter-mongodb mongosh -u admin -p password`
-- Redis: `docker exec -it worklighter-redis redis-cli ping`
+- MongoDB: `docker exec -it docflow-360-mongodb mongosh -u admin -p password`
+- Redis: `docker exec -it docflow-360-redis redis-cli ping`
 
 ---
 
@@ -159,7 +168,7 @@ docker-compose -f docker-compose.infra.yml up -d
 ## Project Structure (2026 Playbook)
 
 ```
-worklighter/
+docflow-360/
 ├── apps/                          # Deployable services
 │   ├── api/                       # Express → NestJS REST API
 │   ├── web/                       # Next.js 16 + React 19 frontend
@@ -229,6 +238,9 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full Azure provisioning and deploym
 | [TESTING.md](./TESTING.md) | End-to-end testing procedures for all three workflows |
 | [ARCHITECTURE_DECISIONS.md](./ARCHITECTURE_DECISIONS.md) | 11 ADRs covering cloud, database, OCR, AI runtime, and frontend choices |
 | [.github/copilot-instructions.md](./.github/copilot-instructions.md) | GitHub Copilot coding guidelines and playbook principles |
+| [docs/product-spec.md](./docs/product-spec.md) | Trust-first product blueprint (DocFlow 360) |
+| [docs/demo-script.md](./docs/demo-script.md) | 2-minute demo choreography for risk and cost buyers |
+| [docs/trust-primitives.md](./docs/trust-primitives.md) | Release checklist for evidence, policy, sovereign mode, budget, HITL, observability, evals |
 
 ---
 
@@ -248,4 +260,5 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full Azure provisioning and deploym
 ## License
 
 Proprietary — all rights reserved.
+
 

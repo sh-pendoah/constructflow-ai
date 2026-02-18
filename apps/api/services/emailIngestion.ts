@@ -74,7 +74,7 @@ function determineDocumentType(toAddress: string): DocumentType {
 
 /**
  * Extract tenant/company ID from email address
- * Supports patterns like: invoices+companyA@worklighter.com, companyA-logs@worklighter.com
+ * Supports patterns like: invoices+companyA@docflow-360.com, companyA-logs@docflow-360.com
  */
 function extractTenantIdFromEmail(toAddress: string): string | null {
   const lowerTo = toAddress.toLowerCase();
@@ -408,3 +408,4 @@ emailWorker.on('completed', (job) => {
 });
 
 export default emailQueue;
+

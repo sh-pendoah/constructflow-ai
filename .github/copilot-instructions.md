@@ -97,8 +97,8 @@ Worklighter is a Construction Operations Automation Engine built following the *
 4. **Import from shared libs correctly**
    ```typescript
    // Good - shared contracts
-   import type { InvoiceSchema } from '@worklighter/contracts';
-   import { logger } from '@worklighter/observability';
+   import type { InvoiceSchema } from '@docflow-360/contracts';
+   import { logger } from '@docflow-360/observability';
    
    // Bad - cross-app business logic
    import { invoiceService } from '../../api/services/invoiceService';
@@ -326,3 +326,4 @@ apps/<app-name>/
 3. Check existing code patterns before creating new ones
 4. Ask if deviation from playbook defaults is justified
 5. Prefer duplication over tight coupling between apps
+

@@ -157,7 +157,7 @@ async function testAPIHealth() {
 
 async function runTests() {
   console.log('═══════════════════════════════════════════════════════');
-  console.log('   Worklighter Azure Integration Tests');
+  console.log('   docflow-360 Azure Integration Tests');
   console.log('═══════════════════════════════════════════════════════\n');
 
   const results = {

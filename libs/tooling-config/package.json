@@ -1,7 +1,7 @@
 {
-  "name": "@worklighter/tooling-config",
+  "name": "@docflow-360/tooling-config",
   "version": "1.0.0",
-  "description": "Shared ESLint, Prettier, and TypeScript configurations for Worklighter",
+  "description": "Shared ESLint, Prettier, and TypeScript configurations for docflow-360",
   "main": "index.js",
   "scripts": {},
   "devDependencies": {
@@ -10,3 +10,4 @@
     "typescript": "^5.9.3"
   }
 }
+

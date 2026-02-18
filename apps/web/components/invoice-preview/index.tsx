@@ -79,7 +79,7 @@ const InvoicePreview = () => {
                   From: billing@abcconcrete.com
                 </p>
                 <p className="text-button text-primary font-poppins font-semibold">
-                  To: invoices@worklighter.com
+                  To: invoices@docflow-360.com
                 </p>
                 <p className="text-button text-primary font-poppins font-semibold">
                   Subject: Invoice ABC-8472 - Mirror Valley Project
@@ -151,3 +151,4 @@ const InvoicePreview = () => {
 };
 
 export default InvoicePreview;
+
