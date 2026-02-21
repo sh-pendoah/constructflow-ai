@@ -1,0 +1,187 @@
+name: Promote — Gated stg→prd (2026 Playbook §5.1)
+# §5.1  Promote: gated stg → gated prd
+# §5.3  Progressive delivery: ACA revisions + traffic splitting
+# §13   Every production deployment must be rollbackable
+# §4    Least privilege: production write access is pipeline-only
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Immutable image tag (git SHA) to promote'
+        required: true
+      target_env:
+        description: 'Target environment'
+        required: true
+        default: 'stg'
+        type: choice
+        options:
+          - stg
+          - prd
+      rollback_revision:
+        description: 'ACA revision name to roll back to (leave blank for new deployment)'
+        required: false
+
+permissions:
+  contents: read
+  id-token: write   # OIDC — no long-lived Azure credentials
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+  NODE_VERSION: '20'
+
+jobs:
+  # ── Pre-flight checks ─────────────────────────────────────────────────────────
+  pre-flight:
+    name: Pre-flight Checks
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target_env }}-gate  # requires manual approval for prd
+
+    steps:
+      - name: Validate inputs
+        run: |
+          if [ -z "${{ inputs.image_tag }}" ]; then
+            echo "image_tag is required"
+            exit 1
+          fi
+          echo "Promoting image tag: ${{ inputs.image_tag }} → ${{ inputs.target_env }}"
+
+      # Verify nightly gate passed for prd promotions via GitHub Checks API.
+      # Requires the nightly workflow to write a commit status on main.
+      - name: Check nightly gate (prd only)
+        if: inputs.target_env == 'prd'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          STATUS=$(gh api \
+            repos/${{ github.repository }}/commits/${{ inputs.image_tag }}/check-runs \
+            --jq '.check_runs[] | select(.name == "Nightly Gate — All Checks") | .conclusion' \
+            2>/dev/null | head -1)
+          if [ "$STATUS" != "success" ]; then
+            echo "Nightly gate has not passed for commit ${{ inputs.image_tag }} (status: ${STATUS:-not_found})."
+            echo "Run the nightly workflow against this commit before promoting to prd."
+            exit 1
+          fi
+          echo "Nightly gate passed for ${{ inputs.image_tag }}"
+
+  # ── Deploy to stg ─────────────────────────────────────────────────────────────
+  deploy-stg:
+    name: Deploy to stg (Azure Container Apps)
+    runs-on: ubuntu-latest
+    needs: pre-flight
+    if: inputs.target_env == 'stg'
+    environment: stg
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # §7.1 OIDC-based Azure auth — no long-lived credentials stored as secrets
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # §5.3 Progressive delivery: create new ACA revision with 0% traffic
+      - name: Deploy new ACA revision (api) — stg
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          resourceGroup: ${{ vars.ACA_RESOURCE_GROUP_STG }}
+          containerAppName: docflow-360-api-stg
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-api:${{ inputs.image_tag }}
+          revisionSuffix: ${{ inputs.image_tag }}
+          trafficWeight: latest=0 # start at 0%; smoke test before shifting
+
+      - name: Run smoke tests against stg
+        run: |
+          API_URL="https://docflow-360-api-stg.${{ vars.ACA_DOMAIN }}"
+          echo "Running smoke test against $API_URL"
+          curl -sf "$API_URL/health/live" | grep -q '"status":"alive"'
+          curl -sf "$API_URL/health/ready" | grep -q '"status":"ready"'
+          echo "Smoke tests passed"
+
+      # Shift 100% traffic to new revision after smoke tests pass
+      - name: Shift traffic to new revision — stg
+        run: |
+          az containerapp revision set-mode \
+            --name docflow-360-api-stg \
+            --resource-group ${{ vars.ACA_RESOURCE_GROUP_STG }} \
+            --mode single
+
+  # ── Deploy to prd ─────────────────────────────────────────────────────────────
+  deploy-prd:
+    name: Deploy to prd (Azure Container Apps — canary)
+    runs-on: ubuntu-latest
+    needs: pre-flight
+    if: inputs.target_env == 'prd'
+    environment: prd  # requires 2 approvals (§4)
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # §5.3 Progressive delivery: start canary at 10% traffic
+      - name: Deploy canary revision (api) — prd
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          resourceGroup: ${{ vars.ACA_RESOURCE_GROUP_PRD }}
+          containerAppName: docflow-360-api-prd
+          imageToDeploy: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-api:${{ inputs.image_tag }}
+          revisionSuffix: ${{ inputs.image_tag }}
+          trafficWeight: latest=10  # canary at 10%
+
+      - name: Run smoke tests against prd canary
+        run: |
+          API_URL="https://docflow-360-api-prd.${{ vars.ACA_DOMAIN }}"
+          curl -sf "$API_URL/health/live" | grep -q '"status":"alive"'
+          curl -sf "$API_URL/health/ready" | grep -q '"status":"ready"'
+          echo "Prd canary smoke tests passed"
+
+      - name: Shift to 100% traffic — prd
+        run: |
+          az containerapp revision set-mode \
+            --name docflow-360-api-prd \
+            --resource-group ${{ vars.ACA_RESOURCE_GROUP_PRD }} \
+            --mode single
+
+  # ── Rollback ──────────────────────────────────────────────────────────────────
+  rollback:
+    name: Rollback (traffic shift back — no rebuild)
+    runs-on: ubuntu-latest
+    # Use pre-flight as the dependency since exactly one of deploy-stg/deploy-prd runs.
+    # Rollback only triggers when a deploy fails and a rollback revision is specified.
+    needs: pre-flight
+    if: failure() && inputs.rollback_revision != ''
+
+    steps:
+      - name: Azure Login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # §13 Rollback = shift traffic back to known-good revision (no drama, no rebuild)
+      - name: Shift traffic back to stable revision
+        run: |
+          if [ "${{ inputs.target_env }}" = "prd" ]; then
+            RESOURCE_GROUP="${{ vars.ACA_RESOURCE_GROUP_PRD }}"
+          else
+            RESOURCE_GROUP="${{ vars.ACA_RESOURCE_GROUP_STG }}"
+          fi
+          APP_NAME="docflow-360-api-${{ inputs.target_env }}"
+          az containerapp ingress traffic set \
+            --name "$APP_NAME" \
+            --resource-group "$RESOURCE_GROUP" \
+            --revision-weight "${{ inputs.rollback_revision }}=100"
+          echo "Rolled back to revision: ${{ inputs.rollback_revision }}"
