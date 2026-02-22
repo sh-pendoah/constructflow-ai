@@ -854,20 +854,95 @@ We will use Next.js 15 with App Router for the frontend application.
 
 ---
 
+## ADR-012: Repository Directory Layout Deviation from 2026 Playbook Standard
+
+**Date**: 2026-02-21
+**Status**: Accepted
+**Decision Makers**: Technical Lead, Platform Team
+
+### Context
+
+The 2026 End-to-End AI Solution Playbook §3.2 mandates the following top-level layout:
+
+```
+/apps/      — frontends only
+/services/  — APIs and workers
+/packages/  — shared libraries
+/infra/     — Terraform (optional if co-located)
+/docs/      — ADRs, runbooks
+```
+
+docflow-360 uses a different layout:
+
+```
+/apps/      — both frontends AND backend services (api, worker, scheduler, ai-runtime)
+/libs/      — shared libraries (not /packages/)
+/infra/     — Terraform (aligned with playbook)
+/docs/      — ADRs, runbooks (aligned with playbook)
+```
+
+### Decision
+
+We will **retain the current `/apps/` + `/libs/` layout** rather than migrating to
+`/services/` + `/packages/`.
+
+### Rationale
+
+1. **Migration cost vs. benefit**: Moving 4 services from `/apps/` to `/services/`
+   and renaming `/libs/` to `/packages/` requires updating Nx project configs, all
+   Dockerfiles, all CI workflow paths, all import paths in shared libs, and all
+   documentation. Estimated cost: 2+ days. Benefit: naming alignment only — no
+   functional difference.
+
+2. **Nx workspace convention**: Nx defaults to `appsDir: apps` and `libsDir: libs`.
+   The current layout uses these Nx defaults; changing would require additional
+   Nx configuration and could break Nx affected-graph computation.
+
+3. **Zero runtime impact**: The directory naming has no impact on the deployed
+   artifacts, Docker images, or Azure Container Apps configuration.
+
+4. **Playbook intent is met**: All backends (`api`, `worker`, `scheduler`) are
+   independently deployable services with their own Dockerfiles, package.json, and
+   CI targets. The playbook's intent — independent service deployability — is fully
+   satisfied.
+
+### New Operational Risks Accepted
+
+- New contributors may expect `/services/` based on 2026 playbook documentation.
+  **Mitigation**: this ADR, AGENTS.md, and README.md document the deviation explicitly.
+
+### Consequences
+
+**Positive:**
+- Zero migration cost; no risk of breaking CI/CD or Nx affected builds.
+- Consistent with Nx ecosystem conventions.
+
+**Negative:**
+- Deviates from playbook naming standard; requires ongoing ADR reference.
+
+### Review Criteria
+
+Revisit this decision if:
+1. A new service is added and the `/apps/` name causes genuine confusion.
+2. The 2026 playbook is updated to mandate (not just recommend) `/services/`.
+3. Nx changes its default directory conventions.
+
+---
+
 ## Future ADRs
 
 Topics to document:
-- ADR-012: Compliance Alert Windows (30/15/7/0 days)
-- ADR-013: Multi-Tenant Data Isolation Strategy
-- ADR-014: Export Format Selection (CSV vs XLSX vs PDF)
-- ADR-015: Webhook Event Schema Design
-- ADR-016: Error Handling and Retry Strategies
-- ADR-017: Logging and Monitoring Approach (partially covered in libs/observability)
-- ADR-018: CI/CD Pipeline Design (partially implemented with Nx + path triggers)
-- ADR-019: Testing Strategy (Unit, Integration, E2E)
-- ADR-020: Security and Authentication Model
-- ADR-021: AI Runtime Model Tier Strategy
-- ADR-022: Tool Registry and Side-Effect Classification
+- ADR-013: Compliance Alert Windows (30/15/7/0 days)
+- ADR-014: Multi-Tenant Data Isolation Strategy
+- ADR-015: Export Format Selection (CSV vs XLSX vs PDF)
+- ADR-016: Webhook Event Schema Design
+- ADR-017: Error Handling and Retry Strategies
+- ADR-018: Logging and Monitoring Approach (partially covered in libs/observability)
+- ADR-019: CI/CD Pipeline Design (partially implemented with Nx + path triggers)
+- ADR-020: Testing Strategy (Unit, Integration, E2E)
+- ADR-021: Security and Authentication Model
+- ADR-022: AI Runtime Model Tier Strategy
+- ADR-023: Tool Registry and Side-Effect Classification
 
 ---
 

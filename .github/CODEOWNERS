@@ -1,0 +1,54 @@
+# CODEOWNERS — docflow-360
+# Every path must have a real owner. PRs touching owned paths require that owner's review.
+# Format: <pattern> <owner>
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default: platform team owns everything not otherwise specified
+*                               @sh-pendoah/platform
+
+# Backend API service
+/apps/api/                      @sh-pendoah/backend
+
+# Frontend web app
+/apps/web/                      @sh-pendoah/frontend
+
+# AI runtime service (all AI/LLM routing)
+/apps/ai-runtime/               @sh-pendoah/ai
+
+# Background worker (OCR → LLM → rules pipeline)
+/apps/worker/                   @sh-pendoah/backend
+
+# Scheduled jobs (compliance alerts)
+/apps/scheduler/                @sh-pendoah/backend
+
+# Shared contracts (OpenAPI, Zod, TypeScript interfaces)
+/libs/contracts/                @sh-pendoah/platform
+
+# Shared observability (logging, tracing, telemetry)
+/libs/observability/            @sh-pendoah/platform
+
+# Shared tooling config (ESLint, Prettier, tsconfig)
+/libs/tooling-config/           @sh-pendoah/platform
+
+# Infrastructure as Code — platform + security sign-off required
+/infra/                         @sh-pendoah/platform @sh-pendoah/security
+
+# CI/CD pipelines — platform + security sign-off required
+/.github/workflows/             @sh-pendoah/platform @sh-pendoah/security
+
+# CODEOWNERS itself requires platform sign-off
+/.github/CODEOWNERS             @sh-pendoah/platform
+
+# Governance and compliance config
+/gov-config.yaml                @sh-pendoah/security
+/gov-config.schema.json         @sh-pendoah/security
+/SECURITY.md                    @sh-pendoah/security
+
+# Architecture Decision Records
+/ARCHITECTURE_DECISIONS.md      @sh-pendoah/platform
+
+# Docs and runbooks — platform + on-call ownership
+/docs/                          @sh-pendoah/platform
+
+# E2E tests
+/tests/                         @sh-pendoah/qa
