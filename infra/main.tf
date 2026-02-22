@@ -63,12 +63,12 @@ module "api" {
   }
 
   liveness_probe = {
-    path = "/health/live"
+    path = "/api/health/live"
     port = 3000
   }
 
   readiness_probe = {
-    path = "/health/ready"
+    path = "/api/health/ready"
     port = 3000
   }
 }
