@@ -149,10 +149,10 @@ jobs:
 
       - name: Shift to 100% traffic — prd
         run: |
-          az containerapp revision set-mode \
+          az containerapp ingress traffic set \
             --name docflow-360-api-prd \
             --resource-group ${{ vars.ACA_RESOURCE_GROUP_PRD }} \
-            --mode single
+            --revision-weight latest=100
 
   # ── Rollback ──────────────────────────────────────────────────────────────────
   rollback:
