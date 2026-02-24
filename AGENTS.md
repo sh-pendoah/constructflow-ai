@@ -116,8 +116,8 @@ See commit history and `ARCHITECTURE_DECISIONS.md` for implementation details.
 ```bash
 pnpm install              # Install root and workspace dependencies
 pnpm dev                  # Start all services concurrently
-pnpm dev:api              # API only — http://localhost:3000
-pnpm dev:web              # Web only — http://localhost:3001
+pnpm dev:api              # API only — [REDACTED]
+pnpm dev:web              # Web only — [REDACTED]
 pnpm dev:ai-runtime       # AI runtime only — http://localhost:3002
 pnpm infra:up             # Start MongoDB + Redis (Docker)
 pnpm infra:down           # Stop infrastructure
@@ -148,3 +148,24 @@ npx nx graph              # View dependency graph
 - **Environment variables** — always check `.env.example` for the canonical list. Add new vars there when introducing new configuration.
 - **Model tiers, not names**: Configure model tiers (A/B/C/D) in AI runtime, not hardcoded model names (e.g., "gpt-4"). See `apps/ai-runtime/config/model-tiers.ts`.
 - **ADRs for deviations**: Any deviation from playbook defaults (e.g., MongoDB over PostgreSQL) requires a 1-page ADR in `ARCHITECTURE_DECISIONS.md`.
+
+## Cursor Cloud specific instructions
+
+### Infrastructure
+- **Docker is required** for local infrastructure (MongoDB 7.0 + Redis 7). Start with `pnpm infra:up` (uses `docker-compose.infra.yml`). Ensure Docker daemon is running first.
+- In Cursor Cloud VMs (Docker-in-Docker), Docker needs `fuse-overlayfs` storage driver and `iptables-legacy`. The Docker daemon must be started manually (`sudo dockerd &`) before running `pnpm infra:up`.
+- After starting Docker, grant socket access: `sudo chmod 666 /var/run/docker.sock`.
+
+### Environment files
+- Copy `.env.example` to `.env` at the repo root. The API loads env from the repo root via `apps/api/config/index.ts` (relative path `../../../../.env`).
+- Each app also has its own `.env.example`; copy those to `.env` for per-app config. Set `OCR_PROVIDER=mock` and `LLM_PROVIDER=mock` to avoid needing Azure credentials.
+
+### Running services
+- Standard dev commands are in the root `package.json` — see the "Development Commands" section above.
+- **API** (`pnpm dev:api`): Express server on port 3000. Requires MongoDB + Redis running. Connects automatically on startup.
+- **Web** (`pnpm dev:web`): Next.js 16 dev server on port 3001. Warnings about `turbopack` experimental key and deprecated `middleware` convention are expected and harmless.
+
+### Known pre-existing issues
+- **ESLint**: `pnpm lint` fails because ESLint 10 requires flat config (`eslint.config.js`) but the repo only has legacy `.eslintrc.js` in `libs/tooling-config/`. The `api` lint target references `src/` but source files are in the root of `apps/api/`.
+- **Web build** (`next build`): Fails with `_global-error` prerender `useContext` error. Dev mode (`next dev`) works fine.
+- **Web UI login/register forms**: The frontend's API proxy configuration has a routing issue causing 404s on auth calls from the browser. The API itself works correctly when called directly (curl, Postman, etc.).
