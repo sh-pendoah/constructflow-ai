@@ -31,7 +31,7 @@
     "lint": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "echo 'Linting not configured yet' && exit 0",
+        "command": "eslint . --ignore-pattern node_modules --ignore-pattern dist",
         "cwd": "apps/scheduler"
       }
     },

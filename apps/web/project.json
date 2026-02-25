@@ -31,7 +31,7 @@
     "lint": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "next lint",
+        "command": "eslint app/ components/ Redux/ utils/ --ignore-pattern node_modules",
         "cwd": "apps/web"
       }
     },
