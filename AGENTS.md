@@ -154,6 +154,9 @@ npx nx graph              # View dependency graph
 ### Infrastructure
 - **Docker is required** for local infrastructure (MongoDB 7.0 + Redis 7). Start with `pnpm infra:up` (uses `docker-compose.infra.yml`). Ensure Docker daemon is running first.
 - In Cursor Cloud VMs (Docker-in-Docker), Docker needs `fuse-overlayfs` storage driver and `iptables-legacy`. The Docker daemon must be started manually (`sudo dockerd &`) before running `pnpm infra:up`.
+- After starting Docker, ensure the Docker socket is only accessible to trusted users. Prefer using the `docker` group instead of making the socket world-writable, for example:
+  - Verify ownership and permissions (run as root): `chown root:docker /var/run/docker.sock && chmod 660 /var/run/docker.sock`
+  - Add your user to the `docker` group: `sudo usermod -aG docker $USER` (then log out and back in), or run Docker commands with `sudo` instead of changing the socket to `666`.
 - After starting Docker, grant socket access: `sudo chmod 666 /var/run/docker.sock`.
 
 ### Environment files
@@ -162,6 +165,15 @@ npx nx graph              # View dependency graph
 
 ### Running services
 - Standard dev commands are in the root `package.json` — see the "Development Commands" section above.
+- **API** (`pnpm dev:api`): Express 5 server on port 3000. Requires MongoDB + Redis running. Connects automatically on startup.
+- **Web** (`pnpm dev:web`): Next.js 16 dev server on port 3001. Warnings about `turbopack` experimental key and deprecated `middleware` convention are expected and harmless.
+- **Critical**: The web frontend's `NEXT_PUBLIC_API_URL` env var must point to the API port (3000), not the web port (3001). If the Cursor Cloud VM pre-injects a different value for this env var, it will override the `.env` file value because dotenv does not override existing env vars. Fix by explicitly exporting the correct value (matching `apps/web/.env.example`) before starting the web dev server, or prefix the dev command with the env var assignment, for example:
+  - **Inline for a single run**: `NEXT_PUBLIC_API_URL=http://localhost:3000 pnpm dev:web`
+  - **Export then run**:
+    ```bash
+    export NEXT_PUBLIC_API_URL=http://localhost:3000
+    pnpm dev:web
+    ```
 - **API** (`pnpm dev:api`): Express server on port 3000. Requires MongoDB + Redis running. Connects automatically on startup.
 - **Web** (`pnpm dev:web`): Next.js 16 dev server on port 3001. Warnings about `turbopack` experimental key and deprecated `middleware` convention are expected and harmless.
 - **Critical**: The web frontend's `NEXT_PUBLIC_API_URL` env var must point to the API port (3000), not the web port (3001). If the Cursor Cloud VM pre-injects a different value for this env var, it will override the `.env` file value because dotenv does not override existing env vars. Fix by explicitly exporting the correct value (matching `apps/web/.env.example`) before starting the web dev server, or prefix the dev command with the env var assignment.
