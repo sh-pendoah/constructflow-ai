@@ -116,8 +116,8 @@ See commit history and `ARCHITECTURE_DECISIONS.md` for implementation details.
 ```bash
 pnpm install              # Install root and workspace dependencies
 pnpm dev                  # Start all services concurrently
-pnpm dev:api              # API only — http://localhost:3000
-pnpm dev:web              # Web only — http://localhost:3001
+pnpm dev:api              # API only — [REDACTED]
+pnpm dev:web              # Web only — [REDACTED]
 pnpm dev:ai-runtime       # AI runtime only — http://localhost:3002
 pnpm infra:up             # Start MongoDB + Redis (Docker)
 pnpm infra:down           # Stop infrastructure
@@ -157,6 +157,7 @@ npx nx graph              # View dependency graph
 - After starting Docker, ensure the Docker socket is only accessible to trusted users. Prefer using the `docker` group instead of making the socket world-writable, for example:
   - Verify ownership and permissions (run as root): `chown root:docker /var/run/docker.sock && chmod 660 /var/run/docker.sock`
   - Add your user to the `docker` group: `sudo usermod -aG docker $USER` (then log out and back in), or run Docker commands with `sudo` instead of changing the socket to `666`.
+- After starting Docker, grant socket access: `sudo chmod 666 /var/run/docker.sock`.
 
 ### Environment files
 - Copy `.env.example` to `.env` at the repo root. The API loads env from the repo root via `apps/api/config/index.ts` (relative path `../../../../.env`).
@@ -173,6 +174,9 @@ npx nx graph              # View dependency graph
     export NEXT_PUBLIC_API_URL=http://localhost:3000
     pnpm dev:web
     ```
+- **API** (`pnpm dev:api`): Express server on port 3000. Requires MongoDB + Redis running. Connects automatically on startup.
+- **Web** (`pnpm dev:web`): Next.js 16 dev server on port 3001. Warnings about `turbopack` experimental key and deprecated `middleware` convention are expected and harmless.
+- **Critical**: The web frontend's `NEXT_PUBLIC_API_URL` env var must point to the API port (3000), not the web port (3001). If the Cursor Cloud VM pre-injects a different value for this env var, it will override the `.env` file value because dotenv does not override existing env vars. Fix by explicitly exporting the correct value (matching `apps/web/.env.example`) before starting the web dev server, or prefix the dev command with the env var assignment.
 - **Seed data**: Run `cd apps/api && npx tsx scripts/seed.ts` to create a Demo Tenant and admin user (`demo@docflow-360.com` / `password123`).
 
 ### Known pre-existing issues
