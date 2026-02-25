@@ -131,4 +131,4 @@ test-results/
 .nx/cache/
 .turbo/
 
-master.env
+master.envapps/ai-runtime/dist/
