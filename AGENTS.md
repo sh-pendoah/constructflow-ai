@@ -162,7 +162,7 @@ npx nx graph              # View dependency graph
 
 ### Running services
 - Standard dev commands are in the root `package.json` — see the "Development Commands" section above.
-- **API** (`pnpm dev:api`): Express server on port 3000. Requires MongoDB + Redis running. Connects automatically on startup.
+- **API** (`pnpm dev:api`): Express 5 server on port 3000. Requires MongoDB + Redis running. Connects automatically on startup.
 - **Web** (`pnpm dev:web`): Next.js 16 dev server on port 3001. Warnings about `turbopack` experimental key and deprecated `middleware` convention are expected and harmless.
 - **Critical**: The web frontend's `NEXT_PUBLIC_API_URL` env var must point to the API port (3000), not the web port (3001). If the Cursor Cloud VM pre-injects a different value for this env var, it will override the `.env` file value because dotenv does not override existing env vars. Fix by explicitly exporting the correct value (matching `apps/web/.env.example`) before starting the web dev server, or prefix the dev command with the env var assignment, for example:
   - **Inline for a single run**: `NEXT_PUBLIC_API_URL=http://localhost:3000 pnpm dev:web`
