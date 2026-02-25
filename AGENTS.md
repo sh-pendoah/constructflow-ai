@@ -154,7 +154,9 @@ npx nx graph              # View dependency graph
 ### Infrastructure
 - **Docker is required** for local infrastructure (MongoDB 7.0 + Redis 7). Start with `pnpm infra:up` (uses `docker-compose.infra.yml`). Ensure Docker daemon is running first.
 - In Cursor Cloud VMs (Docker-in-Docker), Docker needs `fuse-overlayfs` storage driver and `iptables-legacy`. The Docker daemon must be started manually (`sudo dockerd &`) before running `pnpm infra:up`.
-- After starting Docker, grant socket access: `sudo chmod 666 /var/run/docker.sock`.
+- After starting Docker, ensure the Docker socket is only accessible to trusted users. Prefer using the `docker` group instead of making the socket world-writable, for example:
+  - Verify ownership and permissions (run as root): `chown root:docker /var/run/docker.sock && chmod 660 /var/run/docker.sock`
+  - Add your user to the `docker` group: `sudo usermod -aG docker $USER` (then log out and back in), or run Docker commands with `sudo` instead of changing the socket to `666`.
 
 ### Environment files
 - Copy `.env.example` to `.env` at the repo root. The API loads env from the repo root via `apps/api/config/index.ts` (relative path `../../../../.env`).
