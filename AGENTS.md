@@ -164,8 +164,10 @@ npx nx graph              # View dependency graph
 - Standard dev commands are in the root `package.json` — see the "Development Commands" section above.
 - **API** (`pnpm dev:api`): Express server on port 3000. Requires MongoDB + Redis running. Connects automatically on startup.
 - **Web** (`pnpm dev:web`): Next.js 16 dev server on port 3001. Warnings about `turbopack` experimental key and deprecated `middleware` convention are expected and harmless.
+- **Critical**: The web frontend's `NEXT_PUBLIC_API_URL` env var must point to the API port (3000), not the web port (3001). If the Cursor Cloud VM pre-injects a different value for this env var, it will override the `.env` file value because dotenv does not override existing env vars. Fix by explicitly exporting the correct value (matching `apps/web/.env.example`) before starting the web dev server, or prefix the dev command with the env var assignment.
+- **Seed data**: Run `cd apps/api && npx tsx scripts/seed.ts` to create a Demo Tenant and admin user (`demo@docflow-360.com` / `password123`).
 
 ### Known pre-existing issues
 - **ESLint**: `pnpm lint` fails because ESLint 10 requires flat config (`eslint.config.js`) but the repo only has legacy `.eslintrc.js` in `libs/tooling-config/`. The `api` lint target references `src/` but source files are in the root of `apps/api/`.
 - **Web build** (`next build`): Fails with `_global-error` prerender `useContext` error. Dev mode (`next dev`) works fine.
-- **Web UI login/register forms**: The frontend's API proxy configuration has a routing issue causing 404s on auth calls from the browser. The API itself works correctly when called directly (curl, Postman, etc.).
+- **Web UI login/register forms**: If `NEXT_PUBLIC_API_URL` is set to the wrong port (e.g. 3001 instead of 3000), the frontend sends auth calls to itself, causing 404s. See the "Critical" note above for the fix.
