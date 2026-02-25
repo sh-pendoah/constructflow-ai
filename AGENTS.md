@@ -116,8 +116,8 @@ See commit history and `ARCHITECTURE_DECISIONS.md` for implementation details.
 ```bash
 pnpm install              # Install root and workspace dependencies
 pnpm dev                  # Start all services concurrently
-pnpm dev:api              # API only — [REDACTED]
-pnpm dev:web              # Web only — [REDACTED]
+pnpm dev:api              # API only — http://localhost:3000
+pnpm dev:web              # Web only — http://localhost:3001
 pnpm dev:ai-runtime       # AI runtime only — http://localhost:3002
 pnpm infra:up             # Start MongoDB + Redis (Docker)
 pnpm infra:down           # Stop infrastructure
