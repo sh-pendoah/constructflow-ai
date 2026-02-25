@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Poppins } from "next/font/google";
-import { Toaster } from "react-hot-toast";
 import StoreProvider from "@/Redux/storeProvider";
 import "./globals.css";
-import NextTopLoader from "nextjs-toploader";
+import TopLoader from "@/components/top-loader";
+import ToastProvider from "@/components/toast-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,35 +35,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${poppins.variable} antialiased`}>
-      <NextTopLoader />
+      <TopLoader />
         <StoreProvider>
           {children}
-          <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: "#fff",
-              color: "#0E1114",
-              borderRadius: "8px",
-              border: "1px solid #DEE0E3",
-              padding: "16px",
-              fontFamily: "SF Pro, sans-serif",
-            },
-            success: {
-              iconTheme: {
-                primary: "#10B981",
-                secondary: "#fff",
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: "#EF4444",
-                secondary: "#fff",
-              },
-            },
-          }}
-        />
+          <ToastProvider />
         </StoreProvider>
       </body>
     </html>
