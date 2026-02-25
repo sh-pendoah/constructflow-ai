@@ -1,4 +1,27 @@
 import type { NextConfig } from 'next';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+function loadDotEnv(): Record<string, string> {
+  try {
+    const content = readFileSync(resolve(process.cwd(), '.env'), 'utf-8');
+    const env: Record<string, string> = {};
+    for (const line of content.split('\n')) {
+      const trimmed = line.trim();
+      if (trimmed && !trimmed.startsWith('#')) {
+        const eqIdx = trimmed.indexOf('=');
+        if (eqIdx > 0) {
+          env[trimmed.slice(0, eqIdx).trim()] = trimmed.slice(eqIdx + 1).trim();
+        }
+      }
+    }
+    return env;
+  } catch {
+    return {};
+  }
+}
+
+const dotEnv = loadDotEnv();
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -7,11 +30,7 @@ const nextConfig: NextConfig = {
   },
   env: {
     NEXT_PUBLIC_API_URL:
-      process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
-  },
-  // Disable Turbopack and use SWC instead
-  experimental: {
-    turbopack: false,
+      dotEnv.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '[REDACTED]',
   },
 };
 
