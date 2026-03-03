@@ -1,22 +1,13 @@
-FROM node:20-alpine
+ARG NODE_VERSION=24.14.0
+FROM node:${NODE_VERSION}-bookworm-slim
 
-WORKDIR /app
+WORKDIR /workspace
 
-# Copy package files
-COPY package*.json ./
-COPY tsconfig.json ./
+RUN corepack enable && corepack prepare pnpm@10.30.3 --activate
 
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy source code
 COPY . .
 
-# Build TypeScript
-RUN npm run build
+RUN pnpm install --frozen-lockfile || pnpm install
+RUN pnpm --filter docflow-360-worker build
 
-# Expose port (not used, but good practice)
-EXPOSE 3000
-
-# Run worker
-CMD ["node", "dist/index.js"]
+CMD ["pnpm", "--filter", "docflow-360-worker", "start"]

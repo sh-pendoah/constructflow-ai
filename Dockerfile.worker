@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile for Worklighter Worker
-FROM node:20-alpine AS builder
+FROM node:24.14.0-alpine AS builder
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ WORKDIR /app/apps/worker
 RUN node ../../node_modules/typescript/lib/tsc.js
 
 # Production stage
-FROM node:20-alpine
+FROM node:24.14.0-alpine
 
 WORKDIR /app
 

@@ -1,5 +1,5 @@
 # Multi-stage Dockerfile for Worklighter API
-FROM node:20-alpine AS builder
+FROM node:24.14.0-alpine AS builder
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ WORKDIR /app/apps/api
 RUN node ../../node_modules/typescript/lib/tsc.js
 
 # Production stage
-FROM node:20-alpine
+FROM node:24.14.0-alpine
 
 WORKDIR /app
 

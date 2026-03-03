@@ -104,5 +104,10 @@
   },
   "optionalDependencies": {
     "@tailwindcss/oxide-linux-x64-gnu": "^4.1.18"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": "24.x",
+    "pnpm": "10.x"
   }
 }

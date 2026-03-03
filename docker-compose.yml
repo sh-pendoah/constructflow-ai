@@ -1,148 +1,61 @@
-version: '3.9'
-
 services:
-  # Infrastructure Services
-  postgres:
-    image: postgres:15-alpine
-    container_name: docflow-360-postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-admin}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-docflow-360}
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - docflow-360-network
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d docflow-360" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  mongodb:
-    image: mongo:7.0
-    container_name: docflow-360-mongodb
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
-      MONGO_INITDB_DATABASE: ${MONGO_DB:-docflow-360}
-    ports:
-      - "${MONGO_PORT:-27017}:27017"
-    volumes:
-      - mongodb_data:/data/db
-      - mongodb_config:/data/configdb
-    networks:
-      - docflow-360-network
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  redis:
-    image: redis:7-alpine
-    container_name: docflow-360-redis
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - docflow-360-network
-    command: redis-server --appendonly yes
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # Application Services
-  core-api:
+  docflow-360-monorepo:
     build:
       context: .
-      dockerfile: docker/Dockerfile.core-api
-    container_name: docflow-360-core-api
-    environment:
-      NODE_ENV: ${NODE_ENV:-staging}
-      MONGO_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongodb:27017/${MONGO_DB:-docflow-360}?authSource=admin
-      REDIS_URL: redis://redis:6379
-      PORT: ${CORE_API_PORT:-3000}
-    ports:
-      - "${CORE_API_PORT:-3000}:3000"
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - docflow-360-network
-
-  frontend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.frontend
-    container_name: docflow-360-frontend
-    environment:
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:3000}
-    ports:
-      - "${FRONTEND_PORT:-3001}:3001"
-    depends_on:
-      - core-api
-    networks:
-      - docflow-360-network
-
-  worker:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.worker
-    container_name: docflow-360-worker
-    environment:
-      NODE_ENV: ${NODE_ENV:-staging}
-      MONGO_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongodb:27017/${MONGO_DB:-docflow-360}?authSource=admin
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      OCR_PROVIDER: ${OCR_PROVIDER:-MOCK}
-      LLM_PROVIDER: ${LLM_PROVIDER:-MOCK}
-      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-5}
-    depends_on:
-      mongodb:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    networks:
-      - docflow-360-network
+      dockerfile: Dockerfile
+      args:
+        NODE_VERSION: "24.14.0"
+    command: ["pnpm","--filter","docflow-360-monorepo","dev"]
     restart: unless-stopped
-
-  scheduler:
+    environment:
+      NODE_ENV: production
+  docflow-360-ai-runtime:
     build:
       context: .
-      dockerfile: docker/Dockerfile.scheduler
-    container_name: docflow-360-scheduler
-    environment:
-      NODE_ENV: ${NODE_ENV:-staging}
-      MONGO_URI: mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD:-password}@mongodb:27017/${MONGO_DB:-docflow-360}?authSource=admin
-      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
-      SMTP_PORT: ${SMTP_PORT:-587}
-      SMTP_USER: ${SMTP_USER:-}
-      SMTP_PASS: ${SMTP_PASS:-}
-      SMTP_FROM: ${SMTP_FROM:-noreply@docflow-360.com}
-      COMPLIANCE_CHECK_CRON: ${COMPLIANCE_CHECK_CRON:-0 9 * * *}
-      SUMMARY_EMAIL_CRON: ${SUMMARY_EMAIL_CRON:-0 8 * * 1}
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - docflow-360-network
+      dockerfile: apps/ai-runtime/Dockerfile
+      args:
+        NODE_VERSION: "24.14.0"
+    command: ["pnpm","--filter","docflow-360-ai-runtime","start"]
     restart: unless-stopped
-
-networks:
-  docflow-360-network:
-    driver: bridge
-
-volumes:
-  postgres_data:
-  mongodb_data:
-  mongodb_config:
-  redis_data:
-
+    environment:
+      NODE_ENV: production
+  docflow-360-core-api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      args:
+        NODE_VERSION: "24.14.0"
+    command: ["pnpm","--filter","docflow-360-core-api","start"]
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+  docflow-360-scheduler:
+    build:
+      context: .
+      dockerfile: apps/scheduler/Dockerfile
+      args:
+        NODE_VERSION: "24.14.0"
+    command: ["pnpm","--filter","docflow-360-scheduler","start"]
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+  docflow-360-frontend:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NODE_VERSION: "24.14.0"
+    command: ["pnpm","--filter","docflow-360-frontend","start"]
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+  docflow-360-worker:
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+      args:
+        NODE_VERSION: "24.14.0"
+    command: ["pnpm","--filter","docflow-360-worker","start"]
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production

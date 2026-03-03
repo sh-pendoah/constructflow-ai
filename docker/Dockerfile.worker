@@ -1,5 +1,5 @@
 # Multi-stage build for pnpm monorepo
-FROM node:20-alpine AS installer
+FROM node:24.14.0-alpine AS installer
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ WORKDIR /app/apps/worker
 RUN pnpm run build
 
 # Runtime stage
-FROM node:20-alpine
+FROM node:24.14.0-alpine
 
 WORKDIR /app
 

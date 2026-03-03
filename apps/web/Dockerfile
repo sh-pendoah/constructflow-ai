@@ -1,50 +1,15 @@
-# Multi-stage build for Next.js frontend
-FROM node:20-alpine AS base
+ARG NODE_VERSION=24.14.0
+FROM node:${NODE_VERSION}-bookworm-slim
 
-# Install dependencies only when needed
-FROM base AS deps
-WORKDIR /app
+WORKDIR /workspace
 
-# Copy package files
-COPY package*.json ./
-RUN npm ci
+RUN corepack enable && corepack prepare pnpm@10.30.3 --activate
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build Next.js application
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build:staging
-
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED=1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
+RUN pnpm install --frozen-lockfile || pnpm install
+RUN pnpm --filter docflow-360-frontend build
 
 EXPOSE 3001
 
-ENV PORT=3001
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
+CMD ["pnpm", "--filter", "docflow-360-frontend", "start"]

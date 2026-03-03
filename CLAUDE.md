@@ -46,3 +46,12 @@ pnpm build && pnpm test && pnpm lint
 - Validate all extracted data against schemas before storage
 
 
+
+## Container-First Runtime Policy
+- Preferred runtime: Docker and Docker Compose for local development and CI.
+- Required Node baseline: `24.14.0` (LTS).
+- Required Python baseline: `3.12.10` (3.12 line).
+- Keep host runtimes installed for tooling compatibility, but run app services in containers by default.
+- All new app services must include a `Dockerfile` and be represented in root `docker-compose.yml`.
+- Use pinned runtime/version files (`.node-version`, `.python-version`) and deterministic package managers.
+

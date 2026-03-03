@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "DocFlow 360 financial logic factory - Nx-orchestrated monorepo",
-  "packageManager": "pnpm@9.0.0",
+  "packageManager": "pnpm@10.30.3",
   "scripts": {
     "install:all": "pnpm install",
     "dev": "nx run-many --target=dev --all --parallel",
@@ -40,6 +40,9 @@
     "@playwright/test": "^1.58.2",
     "nx": "^22.5.0",
     "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": "24.x",
+    "pnpm": "10.x"
   }
 }
-
