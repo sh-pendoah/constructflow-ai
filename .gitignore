@@ -132,3 +132,24 @@ test-results/
 .turbo/
 
 master.envapps/ai-runtime/dist/
+# --- Copilot Sync Guardrails ---
+# Prevent local build/cache/temp artifacts from being committed
+.nx/
+**/dist/
+**/build/
+**/tmp/
+**/temp/
+*.tmp
+*.cache
+
+# Local environment/secrets
+.env
+.env.*
+*.env.local
+*.local.env
+master.env
+
+# Keep env templates committed
+!.env.example
+!.env*.example
+# --- End Copilot Sync Guardrails ---
