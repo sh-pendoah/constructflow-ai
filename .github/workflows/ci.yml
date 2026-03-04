@@ -10,7 +10,7 @@ on:
       - 'apps/**'
       - 'libs/**'
       - 'infra/**'
-      - 'nx.json'
+      - 'package.json'
       - 'pnpm-workspace.yaml'
       - 'package.json'
       - '.github/workflows/ci.yml'
@@ -20,7 +20,7 @@ on:
       - 'apps/**'
       - 'libs/**'
       - 'infra/**'
-      - 'nx.json'
+      - 'package.json'
       - 'pnpm-workspace.yaml'
       - 'package.json'
       - '.github/workflows/ci.yml'
@@ -60,10 +60,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint affected projects
-        run: pnpm lint:affected
+        run: pnpm -r lint
 
       - name: Build affected projects
-        run: pnpm build:affected
+        run: pnpm -r build
         env:
           NEXT_PUBLIC_API_URL: http://localhost:3000
 
@@ -105,7 +105,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run unit tests on affected projects
-        run: pnpm test:affected
+        run: pnpm -r test
 
   dependency-review:
     name: Dependency Review (supply chain)
