@@ -17,6 +17,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { authLimiter, generalLimiter } from './middleware/rateLimiter';
 import approvalRuleRoutes from './routes/approval-rules';
 import authRoutes from './routes/auth';
+import aiRoutes from './routes/ai';
 import coiVendorRoutes from './routes/coi-vendors';
 import complianceRoutes from './routes/compliance';
 import contractorRoutes from './routes/contractors';
@@ -86,6 +87,7 @@ app.use('/api/daily-logs', dailyLogRoutes);
 app.use('/api/compliance', complianceRoutes);
 app.use('/api/review-queue', reviewQueueRoutes);
 app.use('/api/exports', exportRoutes);
+app.use('/api/ai', aiRoutes);
 
 // Root
 app.get('/', (_req, res) => {
