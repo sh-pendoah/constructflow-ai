@@ -12,7 +12,7 @@ AI-powered construction project management and document automation platform.
 
 ConstructFlow AI automates construction document workflows with intelligent extraction, reconciliation, compliance tracking, and auditable approvals.
 
-**Built with the 2026 End-to-End AI Solution Playbook**: Azure-first, Nx-orchestrated monorepo, centralized AI runtime, shared libraries, and observability-first architecture.
+**Built with the 2026 End-to-End AI Solution Playbook**: Azure-first, standard workspace monorepo (pnpm + docker), centralized AI runtime, shared libraries, and observability-first architecture.
 
 > **Status:** ✅ P0 complete — Nx integration, shared libraries, CI/CD with affected-only builds, database strategy documented (ADR-011)
 
@@ -39,7 +39,7 @@ Worker  Scheduler    Azure Services
                      (Blob, OCR, OpenAI)
 ```
 
-**Six independent services** in Nx-orchestrated monorepo with shared libraries:
+**Six independent services** in standard workspace monorepo (pnpm + docker) with shared libraries:
 
 | Service | Stack | Purpose |
 |---|---|---|
@@ -250,7 +250,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full Azure provisioning and deploym
 ✅ **Defaults win**: Every deviation from defaults documented in ADRs (e.g., ADR-011 for MongoDB)
 ✅ **Azure-first**: All services target Azure PaaS (Container Apps, Cosmos DB, Managed Redis, OpenAI)
 ✅ **ONE AI Runtime**: Centralized ai-runtime service for all AI calls (implementation in progress)
-✅ **Nx orchestration**: Affected-only builds, task caching, dependency graph
+✅ **standard workspace management**: Affected-only builds, task caching, dependency graph
 ✅ **Shared libraries**: Contracts, observability, tooling config (no shared business logic)
 ✅ **W3C Trace Context**: OpenTelemetry + distributed tracing (libs/observability)
 ✅ **pnpm workspace**: Modern package management with workspace support

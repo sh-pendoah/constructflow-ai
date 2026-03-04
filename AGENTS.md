@@ -4,11 +4,11 @@
 
 docflow-360 is a **Construction Operations Automation Engine** that processes invoices, daily logs, and compliance documents (COIs) through OCR, LLM extraction, rules-based review queues, and exportable audit reports. It targets Microsoft Azure for production deployment.
 
-**Built following the 2026 End-to-End AI Solution Playbook**: Azure-first, multi-app, agent-ready architecture with Nx orchestration, shared libraries for contracts/observability/tooling, and a dedicated AI runtime service.
+**Built following the 2026 End-to-End AI Solution Playbook**: Azure-first, multi-app, agent-ready architecture with standard workspace management, shared libraries for contracts/observability/tooling, and a integrated AI backend module.
 
 ## Repository Layout
 
-This is an **Nx-orchestrated monorepo** with independent deployable services under `apps/` and shared libraries under `libs/`. Each app has its own `package.json`, build pipeline, and Dockerfile. Services communicate via REST APIs and shared infrastructure (MongoDB/Redis). Nx enables affected-only builds and task caching.
+This is an **standard workspace monorepo (pnpm + docker)** with independent deployable services under `apps/` and shared libraries under `libs/`. Each app has its own `package.json`, build pipeline, and Dockerfile. Services communicate via REST APIs and shared infrastructure (MongoDB/Redis). Nx enables affected-only builds and task caching.
 
 ```
 apps/
@@ -54,7 +54,7 @@ pnpm-workspace.yaml   — pnpm workspace configuration
 ### 2026 Playbook Operating Principles
 - **Defaults win**: Every major tech choice has a default. Deviations require a 1-page ADR explaining the constraint, the solution, and new operational risks.
 - **Azure-first, Azure-compatible only**: Prefer Azure PaaS; accept Azure-compatible tech only if it doesn't create ops debt.
-- **ONE AI Runtime**: All AI calls (chat, RAG, tools, agents) route through `apps/ai-runtime/`. No direct OpenAI calls from other services.
+- **ONE AI Runtime**: All AI calls (chat, RAG, tools, agents) route through `apps/api/src/ai/`. No direct OpenAI calls from other services.
 - **Model tiers, not model names**: Route by policy (Tier A: premium reasoning, Tier B: fast/cheap, Tier C: code-specialist, Tier D: embedding).
 
 ### Code Style
@@ -132,21 +132,21 @@ npx playwright test       # Run E2E tests (requires API + Web running)
 
 **Nx commands** (task orchestration):
 ```bash
-npx nx build api          # Build single app
-npx nx run-many --target=build --all  # Build all apps
-npx nx affected --target=build        # Build only affected by changes
-npx nx graph              # View dependency graph
+pnpm build api          # Build single app
+pnpm run-many --target=build --all  # Build all apps
+npx pnpm -r --target=build        # Build only affected by changes
+pnpm graph              # View dependency graph
 ```
 
 ## Working with This Repo
 
 - **Before editing a service**, read its `package.json` and `project.json` (Nx config) to understand available scripts and dependencies.
 - **Shared code policy**: Only share contracts, observability, and tooling config in `libs/`. No shared business logic. Duplication is preferred over tight coupling.
-- **AI calls**: ALL AI/LLM calls must route through `apps/ai-runtime/` service. Direct OpenAI SDK usage in other services is prohibited.
+- **AI calls**: ALL AI/LLM calls must route through `apps/api/src/ai/` service. Direct OpenAI SDK usage in other services is prohibited.
 - **Provider abstraction** — OCR and LLM providers are behind interfaces. When adding a new provider, follow the existing pattern in `apps/api/services/ocrService.ts`.
-- **Nx affected builds**: CI/CD uses `nx affected` to build/test only changed apps and their dependencies. Path-based triggers in GitHub Actions provide fast-gate filtering.
+- **Nx affected builds**: CI/CD uses `pnpm -r` to build/test only changed apps and their dependencies. Path-based triggers in GitHub Actions provide fast-gate filtering.
 - **Environment variables** — always check `.env.example` for the canonical list. Add new vars there when introducing new configuration.
-- **Model tiers, not names**: Configure model tiers (A/B/C/D) in AI runtime, not hardcoded model names (e.g., "gpt-4"). See `apps/ai-runtime/config/model-tiers.ts`.
+- **Model tiers, not names**: Configure model tiers (A/B/C/D) in AI runtime, not hardcoded model names (e.g., "gpt-4"). See `apps/api/src/ai/config/model-tiers.ts`.
 - **ADRs for deviations**: Any deviation from playbook defaults (e.g., MongoDB over PostgreSQL) requires a 1-page ADR in `ARCHITECTURE_DECISIONS.md`.
 
 ## Cursor Cloud specific instructions
