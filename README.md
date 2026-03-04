@@ -1,15 +1,16 @@
-# DocFlow 360 Engine
+# ConstructFlow AI
 
-Automated financial reconciliation that keeps humans in control.
+AI-powered construction project management and document automation platform.
 
-## For Operations Leaders
+## For Construction Leaders
 
-- `Logic, not just OCR`: reconcile invoice vs PO vs receipt with deterministic checks.
-- `Confidence routing`: low-confidence and high-risk outcomes route to human review queues.
-- `Controlled posting`: high-value actions require explicit approvals before export.
+- `Automated invoice reconciliation`: Match invoices to POs and receipts with construction-specific validation.
+- `Workers' comp audit automation`: Extract and validate WC codes from daily logs and payroll.
+- `Compliance document tracking`: Track COI, permits, and safety certifications with expiration alerts.
+- `Project analytics dashboard`: Real-time insights into project costs, compliance status, and document processing.
 - [View Product Spec](./docs/product-spec.md) | [View Demo Script](./docs/demo-script.md)
 
-DocFlow 360 automates document processing workflows with extraction, reconciliation, reason-coded exceptions, and auditable approvals.
+ConstructFlow AI automates construction document workflows with intelligent extraction, reconciliation, compliance tracking, and auditable approvals.
 
 **Built with the 2026 End-to-End AI Solution Playbook**: Azure-first, Nx-orchestrated monorepo, centralized AI runtime, shared libraries, and observability-first architecture.
 
@@ -84,8 +85,8 @@ Worker  Scheduler    Azure Services
 ### 1️⃣ Clone and Install
 
 ```bash
-git clone https://github.com/sh-pendoah/docflow-360.git
-cd docflow-360
+git clone https://github.com/sh-pendoah/constructflow-ai.git
+cd constructflow-ai
 
 # Install all dependencies (root + apps + libs)
 pnpm install
@@ -109,7 +110,7 @@ cp .env.example .env
 pnpm infra:up
 
 # Verify services are healthy
-docker ps  # Should show docflow-360-mongodb and docflow-360-redis
+docker ps  # Should show constructflow-ai-mongodb and constructflow-ai-redis
 ```
 
 ### 4️⃣ Build All Apps
@@ -142,8 +143,8 @@ pnpm dev:scheduler   # Scheduled tasks
 
 - API: `curl http://localhost:3000/health`
 - Web: Open http://localhost:3001 in browser
-- MongoDB: `docker exec -it docflow-360-mongodb mongosh -u admin -p password`
-- Redis: `docker exec -it docflow-360-redis redis-cli ping`
+- MongoDB: `docker exec -it constructflow-ai-mongodb mongosh -u admin -p password`
+- Redis: `docker exec -it constructflow-ai-redis redis-cli ping`
 
 ---
 
@@ -168,7 +169,7 @@ docker-compose -f docker-compose.infra.yml up -d
 ## Project Structure (2026 Playbook)
 
 ```
-docflow-360/
+constructflow-ai/
 ├── apps/                          # Deployable services
 │   ├── api/                       # Express → NestJS REST API
 │   ├── web/                       # Next.js 16 + React 19 frontend
@@ -238,7 +239,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full Azure provisioning and deploym
 | [TESTING.md](./TESTING.md) | End-to-end testing procedures for all three workflows |
 | [ARCHITECTURE_DECISIONS.md](./ARCHITECTURE_DECISIONS.md) | 11 ADRs covering cloud, database, OCR, AI runtime, and frontend choices |
 | [.github/copilot-instructions.md](./.github/copilot-instructions.md) | GitHub Copilot coding guidelines and playbook principles |
-| [docs/product-spec.md](./docs/product-spec.md) | Trust-first product blueprint (DocFlow 360) |
+| [docs/product-spec.md](./docs/product-spec.md) | Trust-first product blueprint (ConstructFlow AI) |
 | [docs/demo-script.md](./docs/demo-script.md) | 2-minute demo choreography for risk and cost buyers |
 | [docs/trust-primitives.md](./docs/trust-primitives.md) | Release checklist for evidence, policy, sovereign mode, budget, HITL, observability, evals |
 

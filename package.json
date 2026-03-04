@@ -1,8 +1,8 @@
 {
-  "name": "docflow-360-monorepo",
+  "name": "constructflow-ai-monorepo",
   "version": "1.0.0",
   "private": true,
-  "description": "DocFlow 360 financial logic factory - Nx-orchestrated monorepo",
+  "description": "ConstructFlow AI construction project management platform - Nx-orchestrated monorepo",
   "packageManager": "pnpm@10.30.3",
   "scripts": {
     "install:all": "pnpm install",

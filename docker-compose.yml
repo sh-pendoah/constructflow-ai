@@ -1,61 +1,61 @@
 services:
-  docflow-360-monorepo:
+  constructflow-ai-monorepo:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","docflow-360-monorepo","dev"]
+    command: ["pnpm","--filter","constructflow-ai-monorepo","dev"]
     restart: unless-stopped
     environment:
       NODE_ENV: production
-  docflow-360-ai-runtime:
+  constructflow-ai-ai-runtime:
     build:
       context: .
       dockerfile: apps/ai-runtime/Dockerfile
       args:
         NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","docflow-360-ai-runtime","start"]
+    command: ["pnpm","--filter","constructflow-ai-ai-runtime","start"]
     restart: unless-stopped
     environment:
       NODE_ENV: production
-  docflow-360-core-api:
+  constructflow-ai-core-api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
       args:
         NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","docflow-360-core-api","start"]
+    command: ["pnpm","--filter","constructflow-ai-core-api","start"]
     restart: unless-stopped
     environment:
       NODE_ENV: production
-  docflow-360-scheduler:
+  constructflow-ai-scheduler:
     build:
       context: .
       dockerfile: apps/scheduler/Dockerfile
       args:
         NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","docflow-360-scheduler","start"]
+    command: ["pnpm","--filter","constructflow-ai-scheduler","start"]
     restart: unless-stopped
     environment:
       NODE_ENV: production
-  docflow-360-frontend:
+  constructflow-ai-frontend:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
       args:
         NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","docflow-360-frontend","start"]
+    command: ["pnpm","--filter","constructflow-ai-frontend","start"]
     restart: unless-stopped
     environment:
       NODE_ENV: production
-  docflow-360-worker:
+  constructflow-ai-worker:
     build:
       context: .
       dockerfile: apps/worker/Dockerfile
       args:
         NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","docflow-360-worker","start"]
+    command: ["pnpm","--filter","constructflow-ai-worker","start"]
     restart: unless-stopped
     environment:
       NODE_ENV: production
