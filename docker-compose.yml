@@ -1,24 +1,4 @@
 services:
-  constructflow-ai-monorepo:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","constructflow-ai-monorepo","dev"]
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
-  constructflow-ai-ai-runtime:
-    build:
-      context: .
-      dockerfile: apps/ai-runtime/Dockerfile
-      args:
-        NODE_VERSION: "24.14.0"
-    command: ["pnpm","--filter","constructflow-ai-ai-runtime","start"]
-    restart: unless-stopped
-    environment:
-      NODE_ENV: production
   constructflow-ai-core-api:
     build:
       context: .
