@@ -60,6 +60,10 @@ See [runbook: api-service](../docs/runbooks/api-service.md#rollback).
 
 All resources follow: `{product}-{component}-{env}` (e.g., `docflow-360-api-stg`).
 
+## Optional: DigitalOcean POC deploy
+
+For a lightweight deploy on DigitalOcean App Platform (shared DB/Spaces), see [../docs/deploy-do-poc.md](../docs/deploy-do-poc.md) and `app.do-poc.yaml` at repo root. Azure Terraform remains the source for stg/prd.
+
 ## Required environment variables / GitHub secrets
 
 | Secret / Variable         | Description                          |

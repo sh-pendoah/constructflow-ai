@@ -1,0 +1,83 @@
+# DigitalOcean App Platform — docflow-360 POC (optional).
+# Production/staging: use Azure Terraform (infra/). This spec is for lightweight DO deploy only.
+# Shared DB/Spaces; no databases: block. Set MONGO_URI, REDIS_URL, DO_SPACES_*, AZURE_* in DO dashboard.
+name: docflow-360-poc
+region: nyc
+features:
+  - buildpack-stack=ubuntu-22
+domains:
+  - domain: docflow-360.shtrial.com
+    type: PRIMARY
+    zone: shtrial.com
+  - domain: api-docflow-360.shtrial.com
+    type: ALIAS
+    zone: shtrial.com
+ingress:
+  rules:
+    - match:
+        authority:
+          exact: api-docflow-360.shtrial.com
+        path:
+          prefix: /
+      component:
+        name: api
+        preserve_path_prefix: true
+    - match:
+        authority:
+          exact: docflow-360.shtrial.com
+        path:
+          prefix: /
+      component:
+        name: web
+services:
+  - name: web
+    source_dir: .
+    dockerfile_path: apps/web/Dockerfile
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: sh-pendoah/docflow-360
+    http_port: 3000
+    instance_size_slug: basic-xs
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://api-docflow-360.shtrial.com
+        scope: RUN_AND_BUILD_TIME
+  - name: api
+    source_dir: .
+    dockerfile_path: apps/api/Dockerfile
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: sh-pendoah/docflow-360
+    http_port: 3000
+    instance_size_slug: basic-xs
+    envs:
+      - key: APP_SLUG
+        value: docflow-360
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        type: SECRET
+      - key: REDIS_URL
+        type: SECRET
+      - key: DO_SPACES_BUCKET
+        value: sh-storage
+      - key: DO_SPACES_REGION
+        value: nyc3
+      - key: DO_SPACES_ENDPOINT_URL
+        value: https://nyc3.digitaloceanspaces.com
+      - key: DO_SPACES_ACCESS_KEY_ID
+        type: SECRET
+      - key: DO_SPACES_SECRET_ACCESS_KEY
+        type: SECRET
+      - key: AZURE_OPENAI_ENDPOINT
+        type: SECRET
+      - key: AZURE_OPENAI_API_KEY
+        type: SECRET
+      - key: AZURE_FORM_RECOGNIZER_ENDPOINT
+        type: SECRET
+      - key: AZURE_FORM_RECOGNIZER_API_KEY
+        type: SECRET
