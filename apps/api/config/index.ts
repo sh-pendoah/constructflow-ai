@@ -50,7 +50,7 @@ export const config = {
   openaiApiKey: process.env.OPENAI_API_KEY || '',
   openaiChatModel: process.env.OPENAI_CHAT_MODEL || 'gpt-4o',
   openaiEmbeddingModel:
-    process.env.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-small',
+    process.env.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-large',
 
   // Google Auth
   googleClientId:
