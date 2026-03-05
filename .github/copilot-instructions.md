@@ -268,13 +268,13 @@ pnpm add -D -w typescript
 
 ```bash
 # Build single app
-npx nx build api
+pnpm --filter api run build
 
 # Build affected by changes
-npx nx affected --target=build
+pnpm -r run build
 
 # Test all
-npx nx run-many --target=test --all
+npx pnpm -r run test
 ```
 
 ### When Creating New App
@@ -284,11 +284,11 @@ npx nx run-many --target=test --all
 apps/<app-name>/
 ├── src/
 ├── package.json
-├── project.json  # Nx config
+
 ├── tsconfig.json
 └── Dockerfile
 
-# Add to nx.json projects
+# Add to pnpm-workspace.yaml if Node app
 # Add Dockerfile as docker/Dockerfile.<app-name>
 ```
 

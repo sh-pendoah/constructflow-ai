@@ -17,7 +17,6 @@ RUN pnpm install
 # Copy source code
 COPY apps/api/ apps/api/
 COPY libs/ libs/
-COPY nx.json ./
 
 # Build the application - use TypeScript from workspace root explicitly
 WORKDIR /app/apps/api

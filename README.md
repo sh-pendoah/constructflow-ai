@@ -14,7 +14,7 @@ ConstructFlow AI automates construction document workflows with intelligent extr
 
 **Built with the 2026 End-to-End AI Solution Playbook**: Azure-first, standard workspace monorepo (pnpm + docker), centralized AI runtime, shared libraries, and observability-first architecture.
 
-> **Status:** ✅ P0 complete — Nx integration, shared libraries, CI/CD with affected-only builds, database strategy documented (ADR-011)
+> **Status:** ✅ P0 complete — pnpm workspace, shared libraries, CI/CD, database strategy documented (ADR-011)
 
 ---
 
@@ -116,7 +116,7 @@ docker ps  # Should show constructflow-ai-mongodb and constructflow-ai-redis
 ### 4️⃣ Build All Apps
 
 ```bash
-# Build all apps using Nx (respects dependency order)
+# Build all apps (use pnpm -r run build or Docker)
 pnpm build
 
 # Or build only what's affected by your changes
@@ -183,10 +183,9 @@ constructflow-ai/
 ├── docker/                        # Dockerfiles (Dockerfile.<app>)
 ├── tests/e2e/                     # Playwright E2E tests
 ├── .github/
-│   ├── workflows/ci.yml           # CI/CD with Nx affected + path triggers
+│   ├── workflows/ci.yml           # CI/CD with path triggers
 │   └── copilot-instructions.md    # AI coding assistant guidelines
 ├── .vscode/tasks.json             # Standardized build/test tasks
-├── nx.json                        # Nx workspace configuration
 ├── pnpm-workspace.yaml            # pnpm workspace definition
 ├── docker-compose.yml             # Full-stack orchestration
 ├── docker-compose.infra.yml       # Infrastructure only (MongoDB + Redis)
@@ -195,9 +194,7 @@ constructflow-ai/
 
 ---
 
-## Nx Commands (Task Orchestration)
-
-## Testing
+## Task Orchestration & Testing
 
 ```bash
 # E2E tests (Playwright — requires API + Web running)
@@ -209,7 +206,7 @@ npx playwright test
 # See TESTING.md for full workflow test procedures
 ```
 
-**CI/CD**: Runs on every push with path-based triggers + Nx affected execution:
+**CI/CD**: Runs on every push with path-based triggers:
 - Lint affected projects
 - Build affected projects
 - Test affected projects  
@@ -254,7 +251,7 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for the full Azure provisioning and deploym
 ✅ **Shared libraries**: Contracts, observability, tooling config (no shared business logic)
 ✅ **W3C Trace Context**: OpenTelemetry + distributed tracing (libs/observability)
 ✅ **pnpm workspace**: Modern package management with workspace support
-✅ **Path-based CI/CD**: GitHub Actions triggers only affected paths, Nx runs affected tasks
+✅ **Path-based CI/CD**: GitHub Actions triggers only affected paths
 
 ---
 

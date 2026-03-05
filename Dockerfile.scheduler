@@ -18,7 +18,6 @@ RUN pnpm add -w -D typescript @types/node
 # Copy source code
 COPY apps/scheduler/ apps/scheduler/
 COPY libs/ libs/
-COPY nx.json ./
 
 # Build the application - use node_modules/.bin/tsc from workspace root explicitly
 WORKDIR /app/apps/scheduler
