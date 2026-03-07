@@ -17,15 +17,17 @@ export function middleware(request: NextRequest) {
   }
 
   // ✅ Public routes (no auth required)
-  const publicRoutes = ["/auth", "/auth/signup", "/onboarding", "/login", "/register"];
+  const publicRoutes = ["/auth", "/auth/signup", "/auth/verify", "/onboarding", "/login", "/register"];
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route),
   );
 
-  // ✅ Auth-only routes (redirect if already logged in)
+  // ✅ Auth-only routes (redirect to dashboard if already logged in).
+  // Exact match on "/auth" to avoid blocking "/auth/verify" which is a
+  // public callback URL that must never redirect to dashboard.
   const authOnlyRoutes = ["/auth", "/auth/signup", "/login", "/register"];
   const isAuthOnlyRoute = authOnlyRoutes.some((route) =>
-    pathname.startsWith(route),
+    pathname === route || (route !== "/auth" && pathname.startsWith(route)),
   );
 
   // ✅ User is authenticated

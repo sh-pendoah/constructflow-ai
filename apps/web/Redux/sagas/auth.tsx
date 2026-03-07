@@ -14,6 +14,7 @@ import {
   inviteTeamMemberApi,
   loginApi,
   onboardingApi,
+  requestMagicLinkApi,
   resetPasswordApi,
   sendVerificationEmailApi,
   signupApi,
@@ -22,6 +23,7 @@ import {
   updateTeamMemberApi,
   uploadProfilePictureApi,
   verifyEmailOtpApi,
+  verifyMagicTokenApi,
   verifyOtpApi,
 } from '../Apis/auth';
 import {
@@ -55,6 +57,9 @@ import {
   loginFailure,
   loginRequest,
   loginSuccess,
+  requestMagicLinkFailure,
+  requestMagicLinkRequest,
+  requestMagicLinkSuccess,
   resetPasswordFailure,
   resetPasswordRequest,
   resetPasswordSuccess,
@@ -81,6 +86,9 @@ import {
   verifyEmailOtpFailure,
   verifyEmailOtpRequest,
   verifyEmailOtpSuccess,
+  verifyMagicTokenFailure,
+  verifyMagicTokenRequest,
+  verifyMagicTokenSuccess,
   verifyOtpFailure,
   verifyOtpRequest,
   verifyOtpSuccess,
@@ -534,6 +542,45 @@ function* getWorkflowsSaga(): any {
   }
 }
 
+function* requestMagicLinkSaga(action: any): any {
+  try {
+    yield put(requestMagicLinkRequest());
+    yield call(requestMagicLinkApi, action.payload);
+    yield put(requestMagicLinkSuccess());
+  } catch (e: any) {
+    const errorMessage =
+      e?.response?.data?.error ||
+      e?.response?.data?.message ||
+      'Failed to send magic link';
+    toast.error(errorMessage);
+    yield put(requestMagicLinkFailure(errorMessage));
+  }
+}
+
+function* verifyMagicTokenSaga(action: any): any {
+  try {
+    yield put(verifyMagicTokenRequest());
+    const resp = yield call(verifyMagicTokenApi, action.payload.token);
+    yield put(verifyMagicTokenSuccess(resp.data));
+
+    if (resp.data.token) {
+      setCookie(null, 'auth_token', resp.data.token, {
+        maxAge: 30 * 24 * 60 * 60, // 30 days — aligned with password login session lifetime
+        path: '/',
+        sameSite: 'lax',
+      });
+      toast.success('You are now signed in!');
+      location.href = '/dashboard';
+    }
+  } catch (e: any) {
+    const errorMessage =
+      e?.response?.data?.error ||
+      e?.response?.data?.message ||
+      'Magic link verification failed';
+    yield put(verifyMagicTokenFailure(errorMessage));
+  }
+}
+
 export default function* authSaga() {
   yield takeLatest(AUTH_ACTION_TYPES.LOGIN_REQUEST, loginSaga);
   yield takeLatest(AUTH_ACTION_TYPES.SIGNUP_REQUEST, signupSaga);
@@ -591,4 +638,6 @@ export default function* authSaga() {
     deleteTeamMemberSaga
   );
   yield takeLatest(AUTH_ACTION_TYPES.GET_WORKFLOWS_REQUEST, getWorkflowsSaga);
+  yield takeLatest(AUTH_ACTION_TYPES.REQUEST_MAGIC_LINK_REQUEST, requestMagicLinkSaga);
+  yield takeLatest(AUTH_ACTION_TYPES.VERIFY_MAGIC_TOKEN_REQUEST, verifyMagicTokenSaga);
 }

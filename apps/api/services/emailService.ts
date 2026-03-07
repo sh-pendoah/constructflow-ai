@@ -124,6 +124,27 @@ export async function sendCOIExpirationAlert(
   });
 }
 
+// Send magic link email
+export async function sendMagicLinkEmail(email: string, token: string): Promise<void> {
+  const magicLink = `${config.appUrl}/auth/verify?token=${encodeURIComponent(token)}`;
+  const subject = 'Sign in to Your Account';
+  const html = `
+    <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+      <h2 style="color: #1a1a1a;">Sign in to Your Account</h2>
+      <p style="color: #555;">Click the secure link below to log in. No password needed.</p>
+      <a href="${magicLink}" style="display: inline-block; margin: 20px 0; padding: 12px 24px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600;">
+        Sign In
+      </a>
+      <p style="color: #888; font-size: 13px;">Or copy this URL into your browser:</p>
+      <p style="color: #888; font-size: 12px; word-break: break-all;">${magicLink}</p>
+      <p style="color: #aaa; font-size: 12px; margin-top: 24px;">This link expires in ${config.magicLinkExpiryMinutes} minutes and can only be used once. If you did not request this, you can safely ignore this email.</p>
+    </div>
+  `;
+  const text = `Sign in to your account:\n\n${magicLink}\n\nThis link expires in ${config.magicLinkExpiryMinutes} minutes.`;
+
+  await sendEmail({ to: email, subject, html, text });
+}
+
 // Send welcome email
 export async function sendWelcomeEmail(email: string, name: string): Promise<void> {
   const subject = 'Welcome to docflow-360';

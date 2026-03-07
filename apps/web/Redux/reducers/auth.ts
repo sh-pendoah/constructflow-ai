@@ -67,6 +67,11 @@ interface AuthState {
   deleteTeamMemberSuccess: boolean;
   workflows: any[] | null;
   getWorkflowsError: string | null;
+  // Magic link state
+  magicLinkSent: boolean;
+  magicLinkError: string | null;
+  magicLinkVerifying: boolean;
+  magicLinkVerifyError: string | null;
 }
 
 /**
@@ -118,6 +123,11 @@ const initialState: AuthState = {
   deleteTeamMemberSuccess: false,
   workflows: null,
   getWorkflowsError: null,
+  // Magic link state
+  magicLinkSent: false,
+  magicLinkError: null,
+  magicLinkVerifying: false,
+  magicLinkVerifyError: null,
 };
 
 /**
@@ -544,6 +554,51 @@ const authSlice = createSlice({
       state.error = action.payload;
       state.getWorkflowsError = action.payload;
     },
+    // Magic Link Reducers
+    requestMagicLinkRequest: (state) => {
+      state.isLoading = true;
+      state.magicLinkSent = false;
+      state.magicLinkError = null;
+      state.error = null;
+    },
+    requestMagicLinkSuccess: (state) => {
+      state.isLoading = false;
+      state.magicLinkSent = true;
+      state.magicLinkError = null;
+    },
+    requestMagicLinkFailure: (state, action: PayloadAction<any>) => {
+      state.isLoading = false;
+      state.magicLinkSent = false;
+      state.magicLinkError = action.payload;
+      state.error = action.payload;
+    },
+    verifyMagicTokenRequest: (state) => {
+      state.magicLinkVerifying = true;
+      state.magicLinkVerifyError = null;
+      state.error = null;
+    },
+    verifyMagicTokenSuccess: (state, action: PayloadAction<any>) => {
+      state.magicLinkVerifying = false;
+      state.isAuthenticated = true;
+      state.magicLinkVerifyError = null;
+      state.userData = action.payload.data || action.payload;
+      if (action.payload.token) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('token', action.payload.token);
+        }
+      }
+    },
+    verifyMagicTokenFailure: (state, action: PayloadAction<any>) => {
+      state.magicLinkVerifying = false;
+      state.magicLinkVerifyError = action.payload;
+      state.error = action.payload;
+    },
+    resetMagicLink: (state) => {
+      state.magicLinkSent = false;
+      state.magicLinkError = null;
+      state.magicLinkVerifying = false;
+      state.magicLinkVerifyError = null;
+    },
   },
 });
 
@@ -609,6 +664,13 @@ export const {
   getWorkflowsRequest,
   getWorkflowsSuccess,
   getWorkflowsFailure,
+  requestMagicLinkRequest,
+  requestMagicLinkSuccess,
+  requestMagicLinkFailure,
+  verifyMagicTokenRequest,
+  verifyMagicTokenSuccess,
+  verifyMagicTokenFailure,
+  resetMagicLink,
 } = authSlice.actions;
 export default authSlice.reducer;
 

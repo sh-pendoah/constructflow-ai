@@ -1,16 +1,149 @@
 import { Router, Request, Response } from 'express';
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User';
+import { AuthToken, hashToken } from '../models/AuthToken';
 import { config } from '../config';
 import { logger } from '../config/logger';
 import { registerValidators, loginValidators } from '../middleware/validators';
 import { validate } from '../middleware/validate';
+import { sendMagicLinkEmail } from '../services/emailService';
 
 const router: Router = Router();
 
 function generateToken(user: { id: string; email: string; role: string; tenantId?: string }): string {
   return jwt.sign(user, config.jwtSecret, { expiresIn: config.jwtExpiresIn } as jwt.SignOptions);
 }
+
+// ── Magic Link: Request Login ──────────────────────────────────────────────
+router.post('/request-login', async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      res.status(400).json({ error: 'Valid email address is required' });
+      return;
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Find or create user (passwordless — no password required)
+    let user = await User.findOne({ email: normalizedEmail });
+    if (!user) {
+      user = await User.create({
+        email: normalizedEmail,
+        password: crypto.randomBytes(32).toString('hex'), // random password — not shared with user (passwordless account)
+        name: normalizedEmail.split('@')[0],
+        role: 'worker',
+      });
+    }
+
+    // Invalidate any previous unused tokens for this email
+    await AuthToken.updateMany(
+      { email: normalizedEmail, used: false },
+      { $set: { used: true } }
+    );
+
+    // Generate secure one-time token
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = hashToken(rawToken);
+    const expiresAt = new Date(Date.now() + config.magicLinkExpiryMinutes * 60 * 1000);
+
+    await AuthToken.create({ tokenHash, email: normalizedEmail, expiresAt });
+
+    // Send magic link email
+    try {
+      await sendMagicLinkEmail(normalizedEmail, rawToken);
+    } catch (emailErr) {
+      logger.error('Magic link email send failed:', emailErr);
+      // In local development, and only when explicitly enabled, log the link for debugging
+      if (config.env === 'development' && process.env.LOG_MAGIC_LINKS === 'true') {
+        const magicLink = `${config.appUrl}/auth/verify?token=${encodeURIComponent(rawToken)}`;
+        logger.info(`[DEV] Magic link for ${normalizedEmail}: ${magicLink}`);
+      } else {
+        // Clean up the token we just created since the email was not delivered
+        await AuthToken.deleteOne({ tokenHash });
+        res.status(503).json({ error: 'Email delivery failed. Please try again.' });
+        return;
+      }
+    }
+
+    res.json({ message: 'Magic link sent. Check your email.' });
+  } catch (error) {
+    logger.error('Request login error:', error);
+    res.status(500).json({ error: 'Failed to send magic link' });
+  }
+});
+
+// ── Magic Link: Verify Token ───────────────────────────────────────────────
+router.get('/verify', async (req: Request, res: Response) => {
+  try {
+    const { token } = req.query;
+
+    if (!token || typeof token !== 'string') {
+      res.status(400).json({ error: 'Token is required' });
+      return;
+    }
+
+    const tokenHash = hashToken(token);
+    const authToken = await AuthToken.findOne({ tokenHash });
+
+    if (!authToken) {
+      res.status(401).json({ error: 'Invalid or expired magic link' });
+      return;
+    }
+
+    if (authToken.used) {
+      res.status(401).json({ error: 'This magic link has already been used' });
+      return;
+    }
+
+    if (authToken.expiresAt < new Date()) {
+      res.status(401).json({ error: 'Magic link has expired. Please request a new one.' });
+      return;
+    }
+
+    // Mark token as used atomically to avoid race conditions
+    const now = new Date();
+    const updatedAuthToken = await AuthToken.findOneAndUpdate(
+      { _id: authToken._id, used: false, expiresAt: { $gt: now } },
+      { $set: { used: true } },
+      { new: true }
+    );
+
+    if (!updatedAuthToken) {
+      res.status(401).json({ error: 'This magic link has already been used or expired' });
+      return;
+    }
+
+    // Find user
+    const user = await User.findOne({ email: updatedAuthToken.email });
+    if (!user) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+
+    if (!user.isActive) {
+      res.status(403).json({ error: 'Account deactivated' });
+      return;
+    }
+
+    // Update last login
+    await User.updateOne({ _id: user._id }, { $set: { updatedAt: new Date() } });
+
+    const jwtToken = generateToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      tenantId: user.tenantId?.toString(),
+    });
+
+    res.json({ user, token: jwtToken });
+  } catch (error) {
+    logger.error('Verify magic link error:', error);
+    res.status(500).json({ error: 'Verification failed' });
+  }
+});
 
 router.post('/register', registerValidators, validate, async (req: Request, res: Response) => {
   try {

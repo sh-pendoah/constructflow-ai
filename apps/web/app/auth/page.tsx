@@ -1,85 +1,101 @@
 "use client";
 
-import { useState } from "react";
-import { useFormik } from "formik";
-import Input from "@/components/input";
+import { FormEvent, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  loginValidationSchema,
-  type LoginFormValues,
-} from "@/utils/validations";
-import { useRouter } from "next/navigation";
-import ForgotPasswordModal from "@/components/forgot-password-modal";
-import VerifyEmailModal from "@/components/verify-email-modal";
-import CreateNewPasswordModal from "@/components/create-new-password-modal";
-import PasswordResetSuccessModal from "@/components/password-reset-success-modal";
+import { Loader2, Mail, CheckCircle2 } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/Redux/hooks";
 import { authActions } from "@/Redux/actions/auth";
-import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
-import { clearAllForgotModals, resetPasswordFailure } from "@/Redux/reducers/auth";
+import { resetMagicLink } from "@/Redux/reducers/auth";
 
-const LoginPage = () => {
-  const router = useRouter();
-  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
-  const [isVerifyEmailOpen, setIsVerifyEmailOpen] = useState(false);
-  const [isCreatePasswordOpen, setIsCreatePasswordOpen] = useState(false);
-  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
-  const [resetEmail, setResetEmail] = useState("");
-  const [resetPasswordToken, setResetPasswordToken] = useState<string | null>(null);
+export default function LoginPage() {
   const dispatch = useAppDispatch();
-  const {
-    isLoading,
-    isVerifying,
-    forgotPasswordSuccess,
-    verifyOtpSuccess,
-    resetPasswordSuccess,
-  } = useAppSelector((state) => state.auth);
-  
-  // Track previous verification state to detect successful completion
-  const formik = useFormik<LoginFormValues>({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: loginValidationSchema,
-    onSubmit: (values) => {
-      dispatch(authActions.loginRequest(values));
-    },
-  });
+  const { isLoading, magicLinkSent, magicLinkError } = useAppSelector(
+    (state) => state.auth
+  );
 
-  const onCloseAllModals = () => {
-    dispatch(clearAllForgotModals());
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (value: string) => {
+    if (!value) return "Email is required";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Enter a valid email address";
+    return "";
+  };
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const err = validateEmail(email);
+    if (err) {
+      setEmailError(err);
+      return;
+    }
+    setEmailError("");
+    dispatch(authActions.requestMagicLinkRequest({ email: email.trim().toLowerCase() }));
+  };
+
+  const handleResend = () => {
+    dispatch(resetMagicLink());
+    dispatch(authActions.requestMagicLinkRequest({ email: email.trim().toLowerCase() }));
+  };
+
+  const handleTryAgain = () => {
+    dispatch(resetMagicLink());
+    setEmail("");
+    setEmailError("");
+  };
+
+  if (magicLinkSent) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4 bg-background">
+        <div className="w-full max-w-[480px] flex flex-col items-center gap-8 px-8 pt-10 pb-8 rounded-2xl border border-custom bg-white-custom shadow-md-custom text-center">
+          <div className="w-16 h-16 rounded-full bg-green-50 flex items-center justify-center">
+            <CheckCircle2 className="w-8 h-8 text-green-500" />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <h1 className="text-2xl font-semibold text-primary font-poppins">
+              Check your email
+            </h1>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              We sent a secure sign-in link to{" "}
+              <span className="font-medium text-gray-700">{email}</span>.
+              Click the link to sign in — no password needed.
+            </p>
+            <p className="text-gray-400 text-xs mt-1">
+              The link expires in {process.env.NEXT_PUBLIC_MAGIC_LINK_EXPIRY_MINUTES ?? '15'} minutes.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 w-full">
+            <button
+              onClick={handleResend}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                "Resend link"
+              )}
+            </button>
+            <button
+              onClick={handleTryAgain}
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              Use a different email
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   }
-
-  useEffect(() => {
-    if (forgotPasswordSuccess) {
-      setIsVerifyEmailOpen(true);
-      setIsForgotPasswordOpen(false);
-    }
-  }, [forgotPasswordSuccess]);
-
-  useEffect(() => {
-    if (verifyOtpSuccess) {
-      setIsCreatePasswordOpen(true);
-      setIsVerifyEmailOpen(false);
-    }
-  }, [verifyOtpSuccess]);
-
-  useEffect(() => {
-    if (resetPasswordSuccess) {
-      setIsSuccessOpen(true);
-      setIsCreatePasswordOpen(false);
-      dispatch(resetPasswordFailure(null))
-    }
-  }, [resetPasswordSuccess]);
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      <div className="w-full max-w-[672px] flex flex-col items-center gap-[50px] px-8 pt-11 pb-8 rounded-2xl border border-custom bg-white-custom shadow-md-custom">
+      <div className="w-full max-w-[480px] flex flex-col items-center gap-10 px-8 pt-11 pb-8 rounded-2xl border border-custom bg-white-custom shadow-md-custom">
         {/* Logo */}
-        <div className="w-[263px] h-[94px] relative">
+        <div className="w-[220px] h-[78px] relative">
           <Image
             src="/images/docflow-360-logo.png"
             alt="docflow-360 Logo"
@@ -89,176 +105,76 @@ const LoginPage = () => {
           />
         </div>
 
-        {/* Form Container */}
-        <form
-          onSubmit={formik.handleSubmit}
-          className="w-full flex flex-col gap-6"
-        >
-          {/* Title and Inputs Container */}
-          <div className="w-full flex flex-col gap-11">
-            {/* Title Container */}
-            <div className="w-full flex flex-col gap-0.5">
-              <h1 className="text-[27px] leading-[1.5em] font-semibold text-primary font-poppins">
-                Log in to docflow-360
-              </h1>
-            </div>
-
-            {/* Input Container */}
-            <div className="w-full flex flex-col gap-8">
-              {/* Email Input */}
-              <Input
-                label="Email"
-                type="email"
-                placeholder="example@email.com"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                required
-                name="email"
-                error={
-                  formik.touched.email && formik.errors.email
-                    ? formik.errors.email
-                    : undefined
-                }
-              />
-
-              <div className="w-full flex flex-col gap-1">
-                <Input
-                  label="Password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  required
-                  name="password"
-                  error={
-                    formik.touched.password && formik.errors.password
-                      ? formik.errors.password
-                      : undefined
-                  }
-                />
-              <button
-                type="button"
-                onClick={() => setIsForgotPasswordOpen(true)}
-                className="self-stretch cursor-pointer text-right justify-start text-primary text-base font-semibold font-poppins hover:opacity-80 transition-opacity"
-              >
-                Forgot Password?
-              </button>
-              </div>
-            </div>
-            {/* Password Input */}
+        <form onSubmit={handleSubmit} className="w-full flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-[26px] leading-tight font-semibold text-primary font-poppins">
+              Sign in to your account
+            </h1>
+            <p className="text-sm text-gray-500">
+              Enter your email and we&apos;ll send you a secure sign-in link.
+            </p>
           </div>
 
-          {/* Button Container */}
-          <div className="w-full flex flex-col gap-1">
-            {/* Sign In Button */}
-            <button
-              type="submit"
-              className="w-full flex items-center h-12 justify-center gap-2 py-5 px-3 rounded-lg bg-primary hover:bg-primary-hover transition-colors font-poppins text-[17px] leading-[1.5em] font-semibold text-primary-button cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={
-                formik.values.email === "" || formik.values.password === ""
-              }
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="email"
+              className="text-sm font-medium text-gray-700"
             >
-              {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Sign In"}
-            </button>
-
-            {/* Sign Up Link */}
-            <div className="w-full flex items-center justify-center gap-2 py-2 px-3">
-              <span className="text-[17px] leading-[1.5em] font-semibold text-primary cursor-pointer hover:opacity-80 transition-opacity font-poppins">
-                Don&apos;t have an account?{" "}
-                <Link href="/auth/signup" className="text-primary-link">
-                  Sign Up
-                </Link>
-              </span>
+              Email address
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                autoFocus
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (emailError) setEmailError(validateEmail(e.target.value));
+                }}
+                className={`w-full border rounded-lg pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow ${
+                  emailError
+                    ? "border-red-400 focus:ring-red-400"
+                    : "border-gray-200"
+                }`}
+              />
             </div>
+            {emailError && (
+              <p className="text-xs text-red-500 mt-0.5">{emailError}</p>
+            )}
+            {magicLinkError && (
+              <p className="text-xs text-red-500 mt-0.5">{magicLinkError}</p>
+            )}
           </div>
+
+          <button
+            type="submit"
+            disabled={isLoading || !email}
+            className="w-full flex items-center h-11 justify-center gap-2 rounded-lg bg-primary hover:bg-primary-hover transition-colors font-poppins text-base font-semibold text-primary-button cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isLoading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              "Send Login Link"
+            )}
+          </button>
+
+          <p className="text-xs text-gray-400 text-center leading-relaxed">
+            We&apos;ll email you a magic link — no password required.
+          </p>
         </form>
+
+        <div className="w-full border-t border-gray-100 pt-4 flex items-center justify-center gap-1 text-sm">
+          <span className="text-gray-500">Want to explore first?</span>
+          <Link href="/dashboard" className="text-primary font-medium hover:opacity-80 transition-opacity">
+            Continue as guest
+          </Link>
+        </div>
       </div>
-
-      {/* Forgot Password Modal */}
-      <ForgotPasswordModal
-        isOpen={isForgotPasswordOpen}
-        onClose={() => {
-          setIsForgotPasswordOpen(false);
-          dispatch(authActions.clearAuthError());
-          onCloseAllModals();
-        }}
-        onSendCode={(email) => {
-          setResetEmail(email);
-          dispatch(authActions.forgotPasswordRequest({ email }));
-        }}
-        isLoading={isLoading && isForgotPasswordOpen}
-      />
-
-      {/* Verify Email Modal */}
-      <VerifyEmailModal
-        isOpen={isVerifyEmailOpen}
-        onClose={() => {
-          setIsVerifyEmailOpen(false);
-          setIsForgotPasswordOpen(true);
-          dispatch(authActions.clearAuthError());
-          onCloseAllModals();
-        }}
-        onVerify={(code) => {
-          if (resetEmail && code) {
-            dispatch(
-              authActions.verifyOtpRequest({
-                email: resetEmail,
-                code: code,
-              })
-            );
-          }
-        }}
-        onResend={() => {
-          if (resetEmail) {
-            dispatch(authActions.forgotPasswordRequest({ email: resetEmail }));
-          }
-        }}
-        email={resetEmail}
-        isVerifying={isVerifying}
-        isResending={isLoading && isVerifyEmailOpen}
-      />
-
-      {/* Create New Password Modal */}
-      <CreateNewPasswordModal
-        isOpen={isCreatePasswordOpen}
-        onClose={() => {
-          setIsCreatePasswordOpen(false);
-          dispatch(authActions.clearAuthError());
-          onCloseAllModals();
-        }}
-        onResetPassword={(newPassword, confirmPassword) => {
-          const token = resetPasswordToken || localStorage.getItem("resetPasswordToken");
-          if (token && newPassword) {
-            dispatch(
-              authActions.resetPasswordRequest({
-                resetPasswordToken: token,
-                newPassword: newPassword,
-              })
-            );
-          }
-        }}
-        isLoading={isLoading && isCreatePasswordOpen}
-      />
-
-      {/* Password Reset Success Modal */}
-      <PasswordResetSuccessModal
-        isOpen={isSuccessOpen}
-        onGoToSignIn={() => {
-          setIsSuccessOpen(false);
-          setResetEmail("");
-          setResetPasswordToken(null);
-          localStorage.removeItem("resetPasswordToken");
-          dispatch(authActions.clearAuthError());
-          router.push("/auth");
-          onCloseAllModals();
-        }}
-      />
     </div>
   );
-};
-
-export default LoginPage;
-
+}
 
