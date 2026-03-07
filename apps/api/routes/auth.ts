@@ -85,7 +85,7 @@ router.get('/verify', async (req: Request, res: Response) => {
       return;
     }
 
-    const tokenHash = hashToken(decodeURIComponent(token));
+    const tokenHash = hashToken(token);
     const authToken = await AuthToken.findOne({ tokenHash });
 
     if (!authToken) {
