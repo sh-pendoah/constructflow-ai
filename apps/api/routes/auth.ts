@@ -103,12 +103,21 @@ router.get('/verify', async (req: Request, res: Response) => {
       return;
     }
 
-    // Mark token as used
-    authToken.used = true;
-    await authToken.save();
+    // Mark token as used atomically to avoid race conditions
+    const now = new Date();
+    const updatedAuthToken = await AuthToken.findOneAndUpdate(
+      { _id: authToken._id, used: false, expiresAt: { $gt: now } },
+      { $set: { used: true } },
+      { new: true }
+    );
+
+    if (!updatedAuthToken) {
+      res.status(401).json({ error: 'This magic link has already been used or expired' });
+      return;
+    }
 
     // Find user
-    const user = await User.findOne({ email: authToken.email });
+    const user = await User.findOne({ email: updatedAuthToken.email });
     if (!user) {
       res.status(404).json({ error: 'User not found' });
       return;
