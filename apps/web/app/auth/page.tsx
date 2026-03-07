@@ -63,7 +63,7 @@ export default function LoginPage() {
               Click the link to sign in — no password needed.
             </p>
             <p className="text-gray-400 text-xs mt-1">
-              The link expires in 15 minutes.
+              The link expires in {process.env.NEXT_PUBLIC_MAGIC_LINK_EXPIRY_MINUTES ?? '15'} minutes.
             </p>
           </div>
 

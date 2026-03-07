@@ -31,6 +31,10 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_API_URL:
       dotEnv.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_API_URL || '[REDACTED]',
+    NEXT_PUBLIC_MAGIC_LINK_EXPIRY_MINUTES:
+      dotEnv.NEXT_PUBLIC_MAGIC_LINK_EXPIRY_MINUTES ||
+      process.env.NEXT_PUBLIC_MAGIC_LINK_EXPIRY_MINUTES ||
+      '15',
   },
 };
 

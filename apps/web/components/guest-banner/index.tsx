@@ -26,6 +26,7 @@ export default function GuestBanner() {
           Sign in
         </Link>
         <button
+          type="button"
           onClick={() => setDismissed(true)}
           className="text-amber-600 hover:text-amber-900 transition-colors"
           aria-label="Dismiss"

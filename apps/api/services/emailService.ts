@@ -137,10 +137,10 @@ export async function sendMagicLinkEmail(email: string, token: string): Promise<
       </a>
       <p style="color: #888; font-size: 13px;">Or copy this URL into your browser:</p>
       <p style="color: #888; font-size: 12px; word-break: break-all;">${magicLink}</p>
-      <p style="color: #aaa; font-size: 12px; margin-top: 24px;">This link expires in 15 minutes and can only be used once. If you did not request this, you can safely ignore this email.</p>
+      <p style="color: #aaa; font-size: 12px; margin-top: 24px;">This link expires in ${config.magicLinkExpiryMinutes} minutes and can only be used once. If you did not request this, you can safely ignore this email.</p>
     </div>
   `;
-  const text = `Sign in to your account:\n\n${magicLink}\n\nThis link expires in 15 minutes.`;
+  const text = `Sign in to your account:\n\n${magicLink}\n\nThis link expires in ${config.magicLinkExpiryMinutes} minutes.`;
 
   await sendEmail({ to: email, subject, html, text });
 }

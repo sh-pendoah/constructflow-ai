@@ -565,7 +565,7 @@ function* verifyMagicTokenSaga(action: any): any {
 
     if (resp.data.token) {
       setCookie(null, 'auth_token', resp.data.token, {
-        maxAge: 7 * 24 * 60 * 60, // 7 days
+        maxAge: 30 * 24 * 60 * 60, // 30 days — aligned with password login session lifetime
         path: '/',
         sameSite: 'lax',
       });
