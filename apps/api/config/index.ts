@@ -52,6 +52,12 @@ export const config = {
   openaiEmbeddingModel:
     process.env.OPENAI_EMBEDDING_MODEL || 'text-embedding-3-large',
 
+  // App base URL (used for magic links, etc.)
+  appUrl: process.env.APP_URL || 'http://localhost:3001',
+
+  // Magic link expiry in minutes
+  magicLinkExpiryMinutes: parseInt(process.env.MAGIC_LINK_EXPIRY_MINUTES || '15', 10),
+
   // Google Auth
   googleClientId:
     process.env.GOOGLE_CLIENT_ID || process.env.AUTH_GOOGLE_ID || '',

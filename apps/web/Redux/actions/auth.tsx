@@ -79,6 +79,13 @@ export const AUTH_ACTION_TYPES = {
   GET_WORKFLOWS_REQUEST: "auth/GET_WORKFLOWS_REQUEST",
   GET_WORKFLOWS_SUCCESS: "auth/GET_WORKFLOWS_SUCCESS",
   GET_WORKFLOWS_FAILURE: "auth/GET_WORKFLOWS_FAILURE",
+  // Magic Link Actions
+  REQUEST_MAGIC_LINK_REQUEST: "auth/REQUEST_MAGIC_LINK_REQUEST",
+  REQUEST_MAGIC_LINK_SUCCESS: "auth/REQUEST_MAGIC_LINK_SUCCESS",
+  REQUEST_MAGIC_LINK_FAILURE: "auth/REQUEST_MAGIC_LINK_FAILURE",
+  VERIFY_MAGIC_TOKEN_REQUEST: "auth/VERIFY_MAGIC_TOKEN_REQUEST",
+  VERIFY_MAGIC_TOKEN_SUCCESS: "auth/VERIFY_MAGIC_TOKEN_SUCCESS",
+  VERIFY_MAGIC_TOKEN_FAILURE: "auth/VERIFY_MAGIC_TOKEN_FAILURE",
   // Clear Auth Error
   CLEAR_AUTH_ERROR: "auth/CLEAR_AUTH_ERROR",
 } as const;
@@ -382,6 +389,31 @@ export const authActions = {
   }),
   getWorkflowsFailure: (error: string) => ({
     type: AUTH_ACTION_TYPES.GET_WORKFLOWS_FAILURE,
+    payload: error,
+  }),
+  // Magic Link
+  requestMagicLinkRequest: (payload: { email: string }) => ({
+    type: AUTH_ACTION_TYPES.REQUEST_MAGIC_LINK_REQUEST,
+    payload,
+  }),
+  requestMagicLinkSuccess: (payload: any) => ({
+    type: AUTH_ACTION_TYPES.REQUEST_MAGIC_LINK_SUCCESS,
+    payload,
+  }),
+  requestMagicLinkFailure: (error: string) => ({
+    type: AUTH_ACTION_TYPES.REQUEST_MAGIC_LINK_FAILURE,
+    payload: error,
+  }),
+  verifyMagicTokenRequest: (token: string) => ({
+    type: AUTH_ACTION_TYPES.VERIFY_MAGIC_TOKEN_REQUEST,
+    payload: { token },
+  }),
+  verifyMagicTokenSuccess: (payload: any) => ({
+    type: AUTH_ACTION_TYPES.VERIFY_MAGIC_TOKEN_SUCCESS,
+    payload,
+  }),
+  verifyMagicTokenFailure: (error: string) => ({
+    type: AUTH_ACTION_TYPES.VERIFY_MAGIC_TOKEN_FAILURE,
     payload: error,
   }),
 };

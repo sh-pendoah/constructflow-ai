@@ -1,4 +1,23 @@
 import api from "./api";
+// Magic link auth
+export const requestMagicLinkApi = async (payload: { email: string }): Promise<any> => {
+  try {
+    const response = await api.post('/api/auth/request-login', payload);
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
+export const verifyMagicTokenApi = async (token: string): Promise<any> => {
+  try {
+    const response = await api.get(`/api/auth/verify?token=${encodeURIComponent(token)}`);
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+};
+
 export const loginApi = async (payload: any): Promise<any> => {
   try {
     const response = await api.post("/auth/v1/login", payload);
