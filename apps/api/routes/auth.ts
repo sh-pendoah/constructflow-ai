@@ -56,8 +56,8 @@ router.post('/request-login', async (req: Request, res: Response) => {
       await sendMagicLinkEmail(normalizedEmail, rawToken);
     } catch (emailErr) {
       logger.error('Magic link email send failed:', emailErr);
-      // In development, log the link so developers can use it without SMTP
-      if (config.env !== 'production') {
+      // In local development, and only when explicitly enabled, log the link for debugging
+      if (config.env === 'development' && process.env.LOG_MAGIC_LINKS === 'true') {
         const magicLink = `${config.appUrl}/auth/verify?token=${encodeURIComponent(rawToken)}`;
         logger.info(`[DEV] Magic link for ${normalizedEmail}: ${magicLink}`);
       } else {
